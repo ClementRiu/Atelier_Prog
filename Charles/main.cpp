@@ -20,24 +20,43 @@ int main(){
         for (int j = 0; j < NbCase*Taille; j += Taille){
             if ((i+1) % (j+1) == 0){
                 Case c(i, j, eau);
-                carte[NbCase * j / Taille + i / Taille] = c;
+                carte[NumeroCase(i, j)] = c;
             }
             if ((i+1) % (j+1) == 1){
                 Case c(i, j, herbe);
-                carte[NbCase * j / Taille + i / Taille] = c;
+                carte[NumeroCase(i, j)] = c;
             }
             if ((i+1) % (j+1) > 1){
                 Case c(i, j, route);
-                carte[NbCase * j / Taille + i / Taille] = c;
+                carte[NumeroCase(i, j)] = c;
             }
         }
     }
     carte[30].Brillance();
+    Heros h;
+    h.SetCase(0);;
+    carte[0].FlagHeros();
     carte[50].Brillance();
     // Affichage des cases
     for (int i = 0; i < NbCase; i ++){
         for (int j = 0; j  <NbCase; j ++){
             carte[NbCase * j + i].Affiche();
+        }
+    }
+    // On bouge le heros
+    carte[h.GetCase()].DeplaceHeros(h,carte[35]);
+    while (true){
+        Imagine::Event e;
+        int x, y;
+        do{
+            getEvent(0, e);
+            if(e.type == Imagine::EVT_BUT_ON){
+                x = e.pix[0];
+                y = e.pix[1];
+            }
+        }while(e.type!=Imagine::EVT_BUT_OFF);
+        if (x / Taille < NbCase && y / Taille < NbCase){
+            carte[h.GetCase()].DeplaceHeros(h, carte[NumeroCase(x,y)]);
         }
     }
     Imagine::endGraphics();
