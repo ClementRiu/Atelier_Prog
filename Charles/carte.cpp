@@ -1,7 +1,7 @@
 #include "carte.h"
 
 
-TypeCase::TypeCase(int dep, std::string desc, Imagine::Color img){
+TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img){
     nb_dep = dep;
     description = desc;
     image = img;
@@ -27,6 +27,10 @@ Case::Case(int x1, int y1, TypeCase tc){
 }
 
 
+Case::Case(){
+}
+
+
 void Case::Heros(){
     heros =! heros;
 }
@@ -38,8 +42,11 @@ void Case::Brillance(){
 
 
 void Case::Affiche(){
-    Imagine::fillRect(x, y, Taille, Taille, type.Image());
+    Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
     if (brillance){
-        Imagine::drawRect(x, y, Taille, Taille, Imagine::BLACK);
+        Imagine::drawRect(x, y, Taille - 1, Taille - 1, Imagine::BLACK);
     }
+    int taillemax = LargDroite/NbCase;
+    Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax, taillemax, type.Image());
+    std::cout << taillemax;
 }
