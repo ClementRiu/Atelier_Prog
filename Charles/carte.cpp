@@ -1,5 +1,6 @@
 #include "carte.h"
 
+
 int NumeroCase(int x, int y){
     return ((y / Taille) * NbCase + x / Taille);
 }
@@ -21,6 +22,17 @@ Imagine::Color TypeCase::Image(){
 }
 
 
+float TypeCase::NbDep(){
+    return nb_dep;
+}
+
+
+Heros::Heros(int dep){
+    nb_dep = dep;
+    numcase = 0;
+}
+
+
 int Heros::GetCase() const{
     return numcase;
 }
@@ -28,6 +40,11 @@ int Heros::GetCase() const{
 
 void Heros::SetCase(int num){
     numcase = num;
+}
+
+
+int Heros::GetDep() const{
+    return nb_dep;
 }
 
 
@@ -60,15 +77,15 @@ void Case::DeplaceHeros(Heros &h, Case &c){
 }
 
 
-void Case::Brillance(){
-    brillance = !brillance;
+void Case::BrillanceOnOff(bool flag){
+    brillance = flag;
 }
 
 
 void Case::Affiche(){
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
     if (brillance){
-        Imagine::drawRect(x, y, Taille - 1, Taille - 1, Imagine::BLACK);
+        Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
     }
     int taillemax = LargDroite/NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax, taillemax, type.Image());
@@ -76,4 +93,14 @@ void Case::Affiche(){
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
         Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax, taillemax, Imagine::BLACK);
     }
+}
+
+
+float Case::NbDep(){
+    return type.NbDep();
+}
+
+
+bool Case::Brillance(){
+    return brillance;
 }

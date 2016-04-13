@@ -27,17 +27,24 @@ public:
     TypeCase();
     // Accesseur a l'image du type de la case
     Imagine::Color Image();
+    // Accesseur au nombre de déplacement que coûte la case
+    float NbDep();
 
 };
 
 // Classe definissant le heros
 class Heros{
     int numcase;
+    int nb_dep;
 public:
+    // Constructeur de la classe Heros
+    Heros(int dep);
     // Accesseur a la case du heros
     int GetCase() const;
     // setteur de la case du heros
     void SetCase(int num);
+    // Accesseur a la case du heros
+    int GetDep() const;
 };
 
 // Classe definissant les cases de la carte
@@ -56,10 +63,14 @@ public:
     void FlagHeros();
     // Deplace et actualise la position du Heros sur la carte
     void DeplaceHeros(Heros &h, Case &c);
-    // Place la case en surbrillance s'il n'y etait pas et enleve la surbrillance sinon
-    void Brillance();
+    // Place la case en surbrillance, ou enleve la surbrillance selon le booleen
+    void BrillanceOnOff(bool flag);
     // Affiche la case
     void Affiche(); // Cette methode devrait être const mais je n'arrive pas a le faire !!!!!
+    // Accesseur au nombre de déplacement que coûte la case
+    float NbDep();
+    // Accesseur a la brillance de la case
+    bool Brillance();
 };
 
 
