@@ -1,37 +1,39 @@
 // Author:   Charles AUGUSTE
 
 
-#include"carte.h"
+#include "carte.h"
+#include "priorite.h"
 
 
 const float INF = 1.0f/0.0f; // Infini en float
 
 
-// Met en surbrillance les cases autorisees au Heros
-// A REMPLACER PAR DIJKASTRA
-void CaseAutorisee(float dep, Case *carte, int num_case, bool brillance){
-    float possibilite = dep - carte[num_case].NbDep();
-    if (possibilite >= 0){
-        carte[num_case].BrillanceOnOff(brillance);
-        carte[num_case].Affiche();
-        if ((num_case + 1) % NbCase != 0){
-            CaseAutorisee(possibilite, carte, num_case + 1, brillance);
-        }
-        if ((num_case + 1) % NbCase != 1){
-            CaseAutorisee(possibilite, carte, num_case - 1, brillance);
-        }
-        if (num_case >= NbCase){
-            CaseAutorisee(possibilite, carte, num_case - NbCase, brillance);
-        }
-        if (num_case + 1 < NbCase * (NbCase - 1) ){
-            CaseAutorisee(possibilite, carte, num_case + NbCase, brillance);
+// Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
+void FastMarching(float dep, Case *carte, int num_case, bool brillance){
+    FilePriorite F;
+    CaseDist depart(num_case, dep);
+    F.push(depart);
+    while (!F.empty()){
+        CaseDist c = F.pop();
+        for (int i = -1; i <= 1; i = i + 2){
+            for (int j = 1; j <= NbCase; j = j + NbCase - 1){
+                if (c.GetNum() + i * j >= 0 && c.GetNum() + i * j < NbCase * NbCase &&
+                    ((c.GetNum() + i * j) % NbCase != 0 || c.GetNum() % NbCase != NbCase - 1) &&
+                    ((c.GetNum() + i * j) % NbCase != NbCase - 1 || c.GetNum() % NbCase != 0) &&
+                     c.GetDep() - carte[c.GetNum() + i * j].NbDep() >= 0 &&
+                     carte[c.GetNum() + i * j].Brillance() != brillance){
+                        carte[c.GetNum() + i * j].BrillanceOnOff(brillance);
+                        CaseDist c2(c.GetNum() + i * j, c.GetDep() - carte[c.GetNum() + i * j].NbDep());
+                        F.push(c2);
+                }
+            }
         }
     }
 }
 
 
 int main(){
-    Imagine::openWindow(NbCase*Taille + Separation + LargDroite, NbCase*Taille);
+    Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
     // Initialisation du Heros
     Heros h(5);
     // Initialisation des types de case
@@ -78,7 +80,7 @@ int main(){
             }
         }while(e.type != Imagine::EVT_BUT_OFF);
         if (NumeroCase(x,y) == h.GetCase()){
-            CaseAutorisee(h.GetDep() + carte[NumeroCase(x, y)].NbDep(), carte, NumeroCase(x, y), true);
+            FastMarching(h.GetDep(), carte, NumeroCase(x, y), true);
             do{
                 getEvent(0, e);
                 if (e.type == Imagine::EVT_BUT_ON){
@@ -87,7 +89,7 @@ int main(){
                 }
             }while(e.type != Imagine::EVT_BUT_OFF || x > Taille * NbCase || y > Taille * NbCase || !carte[NumeroCase(x1, y1)].Brillance());
             carte[h.GetCase()].DeplaceHeros(h, carte[NumeroCase(x1, y1)]);
-            CaseAutorisee(h.GetDep() + carte[NumeroCase(x, y)].NbDep(), carte, NumeroCase(x, y), false);
+            FastMarching(h.GetDep(), carte, NumeroCase(x, y), false);
         }
     }
     Imagine::endGraphics();

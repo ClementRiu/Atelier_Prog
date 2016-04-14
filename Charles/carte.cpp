@@ -79,6 +79,7 @@ void Case::DeplaceHeros(Heros &h, Case &c){
 
 void Case::BrillanceOnOff(bool flag){
     brillance = flag;
+    this->Affiche();
 }
 
 

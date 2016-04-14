@@ -7,8 +7,8 @@
 
 
 const int Taille = 20;
-const int LargDroite = 50;
-const int NbCase = 10 ;
+const int NbCase = 50;
+const int LargDroite = 3 * NbCase;
 const int Separation = 20; // Separation entre la carte et la mini map
 
 
@@ -63,7 +63,7 @@ public:
     void FlagHeros();
     // Deplace et actualise la position du Heros sur la carte
     void DeplaceHeros(Heros &h, Case &c);
-    // Place la case en surbrillance, ou enleve la surbrillance selon le booleen
+    // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
     void BrillanceOnOff(bool flag);
     // Affiche la case
     void Affiche(); // Cette methode devrait être const mais je n'arrive pas a le faire !!!!!
