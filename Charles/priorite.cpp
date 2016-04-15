@@ -3,22 +3,22 @@
 
 CaseDist::CaseDist(int num, float dep){
     num_case = num;
-    nb_dep = dep;
+    PDep = dep;
 }
 
 
-int CaseDist::GetNum(){
+int CaseDist::getNum(){
     return num_case;
 }
 
 
 bool CaseDist::operator<(CaseDist c) const{
-    return (nb_dep < c.nb_dep);
+    return (PDep < c.PDep);
 }
 
 
-float CaseDist::GetDep(){
-    return nb_dep;
+float CaseDist::getDep(){
+    return PDep;
 }
 
 

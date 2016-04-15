@@ -4,14 +4,14 @@
 
 class CaseDist {
     int num_case;
-    float nb_dep;
+    float PDep;
 public:
     // Constructeur de caseDist
     CaseDist(int num, float dep);
     // Accesseur au numero de la case
-    int GetNum();
+    int getNum();
     // Accesseur au nombre de deplacements restants
-    float GetDep();
+    float getDep();
     // Operateure inferieur ou egal sur la classe
     bool operator<(CaseDist c) const;
 };

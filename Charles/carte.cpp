@@ -1,107 +1,87 @@
 #include "carte.h"
 
 
-int NumeroCase(int x, int y){
+int numeroCase(int x, int y) {
     return ((y / Taille) * NbCase + x / Taille);
 }
 
 
-TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img){
-    nb_dep = dep;
+TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
+    PDep = dep;
     description = desc;
     image = img;
 }
 
 
-TypeCase::TypeCase(){
+TypeCase::TypeCase() {
 }
 
 
-Imagine::Color TypeCase::Image(){
+Imagine::Color TypeCase::Image() {
     return image;
 }
 
 
-float TypeCase::NbDep(){
-    return nb_dep;
+float TypeCase::NbDep() {
+    return PDep;
 }
 
 
-Heros::Heros(int dep){
-    nb_dep = dep;
-    numcase = 0;
-}
-
-
-int Heros::GetCase() const{
-    return numcase;
-}
-
-
-void Heros::SetCase(int num){
-    numcase = num;
-}
-
-
-int Heros::GetDep() const{
-    return nb_dep;
-}
-
-
-Case::Case(int x1, int y1, TypeCase tc){
+Case::Case(int x1, int y1, TypeCase tc) {
     x = x1;
     y = y1;
     taille = Taille;
-    heros = false;
+    occupe = false;
     brillance = false;
     type = tc;
 }
 
 
-Case::Case(){
+Case::Case() {
 }
 
 
-void Case::FlagHeros(){
-    heros = !heros;
+void Case::flagHeros() {
+    occupe = !occupe;
 }
 
 
-
-void Case::DeplaceHeros(Heros &h, Case &c){
-    this->FlagHeros();
-    c.FlagHeros();
-    this->Affiche();
-    c.Affiche();
-    h.SetCase(NumeroCase(c.x, c.y));
+void Case::deplaceHeros(Heros &h, Case &c) {
+    this->flagHeros();
+    c.flagHeros();
+    this->affiche();
+    c.affiche();
+    h.setCase(numeroCase(c.x, c.y));
 }
 
 
-void Case::BrillanceOnOff(bool flag){
+void Case::brillanceOnOff(bool flag) {
     brillance = flag;
-    this->Affiche();
+    this->affiche();
 }
 
 
-void Case::Affiche(){
+void Case::affiche() {
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
-    if (brillance){
+    if (brillance) {
         Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
     }
-    int taillemax = LargDroite/NbCase;
-    Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax, taillemax, type.Image());
-    if (heros){
+    int taillemax = LargDroite / NbCase;
+    Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
+                      taillemax, type.Image());
+    if (occupe) {
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
-        Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax, taillemax, Imagine::BLACK);
+        Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
+                          taillemax, Imagine::BLACK);
     }
 }
 
 
-float Case::NbDep(){
+float Case::NbDep() {
     return type.NbDep();
 }
 
 
-bool Case::Brillance(){
+bool Case::Brillance() {
     return brillance;
 }
