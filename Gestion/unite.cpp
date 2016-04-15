@@ -1,4 +1,5 @@
 #include "unite.h"
+#include <iostream>
 
 Unite::Unite() {
     PDep = 8;
@@ -27,4 +28,23 @@ int Unite::getDep() const {
 
 
 Heros::Heros(int dep) : Unite(dep) {
+}
+
+
+//à implémenter
+void Unite::prendDommage(int attRecue) {
+    std::cout << "à implémenter !" << std::endl;
+}
+
+bool Unite::estVivant() {
+    if (PV <= 0) {
+        return false;
+    }
+    return true;
+}
+
+
+//à implémenter !!
+Objet Heros::equipe(Objet equipement){
+
 }
