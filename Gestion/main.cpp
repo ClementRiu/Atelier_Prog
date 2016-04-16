@@ -50,6 +50,7 @@ void Deplacement(Case * carte, std::vector<Unite> &Unites) {
 
 int main() {
     Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
+
     // Initialisation des types de case
     TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
     TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);

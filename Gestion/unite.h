@@ -1,6 +1,9 @@
 #pragma once
 
+#include "../Combat/objet.h"
+
 const int TAILLE_ARMEE = 6;
+const int TAILLE_INVENTAIRE = 10;
 
 class Unite {
     //caractéristiques de l'unité
@@ -24,8 +27,13 @@ public:
     Unite(int dep, int num);
 
     int getCase() const;
+
     void setCase(int num);
+
     int getDep() const;
+
+    void prendDommage(int att); //à implémenter avec formule adaptée
+    bool estVivant();
 };
 
 
@@ -34,7 +42,7 @@ class Sbire : public Unite {
 };
 
 
-class Armee{
+class Armee {
     Sbire sbireArmee[TAILLE_ARMEE];
 };
 
@@ -45,8 +53,22 @@ class Heros : public Unite {
     int niveau;
     int exp;
 
+    Objet inventaire[TAILLE_INVENTAIRE];
+    Objet equipeCasque;
+    Objet equipeArmeDroite;
+    Objet equipeArmeGauche;
+    Objet equipeTorse;
+    Objet equipeGants;
+    Objet equipeJambes;
+    Objet equipeBottes;
+    Objet equipeAnneau1;
+    Objet equipeAnneau2;
+
 public:
     Heros(int dep, int num);
+
+    //à implémenter !!
+    Objet equipe(Objet equipement);
 };
 
 
