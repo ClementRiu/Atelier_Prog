@@ -5,6 +5,7 @@
 #include <Imagine/Graphics.h>
 #include <stdlib.h>
 #include "unite.h"
+#include "priorite.h"
 
 
 const int Taille = 20;
@@ -32,7 +33,7 @@ public:
     Imagine::Color Image();
 
     // Accesseur au nombre de déplacement que coûte la case
-    float NbDep();
+    float NbDep() const;
 
 };
 
@@ -53,8 +54,10 @@ public:
     // Place le heros sur cette case s'il n'y etait pas et l'enleve s'il y etait
     void flagHeros();
 
+    bool getOccupe() const;
+
     // Deplace et actualise la position du Heros sur la carte
-    void deplaceHeros(Heros &h, Case &c);
+    void deplaceHeros(Unite &h, Case &c);
 
     // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
     void brillanceOnOff(bool flag);
@@ -62,10 +65,13 @@ public:
     // Affiche la case
     void affiche(); // Cette methode devrait être const mais je n'arrive pas a le faire !!!!!
     // Accesseur au nombre de déplacement que coûte la case
-    float NbDep();
+    float NbDep() const;
 
     // Accesseur a la brillance de la case
-    bool Brillance();
+    bool Brillance() const;
+
+    // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
+    void fastMarching(float dep, Case *carte, bool brillance);
 };
 
 

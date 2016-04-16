@@ -22,7 +22,7 @@ Imagine::Color TypeCase::Image() {
 }
 
 
-float TypeCase::NbDep() {
+float TypeCase::NbDep() const{
     return PDep;
 }
 
@@ -46,12 +46,19 @@ void Case::flagHeros() {
 }
 
 
-void Case::deplaceHeros(Heros &h, Case &c) {
-    this->flagHeros();
-    c.flagHeros();
-    this->affiche();
-    c.affiche();
-    h.setCase(numeroCase(c.x, c.y));
+bool Case::getOccupe() const {
+    return occupe;
+}
+
+
+void Case::deplaceHeros(Unite &h, Case &c) {
+    if (!c.getOccupe()){
+        this->flagHeros();
+        c.flagHeros();
+        this->affiche();
+        c.affiche();
+        h.setCase(numeroCase(c.x, c.y));
+    }
 }
 
 
@@ -77,11 +84,36 @@ void Case::affiche() {
 }
 
 
-float Case::NbDep() {
+float Case::NbDep() const {
     return type.NbDep();
 }
 
 
-bool Case::Brillance() {
+bool Case::Brillance() const {
     return brillance;
 }
+
+void Case::fastMarching(float dep, Case *carte, bool brillance) {
+    int num_case=numeroCase(x,y);
+    FilePriorite F;
+    CaseDist depart(num_case, dep);
+    F.push(depart);
+    while (!F.empty()) {
+        CaseDist c = F.pop();
+        for (int i = -1; i <= 1; i = i + 2) {
+            for (int j = 1; j <= NbCase; j = j + NbCase - 1) {
+                if (c.getNum() + i * j >= 0 && c.getNum() + i * j < NbCase * NbCase &&
+                    ((c.getNum() + i * j) % NbCase != 0 || c.getNum() % NbCase != NbCase - 1) &&
+                    ((c.getNum() + i * j) % NbCase != NbCase - 1 || c.getNum() % NbCase != 0) &&
+                    c.getDep() - carte[c.getNum() + i * j].NbDep() >= 0 &&
+                    carte[c.getNum() + i * j].Brillance() != brillance &&
+                    !carte[c.getNum() + i * j].getOccupe()) {
+                    carte[c.getNum() + i * j].brillanceOnOff(brillance);
+                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep());
+                    F.push(c2);
+                }
+            }
+        }
+    }
+}
+

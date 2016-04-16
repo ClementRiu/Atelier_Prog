@@ -21,7 +21,7 @@ class Unite {
 public:
     Unite();
 
-    Unite(int dep);
+    Unite(int dep, int num);
 
     int getCase() const;
     void setCase(int num);
@@ -46,7 +46,7 @@ class Heros : public Unite {
     int exp;
 
 public:
-    Heros(int dep);
+    Heros(int dep, int num);
 };
 
 

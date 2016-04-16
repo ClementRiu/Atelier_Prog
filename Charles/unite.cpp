@@ -5,9 +5,9 @@ Unite::Unite() {
     numcase = 0;
 }
 
-Unite::Unite(int dep) {
+Unite::Unite(int dep, int num) {
     PDep = dep;
-    numcase = 0;
+    numcase = num;
 }
 
 
@@ -26,5 +26,5 @@ int Unite::getDep() const {
 }
 
 
-Heros::Heros(int dep) : Unite(dep) {
+Heros::Heros(int dep, int num) : Unite(dep, num) {
 }

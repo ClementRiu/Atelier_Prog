@@ -1,42 +1,55 @@
-// Author:   Charles AUGUSTE
-
-
 #include "carte.h"
-#include "priorite.h"
 #include "unite.h"
 
 
 const float INF = 1.0f / 0.0f; // Infini en float
 
 
-// Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-void FastMarching(float dep, Case *carte, int num_case, bool brillance) {
-    FilePriorite F;
-    CaseDist depart(num_case, dep);
-    F.push(depart);
-    while (!F.empty()) {
-        CaseDist c = F.pop();
-        for (int i = -1; i <= 1; i = i + 2) {
-            for (int j = 1; j <= NbCase; j = j + NbCase - 1) {
-                if (c.getNum() + i * j >= 0 && c.getNum() + i * j < NbCase * NbCase &&
-                    ((c.getNum() + i * j) % NbCase != 0 || c.getNum() % NbCase != NbCase - 1) &&
-                    ((c.getNum() + i * j) % NbCase != NbCase - 1 || c.getNum() % NbCase != 0) &&
-                    c.getDep() - carte[c.getNum() + i * j].NbDep() >= 0 &&
-                    carte[c.getNum() + i * j].Brillance() != brillance) {
-                    carte[c.getNum() + i * j].brillanceOnOff(brillance);
-                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep());
-                    F.push(c2);
-                }
-            }
+// Fonction renvoyant en référence dans x et y la position d'un clic
+void clic(int &x, int &y) {
+    Imagine::Event e;
+    do {
+        getEvent(0, e);
+        if (e.type == Imagine::EVT_BUT_ON) {
+            x = e.pix[0];
+            y = e.pix[1];
         }
+    } while (e.type != Imagine::EVT_BUT_OFF);
+}
+
+
+// Fonction simple permettant de deplacer le Heros
+void deplaceHeros(Case *carte, Unite &h, int x1, int y1) {
+    carte[h.getCase()].deplaceHeros(h, carte[numeroCase(x1, y1)]);
+}
+
+
+// Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
+void afficheCaseDisponibleOnOff(Case * carte, Unite h, bool b) {
+    carte[h.getCase()].fastMarching(h.getDep(), carte, b);
+}
+
+
+// Fonction simple permettant au joueur de deplacer n'impote quel Heros
+void Deplacement(Case * carte, std::vector<Unite> &Unites) {
+    int x, y, x1, y1, u = 0;
+    clic(x, y);
+    if (x < Taille * NbCase && y < Taille * NbCase && carte[numeroCase(x,y)].getOccupe()) {
+        while (Unites[u].getCase() != numeroCase(x,y)) {
+            u += 1;
+        }
+        afficheCaseDisponibleOnOff(carte, Unites[u], true);
+        do {
+            clic(x1,y1);
+        } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+        afficheCaseDisponibleOnOff(carte, Unites[u], false);
+        deplaceHeros(carte, Unites[u], x1, y1);
     }
 }
 
 
 int main() {
     Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
-    // Initialisation du Heros
-    Heros h(5);
     // Initialisation des types de case
     TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
     TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
@@ -60,39 +73,23 @@ int main() {
             }
         }
     }
-    // Placement du Heros
-    carte[0].flagHeros();
+    // Initialisation des unites
+    std::vector<Unite> Unites;
+    Unite h(5, 304);
+    carte[304].flagHeros();
+    Unite h2(10, 303);
+    carte[303].flagHeros();
+    Unites.push_back(h);
+    Unites.push_back(h2);
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
         for (int j = 0; j < NbCase; j++) {
             carte[NbCase * j + i].affiche();
         }
     }
-    // On bouge le heros
-    carte[h.getCase()].deplaceHeros(h, carte[50]);
+    // Deplacement des unites
     while (true) {
-        Imagine::Event e;
-        int x, y, x1, y1;
-        do {
-            getEvent(0, e);
-            if (e.type == Imagine::EVT_BUT_ON) {
-                x = e.pix[0];
-                y = e.pix[1];
-            }
-        } while (e.type != Imagine::EVT_BUT_OFF);
-        if (numeroCase(x, y) == h.getCase()) {
-            FastMarching(h.getDep(), carte, numeroCase(x, y), true);
-            do {
-                getEvent(0, e);
-                if (e.type == Imagine::EVT_BUT_ON) {
-                    x1 = e.pix[0];
-                    y1 = e.pix[1];
-                }
-            } while (e.type != Imagine::EVT_BUT_OFF || x > Taille * NbCase || y > Taille * NbCase ||
-                     !carte[numeroCase(x1, y1)].Brillance());
-            carte[h.getCase()].deplaceHeros(h, carte[numeroCase(x1, y1)]);
-            FastMarching(h.getDep(), carte, numeroCase(x, y), false);
-        }
+        Deplacement(carte, Unites);
     }
     Imagine::endGraphics();
     return 0;
