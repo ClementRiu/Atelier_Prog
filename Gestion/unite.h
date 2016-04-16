@@ -17,20 +17,24 @@ class Unite {
     int initiative;
 
     int numcase;
-    int PDep;
-    int PDepMax;
+    float PDep;
+    float PDepMax;
 
 
 public:
     Unite();
 
-    Unite(int dep, int num);
+    Unite(float dep, int num);
 
     int getCase() const;
 
     void setCase(int num);
 
-    int getDep() const;
+    float getDep() const;
+
+    void setDep(float dep);
+
+    float getDepMax() const;
 
     void prendDommage(int att); //à implémenter avec formule adaptée
     bool estVivant();
@@ -65,7 +69,7 @@ class Heros : public Unite {
     Objet equipeAnneau2;
 
 public:
-    Heros(int dep, int num);
+    Heros(float dep, int num);
 
     //à implémenter !!
     Objet equipe(Objet equipement);

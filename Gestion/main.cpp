@@ -25,25 +25,39 @@ void deplaceHeros(Case *carte, Unite &h, int x1, int y1) {
 
 
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-void afficheCaseDisponibleOnOff(Case * carte, Unite h, bool b) {
-    carte[h.getCase()].fastMarching(h.getDep(), carte, b);
+void afficheCaseDisponibleOnOff(Case * carte, Unite h, bool b, float &deplacement, int case_a_atteindre) {
+    carte[h.getCase()].fastMarching(h.getDep(), carte, b, deplacement, case_a_atteindre);
 }
 
 
 // Fonction simple permettant au joueur de deplacer n'impote quel Heros
-void Deplacement(Case * carte, std::vector<Unite> &Unites) {
-    int x, y, x1, y1, u = 0;
-    clic(x, y);
+void deplacement(Case * carte, std::vector<Unite> &unites, int x, int y) {
+    int x1, y1, u = 0;
     if (x < Taille * NbCase && y < Taille * NbCase && carte[numeroCase(x,y)].getOccupe()) {
-        while (Unites[u].getCase() != numeroCase(x,y)) {
+        while (unites[u].getCase() != numeroCase(x,y)) {
             u += 1;
         }
-        afficheCaseDisponibleOnOff(carte, Unites[u], true);
-        do {
-            clic(x1,y1);
-        } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
-        afficheCaseDisponibleOnOff(carte, Unites[u], false);
-        deplaceHeros(carte, Unites[u], x1, y1);
+        float deplacement = unites[u].getDep();
+        if (deplacement > 0) {
+            // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
+            afficheCaseDisponibleOnOff(carte, unites[u], true, deplacement, 0);
+            do {
+                clic(x1,y1);
+            } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+            afficheCaseDisponibleOnOff(carte, unites[u], false, deplacement, numeroCase(x1, y1));
+            deplaceHeros(carte, unites[u], x1, y1);
+            unites[u].setDep(deplacement);
+        }
+    }
+}
+
+
+void finTour(std::vector<Unite> &unites, int x, int y){
+    // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
+    if(x > NbCase * Taille + Separation && y > Taille * (NbCase - 5)){
+        for (int i=0; i<unites.size(); ++i){
+            unites[i].setDep(unites[i].getDepMax());
+        }
     }
 }
 
@@ -55,6 +69,7 @@ int main() {
     TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
     TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
     TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
+    TypeCase ville(1, "La ville, le doux foyer", Imagine::MAGENTA);
     // Initialisation de la carte
     Case carte[NbCase * NbCase];
     // Creation de la carte
@@ -74,23 +89,33 @@ int main() {
             }
         }
     }
+    Case c(0, 0, ville);
+    carte[0] = c;
     // Initialisation des unites
-    std::vector<Unite> Unites;
+    std::vector<Unite> unites;
     Unite h(5, 304);
     carte[304].flagHeros();
     Unite h2(10, 303);
     carte[303].flagHeros();
-    Unites.push_back(h);
-    Unites.push_back(h2);
+    unites.push_back(h);
+    unites.push_back(h2);
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
         for (int j = 0; j < NbCase; j++) {
             carte[NbCase * j + i].affiche();
         }
     }
+    // Trace de l'endroit fin du tour A CHANGER #CLEMENT
+    Imagine::drawRect(NbCase * Taille + Separation,Taille * (NbCase - 5), LargDroite-1, LargDroite-1, Imagine::BLACK);
+    std::string s = "FIN DE TOUR BANDE DE PAYSANS";
+    Imagine::drawString(NbCase * Taille + Separation,Taille * (NbCase - 5), s, Imagine::BLACK, 4);
     // Deplacement des unites
     while (true) {
-        Deplacement(carte, Unites);
+        int x, y;
+        clic(x, y);
+        deplacement(carte, unites, x, y);
+        finTour(unites, x, y);
+
     }
     Imagine::endGraphics();
     return 0;

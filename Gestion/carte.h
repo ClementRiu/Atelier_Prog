@@ -9,7 +9,7 @@
 
 
 const int Taille = 20;
-const int NbCase = 50;
+const int NbCase = 30;
 const int LargDroite = 3 * NbCase;
 const int Separation = 20; // Separation entre la carte et la mini map
 
@@ -71,7 +71,7 @@ public:
     bool Brillance() const;
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    void fastMarching(float dep, Case *carte, bool brillance);
+    void fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
 };
 
 

@@ -93,7 +93,7 @@ bool Case::Brillance() const {
     return brillance;
 }
 
-void Case::fastMarching(float dep, Case *carte, bool brillance) {
+void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
     int num_case=numeroCase(x,y);
     FilePriorite F;
     CaseDist depart(num_case, dep);
@@ -111,6 +111,9 @@ void Case::fastMarching(float dep, Case *carte, bool brillance) {
                     carte[c.getNum() + i * j].brillanceOnOff(brillance);
                     CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep());
                     F.push(c2);
+                }
+                if (case_a_atteindre == c.getNum() && !brillance) {
+                    dep_restant = c.getDep();
                 }
             }
         }

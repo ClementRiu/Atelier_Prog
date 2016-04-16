@@ -6,9 +6,10 @@ Unite::Unite() {
     numcase = 0;
 }
 
-Unite::Unite(int dep, int num) {
+Unite::Unite(float dep, int num) {
     PDep = dep;
     numcase = num;
+    PDepMax = dep;
 }
 
 
@@ -22,12 +23,22 @@ void Unite::setCase(int num) {
 }
 
 
-int Unite::getDep() const {
+float Unite::getDep() const {
     return PDep;
 }
 
 
-Heros::Heros(int dep, int num) : Unite(dep, num) {
+void Unite::setDep(float dep) {
+    PDep = dep;
+}
+
+
+float Unite::getDepMax() const {
+    return PDepMax;
+}
+
+
+Heros::Heros(float dep, int num) : Unite(dep, num) {
 }
 
 //à implémenter
