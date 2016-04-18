@@ -8,13 +8,11 @@
 #include "priorite.h"
 
 
+const float INF = 1.0f / 0.0f; // Infini en float
 const int Taille = 20;
 const int NbCase = 30;
 const int LargDroite = 3 * NbCase;
 const int Separation = 20; // Separation entre la carte et la mini map
-
-
-int numeroCase(int x, int y);
 
 
 // Classe definissant les différents types de cases que l'on peut trouver
@@ -36,6 +34,7 @@ public:
     float NbDep() const;
 
 };
+
 
 // Classe definissant les cases de la carte
 class Case {
@@ -73,6 +72,21 @@ public:
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
     void fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
 };
+
+
+int numeroCase(int x, int y);
+// Fonction renvoyant en référence dans x et y la position d'un clic
+void clic(int &x, int &y);
+// Fonction simple permettant de deplacer le Heros
+void deplaceHeros(Case *carte, Unite &h, int x1, int y1);
+// Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
+void afficheCaseDisponibleOnOff(Case *carte, Unite h, bool b, float &deplacement, int case_a_atteindre);
+// Fonction simple permettant au joueur de deplacer n'impote quel Heros
+void deplacement(Case *carte, std::vector<Unite> &unites, int u);
+// Fonction pour finir le tour
+void finTour(std::vector<Unite> &unites, int x, int y);
+// Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). Renvoie 0 pour le deplacement et 1 pour l'attaque
+void choisir(int &choix);
 
 
 #endif // CARTE_H
