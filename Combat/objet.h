@@ -2,10 +2,11 @@
 #include <cstdlib>
 #include <iostream>
 
-const int nb_res = 6;
+const int NB_RES = 6;
 
 class Objet {
     std::string nom;
+    std::string type;
 public:
     Objet();
 
@@ -16,7 +17,25 @@ public:
 
 const Objet nul("NUL");
 
+class Equipement : public Objet {
+    int type;
 
+    int PV;
+    int mana;
+    int force;
+    int defense;
+    int dexterite;
+    int initiative;
+
+    float PDep;
+
+public:
+    int getType();
+};
+
+
+
+/*
 class Arme : public Objet {
     int degat;
     int bonus_attaque;
@@ -49,12 +68,12 @@ public:
 
 class Armure : public Objet {
     int bonus_defense;
-    int bonus_resistance[nb_res];// fonctionne en pourcentage
+    int bonus_resistance[NB_RES];// fonctionne en pourcentage
 public:
     //constructeurs
     Armure();
 
-    Armure(int def, int res[nb_res]);
+    Armure(int def, int res[NB_RES]);
 
     //accesseurs
     int get_defense();
@@ -64,5 +83,6 @@ public:
     //setteurs
     void set_defense(int def);
 
-    void set_bonus_resistance(int res[nb_res]);
+    void set_bonus_resistance(int res[NB_RES]);
 };
+*/

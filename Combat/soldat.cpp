@@ -1,17 +1,17 @@
 #include "soldat.h"
 
-
+/*
 Soldat::Soldat(){
 
 }
 
-Soldat::Soldat(int pv, int att, int bonus, int def, Arme arm, Armure armu,  int res [nb_res]){
+Soldat::Soldat(int pv, int att, int bonus, int def, Equipement arm, Equipement armu,  int res [NB_RES]){
     PV =pv;
     attaque = att;
     bonus_degat = bonus;
     arme=arm;
     armure=armu;
-    for (int i=0; i<nb_res;i++){
+    for (int i=0; i<NB_RES;i++){
         resistance[i] = res[i];
     }
 }
@@ -32,11 +32,11 @@ int Soldat::get_defense(){
     return defense;
 }
 
-Arme Soldat::get_arme(){
+Equipement Soldat::get_arme(){
     return arme;
 }
 
-Armure Soldat::get_armure(){
+Equipement Soldat::get_armure(){
     return armure;
 }
 
@@ -60,16 +60,16 @@ void Soldat::set_defense(int def){
     defense = def;
 }
 
-void Soldat::set_arme(Arme arm){
+void Soldat::set_arme(Equipement arm){
     arme = arm;
 }
 
-void Soldat::set_armure(Armure armu){
+void Soldat::set_armure(Equipement armu){
     armure = armu;
 }
 
-void Soldat::set_resistance(int res [nb_res]){
-    for (int i=0; i<nb_res;i++){
+void Soldat::set_resistance(int res [NB_RES]){
+    for (int i=0; i<NB_RES;i++){
         resistance[i] = res[i];
     }
 }
@@ -106,4 +106,4 @@ int Soldat::est_blesse(int degat){
     set_PV(get_PV() - degat);
 }
 
-
+*/

@@ -17,7 +17,11 @@ bool Objet::operator==(const Objet &B) const {
     return false;
 }
 
+int Equipement::getType() {
+    return type;
+}
 
+/*
 Arme::Arme() {
 
 }
@@ -91,7 +95,7 @@ void Armure::set_bonus_resistance(int res[nb_res]) {
         bonus_resistance[i] = res[i];
     }
 }
-
+*/
 
 
 

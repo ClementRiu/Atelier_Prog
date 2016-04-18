@@ -22,7 +22,7 @@ Imagine::Color TypeCase::Image() {
 }
 
 
-float TypeCase::NbDep() const{
+float TypeCase::NbDep() const {
     return PDep;
 }
 
@@ -52,7 +52,7 @@ bool Case::getOccupe() const {
 
 
 void Case::deplaceHeros(Unite &h, Case &c) {
-    if (!c.getOccupe()){
+    if (!c.getOccupe()) {
         this->flagHeros();
         c.flagHeros();
         this->affiche();
@@ -94,7 +94,7 @@ bool Case::Brillance() const {
 }
 
 void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
-    int num_case=numeroCase(x,y);
+    int num_case = numeroCase(x, y);
     FilePriorite F;
     CaseDist depart(num_case, dep);
     F.push(depart);

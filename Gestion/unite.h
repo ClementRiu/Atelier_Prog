@@ -7,13 +7,13 @@ const int TAILLE_INVENTAIRE = 10;
 
 class Unite {
     //caractéristiques de l'unité
-
     int PV;
     int PVMax;
     int mana;
     int manaMax;
     int force;
     int defense;
+    int dexterite;
     int initiative;
 
     int numcase;
@@ -58,21 +58,35 @@ class Heros : public Unite {
     int exp;
 
     Objet inventaire[TAILLE_INVENTAIRE];
-    Objet equipeCasque;
-    Objet equipeArmeDroite;
-    Objet equipeArmeGauche;
-    Objet equipeTorse;
-    Objet equipeGants;
-    Objet equipeJambes;
-    Objet equipeBottes;
-    Objet equipeAnneau1;
-    Objet equipeAnneau2;
+    Equipement equipementCasque;
+    Equipement equipementArmeDroite;
+    Equipement equipementArmeGauche;
+    Equipement equipementTorse;
+    Equipement equipementGants;
+    Equipement equipementJambes;
+    Equipement equipementBottes;
+    Equipement equipementAnneau1;
+    Equipement equipementAnneau2;
 
 public:
     Heros(float dep, int num);
 
-    //à implémenter !!
-    Objet equipe(Objet equipement);
+    //equipe appelle la méthode adéquate en fonction du type d'équipement
+    Equipement equipe(Equipement eq);
+
+    Equipement equipeCasque(Equipement casque);
+
+    Equipement equipeArme(Equipement arme);
+
+    Equipement equipeTorse(Equipement torse);
+
+    Equipement equipeGants(Equipement gants);
+
+    Equipement equipeJambes(Equipement jambes);
+
+    Equipement equipeBottes(Equipement bottes);
+
+    Equipement equipeAnneau(Equipement anneau);
 };
 
 
