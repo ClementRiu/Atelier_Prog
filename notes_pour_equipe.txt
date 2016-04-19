@@ -6,6 +6,7 @@ Equipement :
 5 = Bottes
 6 = Anneau
 10 = Arme
+11 = Bouclier
 
 
 Types dégats :

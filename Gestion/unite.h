@@ -76,9 +76,13 @@ public:
     //equipe appelle la méthode adéquate en fonction du type d'équipement
     Equipement equipe(Equipement eq);
 
+    Equipement equipe(Equipement eq, int i);
+
     Equipement equipeCasque(Equipement casque);
 
-    Equipement equipeArme(Equipement arme);
+    Equipement equipeArmeDroite(Equipement arme);
+
+    Equipement equipeArmeGauche(Equipement arme);
 
     Equipement equipeTorse(Equipement torse);
 
@@ -88,7 +92,9 @@ public:
 
     Equipement equipeBottes(Equipement bottes);
 
-    Equipement equipeAnneau(Equipement anneau);
+    Equipement equipeAnneau1(Equipement anneau);
+
+    Equipement equipeAnneau2(Equipement anneau);
 };
 
 

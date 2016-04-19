@@ -64,14 +64,22 @@ Equipement Heros::equipeCasque(Equipement casque) {
 }
 
 //manque gestion des deux mains !!
-Equipement Heros::equipeArme(Equipement arme) {
+Equipement Heros::equipeArmeDroite(Equipement arme) {
     Equipement desequipe = equipementArmeDroite;
 
     equipementArmeDroite = arme;
 
     return desequipe;
-
 }
+
+Equipement Heros::equipeArmeGauche(Equipement arme) {
+    Equipement desequipe = equipementArmeGauche;
+
+    equipementArmeGauche = arme;
+
+    return desequipe;
+}
+
 
 Equipement Heros::equipeTorse(Equipement torse) {
     Equipement desequipe = equipementTorse;
@@ -107,7 +115,7 @@ Equipement Heros::equipeBottes(Equipement bottes) {
 }
 
 //manque gestion des deux anneaux !!
-Equipement Heros::equipeAnneau(Equipement anneau) {
+Equipement Heros::equipeAnneau1(Equipement anneau) {
     Equipement desequipe = equipementAnneau1;
 
     equipementAnneau1 = anneau;
@@ -116,7 +124,16 @@ Equipement Heros::equipeAnneau(Equipement anneau) {
 }
 
 
-Equipement Heros::equipe(Equipement eq) {
+Equipement Heros::equipeAnneau2(Equipement anneau) {
+    Equipement desequipe = equipementAnneau2;
+
+    equipementAnneau2 = anneau;
+
+    return desequipe;
+}
+
+
+Equipement Heros::equipe(Equipement eq, int i) {
     if (eq.getType() == 1) {
         return equipeCasque(eq);
     }
@@ -133,9 +150,27 @@ Equipement Heros::equipe(Equipement eq) {
         return equipeBottes(eq);
     }
     if (eq.getType() == 6) {
-        return equipeAnneau(eq);
+        if (i == 1) {
+            return equipeAnneau1(eq);
+        }
+        else {
+            return equipeAnneau2(eq);
+        }
     }
-    if (eq.getType() == 10) {
-        return equipeArme(eq);
+    if (eq.getType() >= 10) {
+        if (eq.getType() == 11 && equipementArmeDroite.getType() == 11 && equipementArmeGauche.getType() == 11) {
+            return eq;
+        }
+        if (i == 1) {
+            return equipeArmeDroite(eq);
+        }
+        else {
+            return equipeArmeGauche(eq);
+        }
     }
+}
+
+
+Equipement Heros::equipe(Equipement eq) {
+    return equipe(eq, 0);
 }
