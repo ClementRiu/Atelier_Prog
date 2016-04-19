@@ -1,0 +1,22 @@
+Equipement :
+1 = Casque
+2 = Torse
+3 = Gants
+4 = Jambes
+5 = Bottes
+6 = Anneau
+10 = Arme
+
+
+Types dégats :
+0 : contendant
+1 : tranchant
+2 : perçant
+
+
+Types résistances : à déterminer
+
+
+
+Bâtiments : à déterminer
+La classe bâtiment fonctionne autours d'un tableau d'int, avec la position dans le tableau = un bâtiment précis, et la valeur = le nombre d'améliorations du bâtiment.

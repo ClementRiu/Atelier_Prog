@@ -7,19 +7,21 @@ const int TAILLE_INVENTAIRE = 10;
 
 class Unite {
     //caractéristiques de l'unité
-    int PV;
-    int PVMax;
-    int mana;
-    int manaMax;
-    int force;
-    int defense;
-    int dexterite;
-    int initiative;
+    float PV;
+    float PVMax;
+    float mana;
+    float manaMax;
+    float force;
+    float defensePhy[NB_DEG_PHY];
+    float defenseMag[NB_RES];
+    float dexterite;
+    float initiative;
 
     int numcase;
     float PDep;
     float PDepMax;
 
+    int typeDegats;
 
 public:
     Unite();

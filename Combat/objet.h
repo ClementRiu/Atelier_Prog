@@ -3,6 +3,7 @@
 #include <iostream>
 
 const int NB_RES = 6;
+const int NB_DEG_PHY = 3;
 
 class Objet {
     std::string nom;

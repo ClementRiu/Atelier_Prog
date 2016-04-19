@@ -1,12 +1,11 @@
 #include "ville.h"
 
-
-void Batiment::affiche() {
+//à compléter
+void Ville::affiche() {
 }
 
 
-void Batiment::monteNiveau() {
-    niveau += 1;
+//ajouter les coûts d'amélioration du batiment
+void Ville::ameliore(int i) {
+    batiments[i] += 1;
 }
-
-
