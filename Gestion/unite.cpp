@@ -62,6 +62,24 @@ void Unite::action(Attaque att, Unite &u) {
     u.prendDommage(att.getPuissance());
 }
 
+
+
+void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites, int u) {
+    int x1, y1, u2 = 0;
+    attq.zone(carte, unites[u], true);
+    do {
+        clic(x1, y1, carte);
+    } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+    if (carte[numeroCase(x1, y1)].getOccupe()) {
+        while (unites[u2].getCase() != numeroCase(x1, y1)) {
+            u2 += 1;
+        }
+        unites[u].action(attq, unites[u2]);
+    }
+    attq.zone(carte, unites[u], false);
+}
+
+
 //*********************************EQUIPEMENT********************************************
 Equipement Heros::equipeCasque(Equipement casque) {
     Equipement desequipe = equipementCasque;

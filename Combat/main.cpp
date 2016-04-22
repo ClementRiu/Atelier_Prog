@@ -68,18 +68,7 @@ int main() {
             deplacement(carte, unites, u);
         }
         if (choix == Imagine::KEY_NUMPAD1) {
-            int x1, y1, u2 = 0;
-            coinCoinOuille.zone(carte, unites[u], true);
-            do {
-                clic(x1, y1, carte);
-            } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
-            if (carte[numeroCase(x1, y1)].getOccupe()) {
-                while (unites[u2].getCase() != numeroCase(x1, y1)) {
-                    u2 += 1;
-                }
-                unites[u].action(coinCoinOuille, unites[u2]);
-            }
-            coinCoinOuille.zone(carte, unites[u], false);
+            attaque(coinCoinOuille, carte, unites, u);
         }
         finTour(unites, x, y);
     }
