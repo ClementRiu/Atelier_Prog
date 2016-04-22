@@ -4,7 +4,6 @@
 
 #include <Imagine/Graphics.h>
 #include <stdlib.h>
-#include "unite.h"
 #include "priorite.h"
 
 
@@ -15,6 +14,8 @@ const int LargDroite = 3 * NbCase;
 const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
 
+
+class Unite;
 
 // Classe definissant les différents types de cases que l'on peut trouver
 class TypeCase {
