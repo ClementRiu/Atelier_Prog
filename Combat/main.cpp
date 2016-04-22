@@ -47,7 +47,7 @@ int main() {
     // Deplacement des unites
     while (true) {
         int x, y, choix = -1;
-        clic(x, y);
+        clic(x, y, carte);
         int u = 0;
         if (x < Taille * NbCase && y < Taille * NbCase && carte[numeroCase(x, y)].getOccupe()) {
             while (unites[u].getCase() != numeroCase(x, y)) {
@@ -62,7 +62,7 @@ int main() {
             int x1, y1, u2 = 0;
             coinCoinOuille.zone(carte, unites[u], true);
             do {
-                clic(x1,y1);
+                clic(x1, y1, carte);
             } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
             if (carte[numeroCase(x1, y1)].getOccupe()){
                 while (unites[u2].getCase() != numeroCase(x1, y1)) {
