@@ -12,6 +12,9 @@ Unite::Unite(float dep, int num) {
     PDepMax = dep;
 }
 
+void Unite::changeOrientation(int i) {
+    orientation = i;
+}
 
 int Unite::getCase() const {
     return numcase;
@@ -53,6 +56,11 @@ bool Unite::estVivant() {
     return true;
 }
 
+
+void Unite::action(Attaque att, Unite &u) {
+    // A MODIFIER
+    u.prendDommage(att.getPuissance());
+}
 
 //*********************************EQUIPEMENT********************************************
 Equipement Heros::equipeCasque(Equipement casque) {
@@ -173,4 +181,26 @@ Equipement Heros::equipe(Equipement eq, int i) {
 
 Equipement Heros::equipe(Equipement eq) {
     return equipe(eq, 0);
+}
+
+
+Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
+    zoneInfluence = zone;
+    puissance = power;
+}
+
+
+void Attaque::zone(Case *carte, Unite u, bool b) {
+    int caseHeros = u.getCase();
+    for (int i = 0; i < zoneInfluence.size(); ++i) {
+        if (caseHeros + zoneInfluence[i].y() * NbCase > 0 && caseHeros + zoneInfluence[i].y() * NbCase &&
+            (caseHeros / NbCase == (caseHeros + zoneInfluence[i].x()) / NbCase)) {
+            carte[caseHeros + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
+        }
+    }
+}
+
+
+int Attaque::getPuissance() {
+    return puissance;
 }

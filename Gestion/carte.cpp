@@ -1,5 +1,5 @@
 #include "carte.h"
-
+#include "unite.h"
 
 TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
     PDep = dep;

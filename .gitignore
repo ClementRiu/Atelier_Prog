@@ -1,5 +1,12 @@
 Gestion/CMakeLists.txt.user
+Ville/CMakeLists.txt.user
+Combat/CMakeLists.txt.user
 /**/CMakeLists.txt.user
 Charles-build
 .idea
 Ville-build
+
+soldat.cpp
+soldat.h
+attaque.cpp
+attaque.h

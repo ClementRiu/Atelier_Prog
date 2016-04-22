@@ -21,3 +21,11 @@ Types résistances : à déterminer
 
 Bâtiments : à déterminer
 La classe bâtiment fonctionne autours d'un tableau d'int, avec la position dans le tableau = un bâtiment précis, et la valeur = le nombre d'améliorations du bâtiment.
+
+
+
+Orientation des soldats : en int pour l'instant,
+1 : haut
+2 : droite
+3 : bas
+4 : gauche
