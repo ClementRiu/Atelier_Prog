@@ -36,7 +36,7 @@ public:
     float NbDep() const;
 
     // Accesseur à la desctiprion de la case
-    std::string Desctiption();
+    std::string Description();
 };
 
 
@@ -47,6 +47,7 @@ class Case {
     bool occupe; // Variable indiquant si le heros est sur la case
     bool brillance; // Variable indiquant si la case est en surbrillance
     TypeCase type;
+
 public:
     // Constructeur de la classe Case
     Case(int x1, int y1, TypeCase tc);
@@ -58,6 +59,9 @@ public:
     void flagHeros();
 
     bool getOccupe() const;
+
+    //get temporaire à se débarasser !!
+    int get(int i);
 
     // Deplace et actualise la position du Heros sur la carte
     void deplaceHeros(Unite &h, Case &c);
@@ -86,21 +90,32 @@ public:
 
 
 int numeroCase(int x, int y);
+
 // Fonction renvoyant en référence dans x et y la position d'un clic
-void clic(int &x, int &y, Case * carte);
+void clic(int &x, int &y, Case *carte);
+
 // Fonction simple permettant de deplacer le Heros
 void deplaceHeros(Case *carte, Unite &h, int x1, int y1);
-// Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-void afficheCaseDisponibleOnOff(Case *carte, Unite h, bool b, float &deplacement, int case_a_atteindre);
+
 // Fonction simple permettant au joueur de deplacer n'impote quel Heros
-void deplacement(Case *carte, std::vector<Unite> &unites, int u);
-// Fonction pour finir le tour
-void finTour(std::vector<Unite> &unites, int x, int y);
+void deplacement(Case *carte, Unite unit);
+
+// Interroge si le joueur a cliqué sur la zone de fin de tour
+bool finTourDemande(int x, int y);
+
+//Termine la journée (=tour dans Gestion)
+void finJournee(std::vector<Unite> &unites);
+
+//Termine le tour en combat
+void finTourCombat(std::vector<Unite> &unites);
+
 // Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). Renvoie 0 pour le deplacement et 1 pour l'attaque
 void choisir(int &choix);
+
 // Renvoie les coordonnees de la case survolee
 void survole(int &x, int &y);
-// Affiche l'enroit survole par la souris
+
+// Affiche l'endroit survole par la souris
 void afficheSurvole(int x, int y, Case *carte);
 
 #endif // CARTE_H

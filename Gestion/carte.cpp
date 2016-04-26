@@ -22,7 +22,7 @@ float TypeCase::NbDep() const {
 }
 
 
-std::string TypeCase::Desctiption(){
+std::string TypeCase::Description() {
     return description;
 }
 
@@ -51,13 +51,13 @@ bool Case::getOccupe() const {
 }
 
 
-void Case::deplaceHeros(Unite &h, Case &c) {
-    if (!c.getOccupe()) {
-        this->flagHeros();
-        c.flagHeros();
-        this->affiche();
-        c.affiche();
-        h.setCase(numeroCase(c.x, c.y));
+//à se débarasser, présent uniquement dans Unite::deplaceVersCase
+int Case::get(int i) {
+    if (i == 0) {
+        return x;
+    }
+    else {
+        return y;
     }
 }
 
@@ -122,13 +122,13 @@ void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_resta
 }
 
 
-Imagine::Color Case::getImage(){
+Imagine::Color Case::getImage() {
     return type.Image();
 }
 
 
-std::string Case::getDescription(){
-    return type.Desctiption();
+std::string Case::getDescription() {
+    return type.Description();
 }
 
 
@@ -159,61 +159,51 @@ void clic(int &x, int &y, Case *carte) {
 }
 
 
-void deplaceHeros(Case *carte, Unite &h, int x1, int y1) {
-    carte[h.getCase()].deplaceHeros(h, carte[numeroCase(x1, y1)]);
-}
-
-
-void afficheCaseDisponibleOnOff(Case *carte, Unite h, bool b, float &deplacement, int case_a_atteindre) {
-    carte[h.getCase()].fastMarching(h.getDep(), carte, b, deplacement, case_a_atteindre);
-}
-
-
-void deplacement(Case *carte, std::vector<Unite> &unites, int u) {
-    int x1, y1;
-    float deplacement = unites[u].getDep();
-    if (deplacement > 0) {
-        // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
-        afficheCaseDisponibleOnOff(carte, unites[u], true, deplacement, 0);
-        do {
-            clic(x1, y1, carte);
-        } while (numeroCase(x1,y1) == -1 || !carte[numeroCase(x1, y1)].Brillance());
-        afficheCaseDisponibleOnOff(carte, unites[u], false, deplacement, numeroCase(x1, y1));
-        deplaceHeros(carte, unites[u], x1, y1);
-        unites[u].setDep(deplacement);
-    }
-}
-
-
-void finTour(std::vector<Unite> &unites, int x, int y) {
+bool finTourDemande(int x, int y) {
     // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
     if (x > NbCase * Taille + Separation && y > Taille * (NbCase - 5)) {
-        for (int i = 0; i < unites.size(); ++i) {
-            unites[i].setDep(unites[i].getDepMax());
-        }
+        return true;
+    }
+    return false;
+}
+
+
+void finJournee(std::vector<Unite> &unites) {
+    std::cout << "à compléter !! (fonction finJournee)" << std::endl;
+    for (int i = 0; i < unites.size(); ++i) {
+        unites[i].setDep(unites[i].getDepMax());
+    }
+}
+
+void finTourCombat(std::vector<Unite> &unites) {
+    std::cout << "à modifier !! (fonction finTourCombat)" << std::endl;
+    for (int i = 0; i < unites.size(); ++i) {
+        unites[i].setDep(unites[i].getDepMax());
     }
 }
 
 
-void choisir(int &choix){
+void choisir(int &choix) {
     choix = -1;
     int tailleEcriture = 9;
     // A MODIFIER
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement", Imagine::BLACK, tailleEcriture);
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque", Imagine::BLACK, tailleEcriture);
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement",
+                        Imagine::BLACK, tailleEcriture);
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque",
+                        Imagine::BLACK, tailleEcriture);
     Imagine::Event e;
     do {
         getEvent(0, e);
         if (e.type == Imagine::EVT_KEY_ON) {
             choix = e.key;
         }
-    } while (e.type != Imagine::EVT_KEY_OFF && (choix != Imagine::KEY_NUMPAD0 || choix != Imagine::KEY_NUMPAD1) );
+    } while (e.type != Imagine::EVT_KEY_OFF && (choix != Imagine::KEY_NUMPAD0 || choix != Imagine::KEY_NUMPAD1));
     // A MODIFIER
     Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
 }
 
 
-void survole(int &x, int &y){
+void survole(int &x, int &y) {
     Imagine::Event e;
     getEvent(0, e);
     x = e.pix[0];
@@ -221,12 +211,14 @@ void survole(int &x, int &y){
 }
 
 
-
-void afficheSurvole(int x, int y, Case *carte){
+void afficheSurvole(int x, int y, Case *carte) {
     // A MODIFIER
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite, Imagine::WHITE);
-    if (numeroCase(x, y) != - 1) {
-        Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille, carte[numeroCase(x,y)].getImage());
-        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille, carte[numeroCase(x,y)].getDescription(), Imagine::BLACK, 4);
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
+                      Imagine::WHITE);
+    if (numeroCase(x, y) != -1) {
+        Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille,
+                          carte[numeroCase(x, y)].getImage());
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
+                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
     }
 }

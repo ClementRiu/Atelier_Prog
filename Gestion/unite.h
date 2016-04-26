@@ -7,20 +7,31 @@
 
 const int TAILLE_ARMEE = 6;
 const int TAILLE_INVENTAIRE = 10;
+const int NB_MAX_ATTAQUES = 10;
+
+const Imagine::Coords<2> a10(1, 0);
+const Imagine::Coords<2> a_10(-1, 0);
+const Imagine::Coords<2> a20(2, 0);
+const Imagine::Coords<2> a_20(-2, 0);
+const Imagine::Coords<2> a01(0, 1);
+const Imagine::Coords<2> a02(0, 2);
+const Imagine::Coords<2> a0_2(0, -2);
+const Imagine::Coords<2> a0_1(0, -1);
 
 class Attaque {
     std::vector<Imagine::Coords<2> > zoneInfluence;
     int puissance;
 public:
+    Attaque();
+
     Attaque(std::vector<Imagine::Coords<2> > zone, int power);
 
     // Affiche la zone d'influence de l'attaque
-    void zone(Case *carte, Unite u, bool b);
+    void zone(Case *carte, bool b, int caseUnite);
 
     int getPuissance();
 };
 
-void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites, int u);
 
 class Unite {
     //caractéristiques de l'unité
@@ -38,6 +49,8 @@ class Unite {
     float PDep;
     float PDepMax;
 
+    Attaque competences[NB_MAX_ATTAQUES];
+
     int orientation; //voir manuel, possible de changer
 
     int typeDegats;
@@ -46,6 +59,17 @@ public:
     Unite();
 
     Unite(float dep, int num);
+
+    void deplacement(Case *carte);
+
+    // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
+    void afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre);
+
+    void deplaceVersCase(Case &c2, Case &c1);
+
+    void tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites);
+
+    void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites);
 
     void changeOrientation(int i);
 
@@ -60,6 +84,9 @@ public:
     float getDepMax() const;
 
     void prendDommage(int att); //à implémenter avec formule adaptée
+
+    void setAttaque(Attaque att, int i);
+
     bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)

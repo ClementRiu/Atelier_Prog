@@ -1,6 +1,36 @@
 #include "unite.h"
 #include <iostream>
 
+Attaque::Attaque() {
+    zoneInfluence.push_back(a10);
+    zoneInfluence.push_back(a01);
+    zoneInfluence.push_back(a_10);
+    zoneInfluence.push_back(a0_1);
+
+    puissance = 10;
+}
+
+
+Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
+    zoneInfluence = zone;
+    puissance = power;
+}
+
+
+void Attaque::zone(Case *carte, bool b, int caseUnite) {
+    for (int i = 0; i < zoneInfluence.size(); ++i) {
+        if (caseUnite + zoneInfluence[i].y() * NbCase > 0 && caseUnite + zoneInfluence[i].y() * NbCase &&
+            (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase)) {
+            carte[caseUnite + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
+        }
+    }
+}
+
+
+int Attaque::getPuissance() {
+    return puissance;
+}
+
 Unite::Unite() {
     PDep = 8;
     numcase = 0;
@@ -10,6 +40,37 @@ Unite::Unite(float dep, int num) {
     PDep = dep;
     numcase = num;
     PDepMax = dep;
+}
+
+
+void Unite::deplacement(Case *carte) {
+    int x1, y1;
+    float dep = PDep;
+    if (dep > 0) {
+        // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
+        afficheCaseDisponibleOnOff(carte, true, dep, 0);
+        do {
+            clic(x1, y1, carte);
+        } while (numeroCase(x1, y1) == -1 || !carte[numeroCase(x1, y1)].Brillance());
+        afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+        deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
+        PDep = dep;
+    }
+}
+
+// Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
+void Unite::afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre) {
+    carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
+}
+
+void Unite::deplaceVersCase(Case &c2, Case &c1) {
+    if (!c2.getOccupe()) {
+        c1.flagHeros();
+        c2.flagHeros();
+        c1.affiche();
+        c2.affiche();
+        numcase = numeroCase(c2.get(0), c2.get(1));
+    }
 }
 
 void Unite::changeOrientation(int i) {
@@ -49,11 +110,39 @@ void Unite::prendDommage(int attRecue) {
     std::cout << "à implémenter !" << std::endl;
 }
 
+void Unite::setAttaque(Attaque att, int i) {
+    competences[i] = att;
+}
+
 bool Unite::estVivant() {
     if (PV <= 0) {
         return false;
     }
     return true;
+}
+
+
+void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites) {
+    bool tourContinue = true;
+
+    while (tourContinue) {
+        int choix = -1;
+
+        choisir(choix);
+
+        if (choix == Imagine::KEY_NUMPAD0) {
+            deplacement(carte);
+        }
+        if (choix == Imagine::KEY_NUMPAD1) {
+            competences[1].zone(carte, true, getCase());
+            attaque(competences[0], carte, unites);
+            competences[1].zone(carte, false, getCase());
+        }
+        if (PDep == 0 || choix == Imagine::KEY_SPACE) {
+            tourContinue = false;
+        }
+    }
+    finTourCombat(unites);
 }
 
 
@@ -63,20 +152,19 @@ void Unite::action(Attaque att, Unite &u) {
 }
 
 
-
-void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites, int u) {
+void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
     int x1, y1, u2 = 0;
-    attq.zone(carte, unites[u], true);
+
     do {
         clic(x1, y1, carte);
-    } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+    } while (x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+    //CETTE PARTIE DU CODE EST ATROCE !!!!!!!!
     if (carte[numeroCase(x1, y1)].getOccupe()) {
         while (unites[u2].getCase() != numeroCase(x1, y1)) {
             u2 += 1;
         }
-        unites[u].action(attq, unites[u2]);
+        action(attq, unites[u2]);
     }
-    attq.zone(carte, unites[u], false);
 }
 
 
@@ -202,23 +290,4 @@ Equipement Heros::equipe(Equipement eq) {
 }
 
 
-Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
-    zoneInfluence = zone;
-    puissance = power;
-}
 
-
-void Attaque::zone(Case *carte, Unite u, bool b) {
-    int caseHeros = u.getCase();
-    for (int i = 0; i < zoneInfluence.size(); ++i) {
-        if (caseHeros + zoneInfluence[i].y() * NbCase > 0 && caseHeros + zoneInfluence[i].y() * NbCase &&
-            (caseHeros / NbCase == (caseHeros + zoneInfluence[i].x()) / NbCase)) {
-            carte[caseHeros + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
-        }
-    }
-}
-
-
-int Attaque::getPuissance() {
-    return puissance;
-}

@@ -52,7 +52,7 @@ int main() {
     Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5), s, Imagine::BLACK, 4);
     // Deplacement des unites
     while (true) {
-        int x = - 1, y = - 1, x1 = - 1, y1 = - 1;
+        int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
         clic(x, y, carte);
         std::cout << numeroCase(x, y) << std::endl;
@@ -61,9 +61,11 @@ int main() {
             while (unites[u].getCase() != numeroCase(x, y)) {
                 u += 1;
             }
-            deplacement(carte, unites, u);
+            unites[u].deplacement(carte);
         }
-        finTour(unites, x, y);
+        if (finTourDemande(x, y)) {
+            finJournee(unites);
+        }
 
     }
     Imagine::endGraphics();
