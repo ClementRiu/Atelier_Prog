@@ -12,6 +12,9 @@ Unite::Unite(float dep, int num) {
     PDepMax = dep;
 }
 
+void Unite::changeOrientation(int i) {
+    orientation = i;
+}
 
 int Unite::getCase() const {
     return numcase;
@@ -51,6 +54,29 @@ bool Unite::estVivant() {
         return false;
     }
     return true;
+}
+
+
+void Unite::action(Attaque att, Unite &u) {
+    // A MODIFIER
+    u.prendDommage(att.getPuissance());
+}
+
+
+
+void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites, int u) {
+    int x1, y1, u2 = 0;
+    attq.zone(carte, unites[u], true);
+    do {
+        clic(x1, y1, carte);
+    } while(x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+    if (carte[numeroCase(x1, y1)].getOccupe()) {
+        while (unites[u2].getCase() != numeroCase(x1, y1)) {
+            u2 += 1;
+        }
+        unites[u].action(attq, unites[u2]);
+    }
+    attq.zone(carte, unites[u], false);
 }
 
 
@@ -173,4 +199,26 @@ Equipement Heros::equipe(Equipement eq, int i) {
 
 Equipement Heros::equipe(Equipement eq) {
     return equipe(eq, 0);
+}
+
+
+Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
+    zoneInfluence = zone;
+    puissance = power;
+}
+
+
+void Attaque::zone(Case *carte, Unite u, bool b) {
+    int caseHeros = u.getCase();
+    for (int i = 0; i < zoneInfluence.size(); ++i) {
+        if (caseHeros + zoneInfluence[i].y() * NbCase > 0 && caseHeros + zoneInfluence[i].y() * NbCase &&
+            (caseHeros / NbCase == (caseHeros + zoneInfluence[i].x()) / NbCase)) {
+            carte[caseHeros + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
+        }
+    }
+}
+
+
+int Attaque::getPuissance() {
+    return puissance;
 }

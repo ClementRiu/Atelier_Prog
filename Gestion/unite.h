@@ -1,9 +1,26 @@
 #pragma once
 
 #include "../Combat/objet.h"
+#include <Imagine/Graphics.h>
+#include "carte.h"
+
 
 const int TAILLE_ARMEE = 6;
 const int TAILLE_INVENTAIRE = 10;
+
+class Attaque {
+    std::vector<Imagine::Coords<2> > zoneInfluence;
+    int puissance;
+public:
+    Attaque(std::vector<Imagine::Coords<2> > zone, int power);
+
+    // Affiche la zone d'influence de l'attaque
+    void zone(Case *carte, Unite u, bool b);
+
+    int getPuissance();
+};
+
+void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites, int u);
 
 class Unite {
     //caractéristiques de l'unité
@@ -21,12 +38,16 @@ class Unite {
     float PDep;
     float PDepMax;
 
+    int orientation; //voir manuel, possible de changer
+
     int typeDegats;
 
 public:
     Unite();
 
     Unite(float dep, int num);
+
+    void changeOrientation(int i);
 
     int getCase() const;
 
@@ -40,6 +61,9 @@ public:
 
     void prendDommage(int att); //à implémenter avec formule adaptée
     bool estVivant();
+
+    // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
+    void action(Attaque a, Unite &u);
 };
 
 
@@ -96,5 +120,9 @@ public:
 
     Equipement equipeAnneau2(Equipement anneau);
 };
+
+
+
+
 
 

@@ -4,7 +4,6 @@
 
 #include <Imagine/Graphics.h>
 #include <stdlib.h>
-#include "unite.h"
 #include "priorite.h"
 
 
@@ -12,8 +11,11 @@ const float INF = 1.0f / 0.0f; // Infini en float
 const int Taille = 20;
 const int NbCase = 30;
 const int LargDroite = 3 * NbCase;
+const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
 
+
+class Unite;
 
 // Classe definissant les différents types de cases que l'on peut trouver
 class TypeCase {
@@ -33,6 +35,8 @@ public:
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;
 
+    // Accesseur à la desctiprion de la case
+    std::string Desctiption();
 };
 
 
@@ -63,6 +67,7 @@ public:
 
     // Affiche la case
     void affiche(); // Cette methode devrait être const mais je n'arrive pas a le faire !!!!!
+
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;
 
@@ -71,12 +76,18 @@ public:
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
     void fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
+
+    // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
+    Imagine::Color getImage();
+
+    // Renvoie le texte correspondant a la case
+    std::string getDescription();
 };
 
 
 int numeroCase(int x, int y);
 // Fonction renvoyant en référence dans x et y la position d'un clic
-void clic(int &x, int &y);
+void clic(int &x, int &y, Case * carte);
 // Fonction simple permettant de deplacer le Heros
 void deplaceHeros(Case *carte, Unite &h, int x1, int y1);
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
@@ -87,6 +98,9 @@ void deplacement(Case *carte, std::vector<Unite> &unites, int u);
 void finTour(std::vector<Unite> &unites, int x, int y);
 // Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). Renvoie 0 pour le deplacement et 1 pour l'attaque
 void choisir(int &choix);
-
+// Renvoie les coordonnees de la case survolee
+void survole(int &x, int &y);
+// Affiche l'enroit survole par la souris
+void afficheSurvole(int x, int y, Case *carte);
 
 #endif // CARTE_H

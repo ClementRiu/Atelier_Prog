@@ -1,5 +1,5 @@
 #include "carte.h"
-
+#include "unite.h"
 
 TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
     PDep = dep;
@@ -19,6 +19,11 @@ Imagine::Color TypeCase::Image() {
 
 float TypeCase::NbDep() const {
     return PDep;
+}
+
+
+std::string TypeCase::Desctiption(){
+    return description;
 }
 
 
@@ -117,12 +122,26 @@ void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_resta
 }
 
 
-int numeroCase(int x, int y) {
-    return ((y / Taille) * NbCase + x / Taille);
+Imagine::Color Case::getImage(){
+    return type.Image();
 }
 
 
-void clic(int &x, int &y) {
+std::string Case::getDescription(){
+    return type.Desctiption();
+}
+
+
+int numeroCase(int x, int y) {
+    if (x >= LargGauche && x < LargGauche + NbCase * Taille && y < NbCase * Taille) {
+        return ((y / Taille) * NbCase + x / Taille);
+    }
+    return -1;
+}
+
+
+void clic(int &x, int &y, Case *carte) {
+    Imagine::enableMouseTracking(true);
     Imagine::Event e;
     do {
         getEvent(0, e);
@@ -130,7 +149,13 @@ void clic(int &x, int &y) {
             x = e.pix[0];
             y = e.pix[1];
         }
+        if (e.type == Imagine::EVT_MOTION) {
+            x = e.pix[0];
+            y = e.pix[1];
+            afficheSurvole(x, y, carte);
+        }
     } while (e.type != Imagine::EVT_BUT_OFF);
+    Imagine::enableMouseTracking(false);
 }
 
 
@@ -151,8 +176,8 @@ void deplacement(Case *carte, std::vector<Unite> &unites, int u) {
         // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
         afficheCaseDisponibleOnOff(carte, unites[u], true, deplacement, 0);
         do {
-            clic(x1, y1);
-        } while (x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+            clic(x1, y1, carte);
+        } while (numeroCase(x1,y1) == -1 || !carte[numeroCase(x1, y1)].Brillance());
         afficheCaseDisponibleOnOff(carte, unites[u], false, deplacement, numeroCase(x1, y1));
         deplaceHeros(carte, unites[u], x1, y1);
         unites[u].setDep(deplacement);
@@ -185,4 +210,23 @@ void choisir(int &choix){
     } while (e.type != Imagine::EVT_KEY_OFF && (choix != Imagine::KEY_NUMPAD0 || choix != Imagine::KEY_NUMPAD1) );
     // A MODIFIER
     Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
+}
+
+
+void survole(int &x, int &y){
+    Imagine::Event e;
+    getEvent(0, e);
+    x = e.pix[0];
+    y = e.pix[1];
+}
+
+
+
+void afficheSurvole(int x, int y, Case *carte){
+    // A MODIFIER
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite, Imagine::WHITE);
+    if (numeroCase(x, y) != - 1) {
+        Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille, carte[numeroCase(x,y)].getImage());
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille, carte[numeroCase(x,y)].getDescription(), Imagine::BLACK, 4);
+    }
 }
