@@ -9,12 +9,34 @@ Objet::Objet(std::string nom_) {
     nom = nom_;
 }
 
+Objet::Objet(const Objet& o){
+    nom = o.nom;
+    type = o.type;
+}
+
 
 bool Objet::operator==(const Objet &B) const {
     if (nom.compare(B.nom) == 0) {
         return true;
     }
     return false;
+}
+
+Equipement::Equipement(){
+
+}
+
+Equipement::Equipement(const Equipement &eq) : Objet(eq){
+    type=eq.type;
+
+    PV=eq.type;
+    mana=eq.mana;
+    force=eq.force;
+    defense=eq.defense;
+    dexterite=eq.dexterite;
+    initiative=eq.initiative;
+
+    PDep=eq.PDep;
 }
 
 int Equipement::getType() {

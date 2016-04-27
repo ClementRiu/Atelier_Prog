@@ -11,6 +11,11 @@ Attaque::Attaque() {
     puissance = 10;
 }
 
+//vérifier que la copie de vectors fonctionne bien !!
+Attaque::Attaque(const Attaque &att) {
+    zoneInfluence = att.zoneInfluence;
+    puissance = att.puissance;
+}
 
 Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
     zoneInfluence = zone;
@@ -37,6 +42,31 @@ Unite::Unite() {
     numcase = 0;
 }
 
+Unite::Unite(const Unite &unit) {
+    PV = unit.PV;
+    PVMax = unit.PVMax;
+    mana = unit.mana;
+    manaMax = unit.manaMax;
+    force = unit.force;
+    dexterite = unit.dexterite;
+    initiative = unit.initiative;
+    numcase = unit.numcase;
+    PDep = unit.PDep;
+    PDepMax = unit.PDepMax;
+
+    for (int i = 0; i++; i < NB_DEG_PHY) {
+        defensePhy[i] = unit.defensePhy[i];
+    }
+
+    for (int i = 0; i++; i < NB_RES) {
+        defenseMag[i] = unit.defenseMag[i];
+    }
+
+    for (int i = 0; i++; i < NB_MAX_ATTAQUES) {
+        competences[i] = unit.competences[i];
+    }
+}
+
 Unite::Unite(float dep, int num) {
     PDep = dep;
     numcase = num;
@@ -52,7 +82,15 @@ void Unite::deplacement(Case *carte) {
         afficheCaseDisponibleOnOff(carte, true, dep, 0);
         do {
             clic(x1, y1, carte);
+
+            //Si le joueur clique sur l'unité on annule la phase de déplacement et on retourne au choix d'action
+            if (numeroCase(x1, y1) == numcase) {
+                afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+                return;
+            }
         } while (numeroCase(x1, y1) == -1 || !carte[numeroCase(x1, y1)].Brillance());
+
+
         afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
         deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
         PDep = dep;
@@ -104,6 +142,12 @@ float Unite::getDepMax() const {
 
 
 Heros::Heros(float dep, int num) : Unite(dep, num) {
+}
+
+Heros::Heros(const Heros &h) : Unite(h) {
+    niveau = h.niveau;
+    exp = h.exp;
+    ArmeeHeros = h.ArmeeHeros;
 }
 
 
@@ -172,6 +216,30 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
             u2 += 1;
         }
         action(attq, unites[u2]);
+    }
+}
+
+Sbire::Sbire() {
+
+}
+
+Sbire::Sbire(const Sbire &s) {
+
+}
+
+Armee::Armee() {
+
+}
+
+Armee::Armee(std::vector<Sbire> sbires) {
+    for (int i = 0; i < TAILLE_ARMEE; i++) {
+        sbireArmee[i] = sbires[i];
+    }
+}
+
+Armee::Armee(const Armee &a) {
+    for (int i = 0; i < TAILLE_ARMEE; i++) {
+        sbireArmee[i] = a.sbireArmee[i];
     }
 }
 

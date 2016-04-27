@@ -18,11 +18,21 @@ const Imagine::Coords<2> portee02(0, 2);
 const Imagine::Coords<2> portee0_2(0, -2);
 const Imagine::Coords<2> portee0_1(0, -1);
 
+/*
+  *******************************************ATTENTION AUX CONTRUCTEURS PAR COPIE****************************
+  Ils ont été créés principalement pour des tests sur les "deque" (voir documentation C++)
+  Ils risquent de ne plus être parfaitement fonctionnels lors de la fin du projet, à vérifier donc lors du travail
+  de Nathanael
+ *
+ ***********************************************************************************************************
+ */
+
 class Attaque {
     std::vector<Imagine::Coords<2> > zoneInfluence;
     int puissance;
 public:
     Attaque();
+    Attaque(const Attaque &att);
 
     Attaque(std::vector<Imagine::Coords<2> > zone, int power);
 
@@ -57,6 +67,7 @@ class Unite {
 
 public:
     Unite();
+    Unite(const Unite& unit);
 
     Unite(float dep, int num);
 
@@ -96,11 +107,19 @@ public:
 
 class Sbire : public Unite {
     int nombre;
+public:
+    Sbire();
+    Sbire(const Sbire & s);
 };
 
 
 class Armee {
     Sbire sbireArmee[TAILLE_ARMEE];
+
+public :
+    Armee();
+    Armee(std::vector<Sbire> sbires);
+    Armee(const Armee &a);
 };
 
 
@@ -123,6 +142,7 @@ class Heros : public Unite {
 
 public:
     Heros(float dep, int num);
+    Heros(const Heros& h);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
     Equipement equipe(Equipement eq);

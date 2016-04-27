@@ -10,6 +10,7 @@ class Objet {
     std::string type;
 public:
     Objet();
+    Objet(const Objet& o);
 
     Objet(std::string nom_);
 
@@ -31,6 +32,9 @@ class Equipement : public Objet {
     float PDep;
 
 public:
+    Equipement();
+    Equipement(const Equipement &eq);
+
     int getType();
 };
 
