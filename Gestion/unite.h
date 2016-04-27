@@ -9,14 +9,14 @@ const int TAILLE_ARMEE = 6;
 const int TAILLE_INVENTAIRE = 10;
 const int NB_MAX_ATTAQUES = 10;
 
-const Imagine::Coords<2> a10(1, 0);
-const Imagine::Coords<2> a_10(-1, 0);
-const Imagine::Coords<2> a20(2, 0);
-const Imagine::Coords<2> a_20(-2, 0);
-const Imagine::Coords<2> a01(0, 1);
-const Imagine::Coords<2> a02(0, 2);
-const Imagine::Coords<2> a0_2(0, -2);
-const Imagine::Coords<2> a0_1(0, -1);
+const Imagine::Coords<2> portee10(1, 0);
+const Imagine::Coords<2> portee_10(-1, 0);
+const Imagine::Coords<2> portee20(2, 0);
+const Imagine::Coords<2> portee_20(-2, 0);
+const Imagine::Coords<2> portee01(0, 1);
+const Imagine::Coords<2> portee02(0, 2);
+const Imagine::Coords<2> portee0_2(0, -2);
+const Imagine::Coords<2> portee0_1(0, -1);
 
 class Attaque {
     std::vector<Imagine::Coords<2> > zoneInfluence;

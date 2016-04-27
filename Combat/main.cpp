@@ -6,14 +6,14 @@ int main() {
     Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
     // Initialisation d'une attaque
     std::vector<Imagine::Coords<2> > zoneInfl;
-    zoneInfl.push_back(a10);
-    zoneInfl.push_back(a_10);
-    zoneInfl.push_back(a20);
-    zoneInfl.push_back(a_20);
-    zoneInfl.push_back(a01);
-    zoneInfl.push_back(a02);
-    zoneInfl.push_back(a0_2);
-    zoneInfl.push_back(a0_1);
+    zoneInfl.push_back(portee10);
+    zoneInfl.push_back(portee_10);
+    zoneInfl.push_back(portee20);
+    zoneInfl.push_back(portee_20);
+    zoneInfl.push_back(portee01);
+    zoneInfl.push_back(portee02);
+    zoneInfl.push_back(portee0_2);
+    zoneInfl.push_back(portee0_1);
     Attaque coinCoinOuille(zoneInfl, 10);
     // Initialisation des types de case
     TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
@@ -48,11 +48,6 @@ int main() {
     // Deplacement des unites
 
     Unite unit;
-
-    //Je ne sais pas encore quel type entre liste/vector/queue/deque je vais utiliser, à revenir
-    std::list<Unite> unites_bis;
-    unites_bis.push_front(h);
-    unites_bis.push_front(h2);
 
 
     while (true) {

@@ -5,6 +5,7 @@
 #include <Imagine/Graphics.h>
 #include <stdlib.h>
 #include "priorite.h"
+#include <bits/stl_deque.h>
 
 
 const float INF = 1.0f / 0.0f; // Infini en float
@@ -63,9 +64,6 @@ public:
     //get temporaire à se débarasser !!
     int get(int i);
 
-    // Deplace et actualise la position du Heros sur la carte
-    void deplaceHeros(Unite &h, Case &c);
-
     // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
     void brillanceOnOff(bool flag);
 
@@ -94,12 +92,6 @@ int numeroCase(int x, int y);
 // Fonction renvoyant en référence dans x et y la position d'un clic
 void clic(int &x, int &y, Case *carte);
 
-// Fonction simple permettant de deplacer le Heros
-void deplaceHeros(Case *carte, Unite &h, int x1, int y1);
-
-// Fonction simple permettant au joueur de deplacer n'impote quel Heros
-void deplacement(Case *carte, Unite unit);
-
 // Interroge si le joueur a cliqué sur la zone de fin de tour
 bool finTourDemande(int x, int y);
 
@@ -109,8 +101,8 @@ void finJournee(std::vector<Unite> &unites);
 //Termine le tour en combat
 void finTourCombat(std::vector<Unite> &unites);
 
-// Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). Renvoie 0 pour le deplacement et 1 pour l'attaque
-void choisir(int &choix);
+// Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). choix devient 0 pour le deplacement et 1 pour l'attaque
+void choisir(int &choix, int &x, int &y);
 
 // Renvoie les coordonnees de la case survolee
 void survole(int &x, int &y);

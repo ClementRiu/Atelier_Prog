@@ -1,11 +1,12 @@
 #include "unite.h"
 #include <iostream>
 
+//attaque de base
 Attaque::Attaque() {
-    zoneInfluence.push_back(a10);
-    zoneInfluence.push_back(a01);
-    zoneInfluence.push_back(a_10);
-    zoneInfluence.push_back(a0_1);
+    zoneInfluence.push_back(portee10);
+    zoneInfluence.push_back(portee01);
+    zoneInfluence.push_back(portee_10);
+    zoneInfluence.push_back(portee0_1);
 
     puissance = 10;
 }
@@ -105,6 +106,7 @@ float Unite::getDepMax() const {
 Heros::Heros(float dep, int num) : Unite(dep, num) {
 }
 
+
 //à implémenter
 void Unite::prendDommage(int attRecue) {
     std::cout << "à implémenter !" << std::endl;
@@ -124,11 +126,16 @@ bool Unite::estVivant() {
 
 void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites) {
     bool tourContinue = true;
+    int x = 0, y = 0;
 
     while (tourContinue) {
         int choix = -1;
 
-        choisir(choix);
+        choisir(choix, x, y);
+
+        if (finTourDemande(x, y)) {
+            break;
+        }
 
         if (choix == Imagine::KEY_NUMPAD0) {
             deplacement(carte);
@@ -137,6 +144,7 @@ void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites) {
             competences[1].zone(carte, true, getCase());
             attaque(competences[0], carte, unites);
             competences[1].zone(carte, false, getCase());
+            PDep = 0;
         }
         if (PDep == 0 || choix == Imagine::KEY_SPACE) {
             tourContinue = false;

@@ -183,13 +183,17 @@ void finTourCombat(std::vector<Unite> &unites) {
 }
 
 
-void choisir(int &choix) {
+void choisir(int &choix, int &x, int &y) {
     choix = -1;
+    x = -1;
+    y = -1;
     int tailleEcriture = 9;
     // A MODIFIER
     Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement",
                         Imagine::BLACK, tailleEcriture);
     Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque",
+                        Imagine::BLACK, tailleEcriture);
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 3 * (tailleEcriture + 1), "ESP: Fin de tour",
                         Imagine::BLACK, tailleEcriture);
     Imagine::Event e;
     do {
@@ -197,7 +201,11 @@ void choisir(int &choix) {
         if (e.type == Imagine::EVT_KEY_ON) {
             choix = e.key;
         }
-    } while (e.type != Imagine::EVT_KEY_OFF && (choix != Imagine::KEY_NUMPAD0 || choix != Imagine::KEY_NUMPAD1));
+        if (e.type == Imagine::EVT_BUT_ON) {
+            x = e.pix[0];
+            y = e.pix[1];
+        }
+    } while (e.type != Imagine::EVT_KEY_OFF && e.type != Imagine::EVT_BUT_OFF);
     // A MODIFIER
     Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
 }
