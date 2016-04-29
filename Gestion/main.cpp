@@ -32,13 +32,19 @@ int main() {
     Case c(0, 0, ville);
     carte[0] = c;
     // Initialisation des unites
+    bool load = false;
     std::vector<Unite> unites;
-    Unite h(5, 304);
-    carte[304].flagHeros();
-    Unite h2(10, 303);
-    carte[303].flagHeros();
-    unites.push_back(h);
-    unites.push_back(h2);
+    if (load) {
+        charge(unites, carte);
+    }
+    else{
+        Unite h(5, 304);
+        carte[304].flagHeros();
+        Unite h2(10, 303);
+        carte[303].flagHeros();
+        unites.push_back(h);
+        unites.push_back(h2);
+    }
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
         for (int j = 0; j < NbCase; j++) {
@@ -50,8 +56,13 @@ int main() {
                       Imagine::BLACK);
     std::string s = "FIN DE TOUR BANDE DE PAYSANS";
     Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5), s, Imagine::BLACK, 4);
+    // Trace de l'endroit pour sauvegarder et quitter A CHANGER
+    Imagine::drawRect(NbCase * Taille + Separation, Taille * (NbCase - 5)-LargDroite-10, LargDroite - 1, LargDroite - 1,
+                      Imagine::BLACK);
+    Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5)-LargDroite, "SAVE & QUIT", Imagine::BLACK, 10);
     // Deplacement des unites
-    while (true) {
+    bool save = true;
+    while (save) {
         int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
         clic(x, y, carte);
@@ -65,6 +76,10 @@ int main() {
         }
         if (finTourDemande(x, y)) {
             finJournee(unites);
+        }
+        if (sauvegardeDemande(x,y)) {
+            sauvegarde(unites);
+            save = false;
         }
 
     }

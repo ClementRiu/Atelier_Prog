@@ -136,6 +136,11 @@ void Unite::setDep(float dep) {
 }
 
 
+void Unite::setDepMax(float depMax) {
+    PDepMax = depMax;
+}
+
+
 float Unite::getDepMax() const {
     return PDepMax;
 }
@@ -209,7 +214,7 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
 
     do {
         clic(x1, y1, carte);
-    } while (x1 > Taille * NbCase || y1 > Taille * NbCase || !carte[numeroCase(x1, y1)].Brillance());
+    } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
     //CETTE PARTIE DU CODE EST ATROCE !!!!!!!!
     if (carte[numeroCase(x1, y1)].getOccupe()) {
         while (unites[u2].getCase() != numeroCase(x1, y1)) {

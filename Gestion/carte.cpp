@@ -159,6 +159,15 @@ void clic(int &x, int &y, Case *carte) {
 }
 
 
+bool sauvegardeDemande(int x, int y) {
+    // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
+    if (x > NbCase * Taille + Separation && y < Taille * (NbCase - 5) && y > Taille * (NbCase - 5) - LargDroite - 10) {
+        return true;
+    }
+    return false;
+}
+
+
 bool finTourDemande(int x, int y) {
     // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
     if (x > NbCase * Taille + Separation && y > Taille * (NbCase - 5)) {
@@ -230,3 +239,52 @@ void afficheSurvole(int x, int y, Case *carte) {
                             carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
     }
 }
+
+
+void sauvegarde(std::vector<Unite> unites) {
+    std::ofstream fichier("../Gestion/sauvegarde.txt", std::ios::out | std::ios::trunc);
+        if (fichier) {
+            fichier << unites.size() << std::endl;
+            for (int i = 0; i < unites.size(); i ++){
+                fichier << unites[i].getCase() << std::endl;
+                fichier << unites[i].getDep() << std::endl;
+                fichier << unites[i].getDepMax() << std::endl;
+            }
+            fichier.close();
+        }
+        else {
+            std::cout << "Erreur à l'ouverture !" << std::endl;
+        }
+}
+
+
+void charge(std::vector<Unite> &unites, Case *carte){
+    std::ifstream fichier("D:/Charles/cours/Ponts/Info/2sem/Projet/Atelier_Prog/Gestion/sauvegarde.txt", std::ios::in);
+        if(fichier){
+            std::string ligne;
+            std::getline(fichier,ligne);
+            int T = atoi(ligne.c_str());
+            std::cout << T;
+            for (int i = 0; i < T; i ++){
+                Unite u;
+                std::getline(fichier,ligne);
+                float val = atoi(ligne.c_str());
+                u.setCase(val);
+                carte[int(val)].flagHeros();
+                std::getline(fichier,ligne);
+                val = atoi(ligne.c_str());
+                u.setDep(val);
+                std::getline(fichier,ligne);
+                val = atoi(ligne.c_str());
+                u.setDepMax(val);
+                unites.push_back(u);
+            }
+            fichier.close();
+        }
+    else {
+        std::cerr << "Erreur à l'ouverture !" << std::endl;
+    }
+}
+
+
+

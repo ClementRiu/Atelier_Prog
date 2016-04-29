@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "priorite.h"
 #include <bits/stl_deque.h>
+#include <iostream>
+#include <fstream>
 
 
 const float INF = 1.0f / 0.0f; // Infini en float
@@ -87,10 +89,14 @@ public:
 };
 
 
+// Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
 int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic
 void clic(int &x, int &y, Case *carte);
+
+// Interroge si le joueur a cliqué sur la zone de sauvegarde
+bool sauvegardeDemande(int x, int y);
 
 // Interroge si le joueur a cliqué sur la zone de fin de tour
 bool finTourDemande(int x, int y);
@@ -109,5 +115,8 @@ void survole(int &x, int &y);
 
 // Affiche l'endroit survole par la souris
 void afficheSurvole(int x, int y, Case *carte);
+
+void sauvegarde(std::vector<Unite> unites);
+void charge(std::vector<Unite> &unites, Case *carte);
 
 #endif // CARTE_H

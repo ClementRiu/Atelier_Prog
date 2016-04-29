@@ -94,6 +94,8 @@ public:
 
     float getDepMax() const;
 
+    void setDepMax(float dep);
+
     void prendDommage(int att); //à implémenter avec formule adaptée
 
     void setAttaque(Attaque att, int i);
