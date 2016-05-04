@@ -78,7 +78,7 @@ public:
 
     void deplaceVersCase(Case &c2, Case &c1);
 
-    void tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites);
+    void tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites, Bouton boutonFinTour);
 
     void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites);
 

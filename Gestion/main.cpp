@@ -51,22 +51,21 @@ int main() {
             carte[NbCase * j + i].affiche();
         }
     }
-    // Trace de l'endroit fin du tour A CHANGER #CLEMENT
-    Imagine::drawRect(NbCase * Taille + Separation, Taille * (NbCase - 5), LargDroite - 1, LargDroite - 1,
-                      Imagine::BLACK);
-    std::string s = "FIN DE TOUR BANDE DE PAYSANS";
-    Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5), s, Imagine::BLACK, 4);
-    // Trace de l'endroit pour sauvegarder et quitter A CHANGER
-    Imagine::drawRect(NbCase * Taille + Separation, Taille * (NbCase - 5)-LargDroite-10, LargDroite - 1, LargDroite - 1,
-                      Imagine::BLACK);
-    Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5)-LargDroite, "SAVE & QUIT", Imagine::BLACK, 10);
+    // Creation et affichage des boutons
+    Bouton boutonSauvegarde(NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
+                            NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5), Imagine::BLUE,
+                            "Save & Quit");
+    Bouton boutonFinTour(NbCase * Taille + Separation, Taille * (NbCase - 5),
+                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
+                         "End turn");
+    boutonSauvegarde.affiche();
+    boutonFinTour.affiche();
     // Deplacement des unites
     bool save = true;
     while (save) {
         int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
         clic(x, y, carte);
-        std::cout << numeroCase(x, y) << std::endl;
         int u = 0;
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
             while (unites[u].getCase() != numeroCase(x, y)) {
@@ -74,10 +73,10 @@ int main() {
             }
             unites[u].deplacement(carte);
         }
-        if (finTourDemande(x, y)) {
+        if (boutonFinTour.boutonActive(x, y)) {
             finJournee(unites);
         }
-        if (sauvegardeDemande(x,y)) {
+        if (boutonSauvegarde.boutonActive(x, y)) {
             sauvegarde(unites);
             save = false;
         }

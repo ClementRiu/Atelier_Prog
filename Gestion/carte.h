@@ -89,17 +89,25 @@ public:
 };
 
 
+class Bouton{
+    int zoneDeDelimitation[4]; // Tableau de la forme [xmin, ymin, xmax, ymax]
+    Imagine::Color image; // A remplacer par une image #Clement
+    std::string nomBouton;
+public:
+    Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom);
+
+    // A changer
+    void affiche(); // Permet d'afficher le bouton
+
+    bool boutonActive(int x, int y); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
+};
+
+
 // Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
 int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic
 void clic(int &x, int &y, Case *carte);
-
-// Interroge si le joueur a cliqué sur la zone de sauvegarde
-bool sauvegardeDemande(int x, int y);
-
-// Interroge si le joueur a cliqué sur la zone de fin de tour
-bool finTourDemande(int x, int y);
 
 //Termine la journée (=tour dans Gestion)
 void finJournee(std::vector<Unite> &unites);

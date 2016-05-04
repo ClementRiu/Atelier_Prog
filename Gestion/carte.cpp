@@ -132,6 +132,34 @@ std::string Case::getDescription() {
 }
 
 
+Bouton::Bouton (int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom){
+    zoneDeDelimitation[0]=xmin;
+    zoneDeDelimitation[1]=ymin;
+    zoneDeDelimitation[2]=xmax;
+    zoneDeDelimitation[3]=ymax;
+    image=c;
+    nomBouton=nom;
+}
+
+
+// A changer
+void Bouton::affiche(){
+    int taille = 1.5*(zoneDeDelimitation[2] - zoneDeDelimitation[0]) / nomBouton.size();
+    std::cout << taille << std::endl;
+    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1], zoneDeDelimitation[2] - zoneDeDelimitation[0],
+            zoneDeDelimitation[3] - zoneDeDelimitation[1], image);
+    Imagine::drawString(zoneDeDelimitation[0], zoneDeDelimitation[1] + taille, nomBouton, Imagine::WHITE, taille);
+}
+
+
+bool Bouton::boutonActive(int x, int y){
+    if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] && x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3]) {
+        return true;
+    }
+    return false;
+}
+
+
 int numeroCase(int x, int y) {
     if (x >= LargGauche && x < LargGauche + NbCase * Taille && y < NbCase * Taille) {
         return ((y / Taille) * NbCase + x / Taille);
@@ -156,24 +184,6 @@ void clic(int &x, int &y, Case *carte) {
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
     Imagine::enableMouseTracking(false);
-}
-
-
-bool sauvegardeDemande(int x, int y) {
-    // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
-    if (x > NbCase * Taille + Separation && y < Taille * (NbCase - 5) && y > Taille * (NbCase - 5) - LargDroite - 10) {
-        return true;
-    }
-    return false;
-}
-
-
-bool finTourDemande(int x, int y) {
-    // CONDITON A CHANGER EN FONCTION DU TRACE DE L'ENDROIT DE FIN DU TOUR #CLEMENT
-    if (x > NbCase * Taille + Separation && y > Taille * (NbCase - 5)) {
-        return true;
-    }
-    return false;
 }
 
 

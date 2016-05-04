@@ -40,19 +40,16 @@ int main() {
             carte[NbCase * j + i].affiche();
         }
     }
-    // Trace de l'endroit fin du tour A CHANGER #CLEMENT
-    Imagine::drawRect(NbCase * Taille + Separation, Taille * (NbCase - 5), LargDroite - 1, LargDroite - 1,
-                      Imagine::BLACK);
-    std::string s = "FIN DE TOUR BANDE DE PAYSANS";
-    Imagine::drawString(NbCase * Taille + Separation, Taille * (NbCase - 5), s, Imagine::BLACK, 4);
-    // Deplacement des unites
-
+    Bouton boutonFinTour(NbCase * Taille + Separation, Taille * (NbCase - 5),
+                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
+                         "End turn");
+    boutonFinTour.affiche();
     Unite unit;
 
 
     while (true) {
-        unites[0].tour(carte, unites);
-        unites[1].tour(carte, unites);
+        unites[0].tour(carte, unites, boutonFinTour);
+        unites[1].tour(carte, unites, boutonFinTour);
     }
 
     Imagine::endGraphics();

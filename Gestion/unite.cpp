@@ -173,7 +173,7 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites) {
+void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites, Bouton boutonFinTour) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
@@ -182,7 +182,7 @@ void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites) {
 
         choisir(choix, x, y);
 
-        if (finTourDemande(x, y)) {
+        if (boutonFinTour.boutonActive(x, y)) {
             break;
         }
 
