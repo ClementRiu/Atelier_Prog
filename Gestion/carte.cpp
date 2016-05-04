@@ -69,6 +69,7 @@ void Case::brillanceOnOff(bool flag) {
 
 
 void Case::affiche() {
+    Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
     if (brillance) {
         Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
@@ -139,15 +140,25 @@ Bouton::Bouton (int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::s
     zoneDeDelimitation[3]=ymax;
     image=c;
     nomBouton=nom;
+    taillePolice = 0;
+}
+
+
+int Bouton::largeur(){
+    return zoneDeDelimitation[2] - zoneDeDelimitation[0];
+}
+
+
+int Bouton::hauteur(){
+    return zoneDeDelimitation[3] - zoneDeDelimitation[1];
 }
 
 
 // A changer
 void Bouton::affiche(){
-    int taille = 1.5*(zoneDeDelimitation[2] - zoneDeDelimitation[0]) / nomBouton.size();
-    std::cout << taille << std::endl;
-    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1], zoneDeDelimitation[2] - zoneDeDelimitation[0],
-            zoneDeDelimitation[3] - zoneDeDelimitation[1], image);
+    int taille = std::min(int (1.5 * this->largeur() / nomBouton.size()), this->hauteur());
+    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1], this->largeur(),
+            this->hauteur(), image);
     Imagine::drawString(zoneDeDelimitation[0], zoneDeDelimitation[1] + taille, nomBouton, Imagine::WHITE, taille);
 }
 
@@ -202,6 +213,7 @@ void finTourCombat(std::vector<Unite> &unites) {
 }
 
 
+// A supprimer a la fin, mais on le garde au cas ou on change d'avis
 void choisir(int &choix, int &x, int &y) {
     choix = -1;
     x = -1;

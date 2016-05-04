@@ -28,10 +28,10 @@ int main() {
     }
     // Initialisation des unites
     std::vector<Unite> unites;
-    Unite h(5, 304);
-    carte[304].flagHeros();
-    Unite h2(10, 303);
-    carte[303].flagHeros();
+    Unite h(5, 204);
+    carte[204].flagHeros();
+    Unite h2(10, 203);
+    carte[203].flagHeros();
     unites.push_back(h);
     unites.push_back(h2);
     // Affichage des cases
@@ -49,7 +49,8 @@ int main() {
 
     while (true) {
         unites[0].tour(carte, unites, boutonFinTour);
-        unites[1].tour(carte, unites, boutonFinTour);
+        unites[1].tour(carte, unites, boutonFinTour
+                       );
     }
 
     Imagine::endGraphics();

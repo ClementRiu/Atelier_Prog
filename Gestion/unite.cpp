@@ -173,29 +173,38 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites, Bouton boutonFinTour) {
+void Unite::tour(Case *carte, std::vector<Unite> &unites, Bouton boutonFinTour) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
     while (tourContinue) {
-        int choix = -1;
 
-        choisir(choix, x, y);
+        std::vector<Bouton> boutons = this->boutonAction(carte);
+        for (int i=0; i < boutons.size(); ++i){
+            boutons[i].affiche();
+        }
+
+        clic(x, y, carte);
+
+        // A modifier
+        for (int i = 0; i < NbCase; ++i){
+            for (int j = 0; j < NbCase; ++j){
+                carte[j * NbCase + i].affiche();
+            }
+        }
 
         if (boutonFinTour.boutonActive(x, y)) {
             break;
         }
 
-        if (choix == Imagine::KEY_NUMPAD0) {
+        // A modifier, voir l'ordre des boutons
+        if (boutons[2].boutonActive(x, y)) {
             deplacement(carte);
         }
-        if (choix == Imagine::KEY_NUMPAD1) {
+        if (boutons[0].boutonActive(x, y)) {
             competences[1].zone(carte, true, getCase());
             attaque(competences[0], carte, unites);
             competences[1].zone(carte, false, getCase());
-            PDep = 0;
-        }
-        if (PDep == 0 || choix == Imagine::KEY_SPACE) {
             tourContinue = false;
         }
     }
@@ -224,23 +233,77 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
     }
 }
 
+
+// La fonction est a modifier niveau affichage et a organiser
+std::vector<Bouton> Unite::boutonAction(Case *carte){
+    int coin = 0;
+    int longMaxMot = 10;
+    int taillePolice = Taille / 2 - 2;
+    int caseIni = numcase;
+    int x, y;
+    std::vector<Bouton> B;
+    if (PDep != 0){
+        longMaxMot = 11;
+    }
+    int largMax = (int((longMaxMot * taillePolice * 1.5) / Taille) + 1) * Taille - 2;
+    if (numcase % NbCase >= NbCase / 2){
+        coin += 1;
+    }
+    if (numcase >= NbCase * NbCase / 2){
+        coin += 2;
+    }
+    if (coin == 0){
+        caseIni += 1 + NbCase;
+    }
+    if (coin == 1){
+        caseIni += - 1 - largMax / Taille + NbCase;
+    }
+    if (coin == 2){
+        caseIni += 1 - NbCase;
+    }
+    if (coin == 3){
+        caseIni += - 1 - largMax / Taille - NbCase;
+    }
+    x = (caseIni % NbCase) * Taille;
+    y = (caseIni / NbCase) * Taille;
+    // Il y a de l'idee, mais c'est la mochete incarnee. Il faut le CHANGER mais s'en inspirer sera utile
+    Bouton b1(x, y, x + largMax + 1, y + Taille - 1, Imagine::BLACK, "Action");
+    B.push_back(b1);
+    Bouton b3(x, y + Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Inventaire");
+    B.push_back(b3);
+    if (PDep != 0){
+        Bouton b2(x, y + 2 * Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + 2 * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Deplacement");
+        B.push_back(b2);
+    }
+    if (carte[numcase].getDescription()==descVille){
+        Bouton b3(x, y + 3 * Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + 3 * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Ville");
+        B.push_back(b3);
+    }
+    return B;
+}
+
+
 Sbire::Sbire() {
 
 }
+
 
 Sbire::Sbire(const Sbire &s) {
 
 }
 
+
 Armee::Armee() {
 
 }
+
 
 Armee::Armee(std::vector<Sbire> sbires) {
     for (int i = 0; i < TAILLE_ARMEE; i++) {
         sbireArmee[i] = sbires[i];
     }
 }
+
 
 Armee::Armee(const Armee &a) {
     for (int i = 0; i < TAILLE_ARMEE; i++) {
@@ -258,6 +321,7 @@ Equipement Heros::equipeCasque(Equipement casque) {
     return desequipe;
 }
 
+
 //manque gestion des deux mains !!
 Equipement Heros::equipeArmeDroite(Equipement arme) {
     Equipement desequipe = equipementArmeDroite;
@@ -266,6 +330,7 @@ Equipement Heros::equipeArmeDroite(Equipement arme) {
 
     return desequipe;
 }
+
 
 Equipement Heros::equipeArmeGauche(Equipement arme) {
     Equipement desequipe = equipementArmeGauche;

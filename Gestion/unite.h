@@ -78,6 +78,7 @@ public:
 
     void deplaceVersCase(Case &c2, Case &c1);
 
+    // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
     void tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites, Bouton boutonFinTour);
 
     void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites);
@@ -104,6 +105,10 @@ public:
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite &u);
+
+    // Cree les boutons pour que l'unite puisse effectuer son action
+    // La fonction est a modifier niveau affichage et a organiser
+    std::vector<Bouton> boutonAction(Case *carte);
 };
 
 

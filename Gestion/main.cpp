@@ -9,7 +9,7 @@ int main() {
     TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
     TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
     TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
-    TypeCase ville(1, "La ville, le doux foyer", Imagine::MAGENTA);
+    TypeCase ville(1, descVille, Imagine::MAGENTA);
     // Initialisation de la carte
     Case carte[NbCase * NbCase];
     // Creation de la carte
@@ -66,13 +66,7 @@ int main() {
         int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
         clic(x, y, carte);
-        int u = 0;
-        if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
-            while (unites[u].getCase() != numeroCase(x, y)) {
-                u += 1;
-            }
-            unites[u].deplacement(carte);
-        }
+        int u = 0;        
         if (boutonFinTour.boutonActive(x, y)) {
             finJournee(unites);
         }
@@ -80,7 +74,27 @@ int main() {
             sauvegarde(unites);
             save = false;
         }
+        if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
+            while (unites[u].getCase() != numeroCase(x, y)) {
+                u += 1;
+            }
+            std::vector<Bouton> boutons = unites[u].boutonAction(carte);
+            for (int i=0; i < boutons.size(); ++i){
+                boutons[i].affiche();
+            }
 
+            clic(x, y, carte);
+
+            // A modifier
+            for (int i = 0; i < NbCase; ++i){
+                for (int j = 0; j < NbCase; ++j){
+                    carte[j * NbCase + i].affiche();
+                }
+            }
+            if (boutons[2].boutonActive(x, y)) {
+                unites[u].deplacement(carte);
+            }
+        }
     }
     Imagine::endGraphics();
     return 0;

@@ -16,6 +16,8 @@ const int NbCase = 30;
 const int LargDroite = 3 * NbCase;
 const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
+const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
+
 
 
 class Unite;
@@ -93,11 +95,16 @@ class Bouton{
     int zoneDeDelimitation[4]; // Tableau de la forme [xmin, ymin, xmax, ymax]
     Imagine::Color image; // A remplacer par une image #Clement
     std::string nomBouton;
+    int taillePolice;
 public:
     Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom);
 
+    int largeur(); // Renvoie la largeur du bouton
+
+    int hauteur(); // renvoie la la hauteur du bouton
+
     // A changer
-    void affiche(); // Permet d'afficher le bouton
+    void affiche(); // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
 
     bool boutonActive(int x, int y); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
 };
