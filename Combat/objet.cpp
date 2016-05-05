@@ -36,6 +36,21 @@ void Objet::equiper(Heros *h, bool droite){
 }
 
 
+// Existe-t-il un moyen propre de coder cette fonction ?
+Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
+    if (typeid(*this) == typeid(*obj)){
+        Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
+        ymin += 2 * Police;
+        ymax += 2 * Police;
+        return b;
+    }
+    else{
+        Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
+        return b;
+    }
+}
+
+
 Equipement::Equipement(){
 
 }

@@ -117,8 +117,8 @@ int main() {
             // Bouton inventaire
             if (boutons[1].boutonActive(x, y)) {
                 unites[u]->ouvreInventaire();
-                unites[u]->equipe(1);
-                unites[u]->ouvreInventaire();
+                // unites[u]->equipe(1);
+                // unites[u]->ouvreInventaire();
                 // Reaffichage de la carte
                 for (int i = 0; i < NbCase; i++) {
                     for (int j = 0; j < NbCase; j++) {

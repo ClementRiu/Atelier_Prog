@@ -109,10 +109,12 @@ void Unite::deplacement(Case *carte) {
     }
 }
 
+
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
 void Unite::afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre) {
     carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
 }
+
 
 void Unite::deplaceVersCase(Case &c2, Case &c1) {
     if (!c2.getOccupe()) {
@@ -124,9 +126,11 @@ void Unite::deplaceVersCase(Case &c2, Case &c1) {
     }
 }
 
+
 void Unite::changeOrientation(int i) {
     orientation = i;
 }
+
 
 int Unite::getCase() const {
     return numcase;
@@ -457,11 +461,72 @@ void Heros::ramasse(Objet* obj){
 // Fonction a modifier
 void Heros::ouvreInventaire(){
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
-    for (int i = 0; i < inventaire.size(); ++i){
-        Imagine::drawString(0, 50 * i + 20, inventaire[i]->getNom(), Imagine::BLACK, 20);
+    std::vector<Bouton> boutonsChoix;
+    std::vector<std::string> nomBoutons;
+    std::vector<Objet*> nomObjets;
+    std::vector<Bouton> boutonEquipement;
+    std::vector<int> equipementPresent;
+    Bouton boutonStop(NbCase * Taille + Separation, Taille * (NbCase - 5),
+                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
+                         "Fermer");
+    boutonStop.affiche();
+    nomBoutons.push_back("Arme");
+    nomBoutons.push_back("Anneau");
+    nomBoutons.push_back("Bottes");
+    nomBoutons.push_back("Gants");
+    nomBoutons.push_back("Jambes");
+    nomBoutons.push_back("Torse");
+    nomBoutons.push_back("Casque");
+    nomBoutons.push_back("Objets divers");
+    for (int i = 0; i < nomBoutons.size(); ++i){
+        Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
+        boutonsChoix.push_back(b);
     }
+    for (int i = 0; i < boutonsChoix.size(); ++i){
+        boutonsChoix[i].affiche();
+    }
+    nomObjets.push_back(new Arme());
+    nomObjets.push_back(new Anneau());
+    nomObjets.push_back(new Bottes());
+    nomObjets.push_back(new Gants());
+    nomObjets.push_back(new Jambes());
+    nomObjets.push_back(new Torse());
+    nomObjets.push_back(new Casque());
+    nomObjets.push_back(new Objet());
     int x, y;
     clicSimple(x, y);
+    while (!boutonStop.boutonActive(x, y)){
+        int xmin = 180, ymin = Police, xmax = width - 100, ymax = 2 * Police;
+        for (int i = 0; i < boutonsChoix.size(); ++i){
+            if (boutonsChoix[i].boutonActive(x, y)){
+                boutonEquipement.clear();
+                equipementPresent.clear();
+                for (int j = 0; j < inventaire.size(); ++j){
+                    Bouton b = inventaire[j]->creeBouton(nomObjets[i], xmin, ymin, xmax, ymax);
+                    if (!b.boutonVide()){
+                        boutonEquipement.push_back(b);
+                        equipementPresent.push_back(j);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < boutonEquipement.size(); ++i){
+            boutonEquipement[i].affiche();
+        }
+        for (int i = 0; i < boutonEquipement.size(); ++i){
+            if (boutonEquipement[i].boutonActive(x, y)){
+                this->equipe(equipementPresent[i]);
+                boutonEquipement[i].setNom(inventaire[equipementPresent[i]]->getNom());
+                boutonEquipement[i].affiche();
+            }
+        }
+        clicSimple(x, y);
+        Imagine::fillRect(180, 0, width - 100 - 180, height, Imagine::WHITE);
+    }
+    for (int i = 0; i < nomObjets.size(); ++i){
+        delete nomObjets[i];
+        nomObjets[i] = 0;
+    }
 }
 
 

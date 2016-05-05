@@ -171,6 +171,16 @@ bool Bouton::boutonActive(int x, int y){
 }
 
 
+bool Bouton::boutonVide(){
+    return (this->largeur() == 0 || this->hauteur() == 0);
+}
+
+
+void Bouton::setNom(std::string nom){
+    nomBouton = nom;
+}
+
+
 int numeroCase(int x, int y) {
     if (x >= LargGauche && x < LargGauche + NbCase * Taille && y < NbCase * Taille) {
         return ((y / Taille) * NbCase + x / Taille);

@@ -109,6 +109,10 @@ public:
     void affiche(); // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
 
     bool boutonActive(int x, int y); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
+
+    bool boutonVide();
+
+    void setNom(std::string nom);
 };
 
 

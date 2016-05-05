@@ -4,10 +4,13 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
+#include "typeinfo.h"
+#include "../Gestion/carte.h"
 
 
 const int NB_RES = 6;
 const int NB_DEG_PHY = 3;
+const int Police = 15;
 
 
 class Heros;
@@ -28,6 +31,8 @@ public:
     std::string getNom();
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Bouton creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax);
 };
 
 
