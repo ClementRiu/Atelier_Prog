@@ -1,6 +1,7 @@
 #include "unite.h"
 #include <iostream>
 
+
 //attaque de base
 Attaque::Attaque() {
     zoneInfluence.push_back(portee10);
@@ -16,6 +17,7 @@ Attaque::Attaque(const Attaque &att) {
     zoneInfluence = att.zoneInfluence;
     puissance = att.puissance;
 }
+
 
 Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
     zoneInfluence = zone;
@@ -37,10 +39,12 @@ int Attaque::getPuissance() {
     return puissance;
 }
 
+
 Unite::Unite() {
     PDep = 8;
     numcase = 0;
 }
+
 
 Unite::Unite(const Unite &unit) {
     PV = unit.PV;
@@ -67,10 +71,18 @@ Unite::Unite(const Unite &unit) {
     }
 }
 
+
 Unite::Unite(float dep, int num) {
     PDep = dep;
     numcase = num;
     PDepMax = dep;
+}
+
+
+Unite::Unite(float dep, float depMax, int num) {
+    PDep = dep;
+    numcase = num;
+    PDepMax = depMax;
 }
 
 
@@ -165,7 +177,7 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tour(Case *carte, std::vector<Unite> &unites, Bouton boutonFinTour) {
+void Unite::tour(Case *carte, std::vector<Unite*> unites, Bouton boutonFinTour) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
@@ -204,13 +216,13 @@ void Unite::tour(Case *carte, std::vector<Unite> &unites, Bouton boutonFinTour) 
 }
 
 
-void Unite::action(Attaque att, Unite &u) {
+void Unite::action(Attaque att, Unite *u) {
     // A MODIFIER
-    u.prendDommage(att.getPuissance());
+    u->prendDommage(att.getPuissance());
 }
 
 
-void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
+void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite*> unites) {
     int x1, y1, u2 = 0;
 
     do {
@@ -218,7 +230,7 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
     } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
     //CETTE PARTIE DU CODE EST ATROCE !!!!!!!!
     if (carte[numeroCase(x1, y1)].getOccupe()) {
-        while (unites[u2].getCase() != numeroCase(x1, y1)) {
+        while (unites[u2]->getCase() != numeroCase(x1, y1)) {
             u2 += 1;
         }
         action(attq, unites[u2]);
@@ -229,15 +241,24 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite> &unites) {
 // La fonction est a modifier niveau affichage et a organiser
 std::vector<Bouton> Unite::boutonAction(Case *carte){
     int coin = 0;
-    int longMaxMot = 10;
+    int longMaxMot = 0;
     int taillePolice = Taille / 2 - 2;
     int caseIni = numcase;
     int x, y;
-    std::vector<Bouton> B;
-    if (PDep != 0){
-        longMaxMot = 11;
+    std::vector<std::string> nomBoutons;
+    nomBoutons.push_back("Action");
+    nomBoutons.push_back("Inventaire");
+    if (PDep!=0){
+        nomBoutons.push_back("Déplacement");
+    }
+    if (carte[numcase].getDescription()==descVille){
+        nomBoutons.push_back("Ville");
+    }
+    for (int i = 0; i < nomBoutons.size(); ++i){
+        longMaxMot = std::max(int(nomBoutons[i].size()),longMaxMot);
     }
     int largMax = (int((longMaxMot * taillePolice * 1.5) / Taille) + 1) * Taille - 2;
+    std::vector<Bouton> B;
     if (numcase % NbCase >= NbCase / 2){
         coin += 1;
     }
@@ -258,18 +279,11 @@ std::vector<Bouton> Unite::boutonAction(Case *carte){
     }
     x = (caseIni % NbCase) * Taille;
     y = (caseIni / NbCase) * Taille;
-    // Il y a de l'idee, mais c'est la mochete incarnee. Il faut le CHANGER mais s'en inspirer sera utile
-    Bouton b1(x, y, x + largMax + 1, y + Taille - 1, Imagine::BLACK, "Action");
-    B.push_back(b1);
-    Bouton b3(x, y + Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Inventaire");
-    B.push_back(b3);
-    if (PDep != 0){
-        Bouton b2(x, y + 2 * Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + 2 * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Deplacement");
-        B.push_back(b2);
-    }
-    if (carte[numcase].getDescription()==descVille){
-        Bouton b3(x, y + 3 * Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1, y + Taille - 1 + 3 * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK, "Ville");
-        B.push_back(b3);
+    for (int i = 0; i < nomBoutons.size(); ++i){
+        Bouton b(x, y + i *  Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1,
+                  y + Taille - 1 + i * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK,
+                 nomBoutons[i]);
+        B.push_back(b);
     }
     return B;
 }
@@ -285,7 +299,7 @@ void Unite::ouvreInventaire(){
 }
 
 
-void Unite::equipe(int i){
+void Unite::equipe(int i, bool droite){
 
 }
 
@@ -358,11 +372,19 @@ Casque Heros::equipeCasque(Casque casque) {
 }
 
 
-//manque gestion des deux mains !!
-Arme Heros::equipeArme(Arme arme) {
+Arme Heros::equipeArmeDroite(Arme arme) {
     Arme desequipe = equipementArmeDroite;
 
     equipementArmeDroite = arme;
+
+    return desequipe;
+}
+
+
+Arme Heros::equipeArmeGauche(Arme arme) {
+    Arme desequipe = equipementArmeGauche;
+
+    equipementArmeGauche = arme;
 
     return desequipe;
 }
@@ -401,58 +423,28 @@ Bottes Heros::equipeBottes(Bottes bottes) {
     return desequipe;
 }
 
-//manque gestion des deux anneaux !!
-Anneau Heros::equipeAnneau(Anneau anneau) {
-    Anneau desequipe = equipementAnneau1;
 
-    equipementAnneau1 = anneau;
+Anneau Heros::equipeAnneauDroite(Anneau anneau) {
+    Anneau desequipe = equipementAnneauDroite;
+
+    equipementAnneauDroite = anneau;
 
     return desequipe;
 }
 
 
-/*
-Equipement Heros::equipe(Equipement eq, int i) {
-    if (eq.getType() == 1) {
-        return equipeCasque(eq);
-    }
-    if (eq.getType() == 2) {
-        return equipeTorse(eq);
-    }
-    if (eq.getType() == 3) {
-        return equipeGants(eq);
-    }
-    if (eq.getType() == 4) {
-        return equipeJambes(eq);
-    }
-    if (eq.getType() == 5) {
-        return equipeBottes(eq);
-    }
-    if (eq.getType() == 6) {
-        if (i == 1) {
-            return equipeAnneau1(eq);
-        }
-        else {
-            return equipeAnneau2(eq);
-        }
-    }
-    if (eq.getType() >= 10) {
-        if (eq.getType() == 11 && equipementArmeDroite.getType() == 11 && equipementArmeGauche.getType() == 11) {
-            return eq;
-        }
-        if (i == 1) {
-            return equipeArmeDroite(eq);
-        }
-        else {
-            return equipeArmeGauche(eq);
-        }
-    }
-}
-*/
+Anneau Heros::equipeAnneauGauche(Anneau anneau) {
+    Anneau desequipe = equipementAnneauGauche;
 
-void Heros::equipe(int i) {
+    equipementAnneauGauche = anneau;
+
+    return desequipe;
+}
+
+
+void Heros::equipe(int i, bool droite) {
     if (i < inventaire.size()) {
-        inventaire[i]->equiper(this);
+        inventaire[i]->equiper(this, droite);
     }
 }
 
@@ -462,6 +454,7 @@ void Heros::ramasse(Objet* obj){
 }
 
 
+// Fonction a modifier
 void Heros::ouvreInventaire(){
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
     for (int i = 0; i < inventaire.size(); ++i){

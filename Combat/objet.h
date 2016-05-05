@@ -27,7 +27,7 @@ public:
 
     std::string getNom();
 
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
@@ -63,43 +63,43 @@ public:
 
     Casque(std::string nom_);
 
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Anneau : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Gants : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Jambes : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Bottes : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Arme : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Torse : public Equipement {
 public:
-    virtual void equiper(Heros *h);
+    virtual void equiper(Heros *h, bool droite);
 };
 
 

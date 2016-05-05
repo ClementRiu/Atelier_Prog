@@ -122,10 +122,10 @@ void clic(int &x, int &y, Case *carte);
 void clicSimple(int &x, int &y);
 
 //Termine la journée (=tour dans Gestion)
-void finJournee(std::vector<Unite> &unites);
+void finJournee(std::vector<Unite*> unites);
 
 //Termine le tour en combat
-void finTourCombat(std::vector<Unite> &unites);
+void finTourCombat(std::vector<Unite*> unites);
 
 // Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). choix devient 0 pour le deplacement et 1 pour l'attaque
 void choisir(int &choix, int &x, int &y);
@@ -136,7 +136,7 @@ void survole(int &x, int &y);
 // Affiche l'endroit survole par la souris
 void afficheSurvole(int x, int y, Case *carte);
 
-void sauvegarde(std::vector<Unite> unites);
-void charge(std::vector<Unite> &unites, Case *carte);
+void sauvegarde(std::vector<Unite*> unites);
+void charge(std::vector<Unite*> unites, Case *carte);
 
 #endif // CARTE_H

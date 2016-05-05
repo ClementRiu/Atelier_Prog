@@ -210,17 +210,17 @@ void clicSimple(int &x, int &y) {
 }
 
 
-void finJournee(std::vector<Unite> &unites) {
+void finJournee(std::vector<Unite*> unites) {
     std::cout << "à compléter !! (fonction finJournee)" << std::endl;
     for (int i = 0; i < unites.size(); ++i) {
-        unites[i].setDep(unites[i].getDepMax());
+        unites[i]->setDep(unites[i]->getDepMax());
     }
 }
 
-void finTourCombat(std::vector<Unite> &unites) {
+void finTourCombat(std::vector<Unite*> unites) {
     std::cout << "à modifier !! (fonction finTourCombat)" << std::endl;
     for (int i = 0; i < unites.size(); ++i) {
-        unites[i].setDep(unites[i].getDepMax());
+        unites[i]->setDep(unites[i]->getDepMax());
     }
 }
 
@@ -275,14 +275,14 @@ void afficheSurvole(int x, int y, Case *carte) {
 }
 
 
-void sauvegarde(std::vector<Unite> unites) {
+void sauvegarde(std::vector<Unite*> unites) {
     std::ofstream fichier("../Gestion/sauvegarde.txt", std::ios::out | std::ios::trunc);
         if (fichier) {
             fichier << unites.size() << std::endl;
             for (int i = 0; i < unites.size(); i ++){
-                fichier << unites[i].getCase() << std::endl;
-                fichier << unites[i].getDep() << std::endl;
-                fichier << unites[i].getDepMax() << std::endl;
+                fichier << unites[i]->getCase() << std::endl;
+                fichier << unites[i]->getDep() << std::endl;
+                fichier << unites[i]->getDepMax() << std::endl;
             }
             fichier.close();
         }
@@ -292,7 +292,7 @@ void sauvegarde(std::vector<Unite> unites) {
 }
 
 
-void charge(std::vector<Unite> &unites, Case *carte){
+void charge(std::vector<Unite*> unites, Case *carte){
     std::ifstream fichier("D:/Charles/cours/Ponts/Info/2sem/Projet/Atelier_Prog/Gestion/sauvegarde.txt", std::ios::in);
         if(fichier){
             std::string ligne;
@@ -300,18 +300,14 @@ void charge(std::vector<Unite> &unites, Case *carte){
             int T = atoi(ligne.c_str());
             std::cout << T;
             for (int i = 0; i < T; i ++){
-                Unite u;
                 std::getline(fichier,ligne);
-                float val = atoi(ligne.c_str());
-                u.setCase(val);
-                carte[int(val)].flagHeros();
+                int num = atoi(ligne.c_str());
+                carte[num].flagHeros();
                 std::getline(fichier,ligne);
-                val = atoi(ligne.c_str());
-                u.setDep(val);
+                float dep = atoi(ligne.c_str());
                 std::getline(fichier,ligne);
-                val = atoi(ligne.c_str());
-                u.setDepMax(val);
-                unites.push_back(u);
+                float depMax = atoi(ligne.c_str());
+                unites.push_back(new Unite(dep, depMax, num));
             }
             fichier.close();
         }

@@ -36,32 +36,23 @@ int main() {
 
     // Initialisation des unites
     bool load = false;
-    std::vector<Unite> unites;
-    std::vector<Unite*> unites2;
+    std::vector<Unite*> unites;
     if (load) {
         charge(unites, carte);
     }
     else{
-        Heros h(5, 304);
         carte[304].flagHeros();
-        Unite h2(10, 303);
         carte[303].flagHeros();
-        unites.push_back(h);
-        unites.push_back(h2);
-        unites2.push_back(new Heros(5, 304));
-        unites2.push_back(new Unite(10, 303));
+        unites.push_back(new Heros(5, 304));
+        unites.push_back(new Unite(10, 303));
     }
-    unites2[0]->ouvreInventaire();
-    unites2[0]->ramasse(new Objet("merde"));
-    unites2[0]->ramasse(new Casque("casque"));
-    unites2[0]->ramasse(new Objet("merde"));
-    unites2[0]->ramasse(new Objet("merde"));
-    unites2[0]->ramasse(new Objet("merde"));
-    unites2[0]->ouvreInventaire();
-    unites2[0]->equipe(1);
-    //std::cout << unites2[0]->getNomCasque();
-    //std::cout << cas.getNom();
-    unites2[0]->ouvreInventaire();
+
+    // Remplissage de l'inventaire de la première unité qui est bien un héros
+    unites[0]->ramasse(new Objet("merde"));
+    unites[0]->ramasse(new Casque("casque"));
+    unites[0]->ramasse(new Objet("merde"));
+    unites[0]->ramasse(new Objet("merde"));
+    unites[0]->ramasse(new Objet("merde"));
 
     // Ecran de menu
     Bouton nouvellePartie(width/4, height/2-20, 3*width/4, height/2+20, Imagine::BLUE, "Nouvelle Partie");
@@ -103,10 +94,10 @@ int main() {
             save = false;
         }
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
-            while (unites[u].getCase() != numeroCase(x, y)) {
+            while (unites[u]->getCase() != numeroCase(x, y)) {
                 u += 1;
             }
-            std::vector<Bouton> boutons = unites[u].boutonAction(carte);
+            std::vector<Bouton> boutons = unites[u]->boutonAction(carte);
             for (int i=0; i < boutons.size(); ++i){
                 boutons[i].affiche();
             }
@@ -119,14 +110,32 @@ int main() {
                     carte[j * NbCase + i].affiche();
                 }
             }
+            // Bouton deplacement
             if (boutons[2].boutonActive(x, y)) {
-                unites[u].deplacement(carte);
+                unites[u]->deplacement(carte);
+            }
+            // Bouton inventaire
+            if (boutons[1].boutonActive(x, y)) {
+                unites[u]->ouvreInventaire();
+                unites[u]->equipe(1);
+                unites[u]->ouvreInventaire();
+                // Reaffichage de la carte
+                for (int i = 0; i < NbCase; i++) {
+                    for (int j = 0; j < NbCase; j++) {
+                        carte[NbCase * j + i].affiche();
+                    }
+                }
+                boutonSauvegarde.affiche();
+                boutonFinTour.affiche();
             }
         }
     }
-    for (int i = 0; i < unites2.size(); ++i){
-        delete unites2[i];
-        unites2[i] = 0;
+
+    // Destruction des unités
+    for (int i = 0; i < unites.size(); ++i){
+        unites[i]->~Unite();
+        delete unites[i];
+        unites[i] = 0;
     }
     Imagine::endGraphics();
     return 0;

@@ -31,7 +31,7 @@ std::string Objet::getNom(){
 }
 
 
-void Objet::equiper(Heros *h){
+void Objet::equiper(Heros *h, bool droite){
 
 }
 
@@ -65,10 +65,8 @@ int Equipement::getType() {
 }
 
 
-void Casque::equiper(Heros *h){
+void Casque::equiper(Heros *h, bool droite){
     *this = h->equipeCasque(*this);
-    std::cout << this->getNom() << std::endl;
-    std::cout << h->getNomCasque() << std::endl;
 }
 
 
@@ -82,32 +80,42 @@ Casque::Casque(std::string nom_) : Equipement(nom_){
 }
 
 
-void Anneau::equiper(Heros *h){
-    *this = h->equipeAnneau(*this);
+void Anneau::equiper(Heros *h, bool droite){
+    if (droite){
+        *this = h->equipeAnneauDroite(*this);
+    }
+    else{
+        *this = h->equipeAnneauGauche(*this);
+    }
 }
 
 
-void Gants::equiper(Heros *h){
+void Gants::equiper(Heros *h, bool droite){
     *this = h->equipeGants(*this);
 }
 
 
-void Jambes::equiper(Heros *h){
+void Jambes::equiper(Heros *h, bool droite){
     *this = h->equipeJambes(*this);
 }
 
 
-void Bottes::equiper(Heros *h){
+void Bottes::equiper(Heros *h, bool droite){
     *this = h->equipeBottes(*this);
 }
 
 
-void Arme::equiper(Heros *h){
-    *this = h->equipeArme(*this);
+void Arme::equiper(Heros *h, bool droite){
+    if (droite){
+        *this = h->equipeArmeDroite(*this);
+    }
+    else{
+        *this = h->equipeArmeGauche(*this);
+    }
 }
 
 
-void Torse::equiper(Heros *h){
+void Torse::equiper(Heros *h, bool droite){
     *this = h->equipeTorse(*this);
 }
 

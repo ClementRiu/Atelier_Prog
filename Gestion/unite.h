@@ -76,6 +76,8 @@ public:
 
     Unite(float dep, int num);
 
+    Unite(float dep, float depMax, int num);
+
     void deplacement(Case *carte);
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
@@ -84,9 +86,9 @@ public:
     void deplaceVersCase(Case &c2, Case &c1);
 
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
-    void tour(Case carte[NbCase * NbCase], std::vector<Unite> &unites, Bouton boutonFinTour);
+    void tour(Case carte[NbCase * NbCase], std::vector<Unite*> unites, Bouton boutonFinTour);
 
-    void attaque(Attaque attq, Case *carte, std::vector<Unite> &unites);
+    void attaque(Attaque attq, Case *carte, std::vector<Unite*> unites);
 
     void changeOrientation(int i);
 
@@ -109,7 +111,7 @@ public:
     bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
-    void action(Attaque a, Unite &u);
+    void action(Attaque a, Unite *u);
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
@@ -122,7 +124,7 @@ public:
     virtual void ouvreInventaire();
 
     // Fonction vide ici
-    virtual void equipe(int i);
+    virtual void equipe(int i, bool droite = true);
 
     // Fonction vide ici
     virtual std::string getNomCasque();
@@ -168,8 +170,8 @@ class Heros : public Unite {
     Gants equipementGants;
     Jambes equipementJambes;
     Bottes equipementBottes;
-    Anneau equipementAnneau1;
-    Anneau equipementAnneau2;
+    Anneau equipementAnneauDroite;
+    Anneau equipementAnneauGauche;
 
 public:
     Heros(float dep, int num);
@@ -179,15 +181,13 @@ public:
     Heros(const Unite& u);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
-    virtual void equipe(int i);
-
-    //Equipement equipe(Equipement eq, int i);
+    virtual void equipe(int i, bool droite = true);
 
     Casque equipeCasque(Casque casque);
 
-    Arme equipeArme(Arme arme);
+    Arme equipeArmeDroite(Arme arme);
 
-    //Equipement equipeArmeGauche(Equipement arme);
+    Arme equipeArmeGauche(Arme arme);
 
     Torse equipeTorse(Torse torse);
 
@@ -197,10 +197,11 @@ public:
 
     Bottes equipeBottes(Bottes bottes);
 
-    Anneau equipeAnneau(Anneau anneau);
+    Anneau equipeAnneauDroite(Anneau anneau);
 
-    //Equipement equipeAnneau2(Equipement anneau);
+    Anneau equipeAnneauGauche(Anneau anneau);
 
+    //Fonction a modifier
     virtual void ouvreInventaire();
 
     virtual void ramasse(Objet *obj);

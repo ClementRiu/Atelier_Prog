@@ -3,7 +3,8 @@
 #include "../Gestion/carte.h"
 
 int main() {
-    Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
+    Imagine::openWindow(width, height);
+
     // Initialisation d'une attaque
     std::vector<Imagine::Coords<2> > zoneInfl;
     zoneInfl.push_back(portee10);
@@ -15,10 +16,12 @@ int main() {
     zoneInfl.push_back(portee0_2);
     zoneInfl.push_back(portee0_1);
     Attaque coinCoinOuille(zoneInfl, 10);
+
     // Initialisation des types de case
     TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
     // Initialisation de la carte
     Case carte[NbCase * NbCase];
+
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
@@ -26,20 +29,22 @@ int main() {
             carte[numeroCase(i, j)] = c;
         }
     }
+
     // Initialisation des unites
-    std::vector<Unite> unites;
-    Unite h(5, 204);
+    std::vector<Unite*> unites;
     carte[204].flagHeros();
-    Unite h2(10, 203);
     carte[203].flagHeros();
-    unites.push_back(h);
-    unites.push_back(h2);
+    unites.push_back(new Unite(5, 204));
+    unites.push_back(new Unite(10, 203));
+
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
         for (int j = 0; j < NbCase; j++) {
             carte[NbCase * j + i].affiche();
         }
     }
+
+    // Affichage du bouton fin de tour
     Bouton boutonFinTour(NbCase * Taille + Separation, Taille * (NbCase - 5),
                          NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
                          "End turn");
@@ -48,12 +53,19 @@ int main() {
 
 
     while (true) {
-        unites[0].tour(carte, unites, boutonFinTour);
-        unites[1].tour(carte, unites, boutonFinTour
+        unites[0]->tour(carte, unites, boutonFinTour);
+        unites[1]->tour(carte, unites, boutonFinTour
                        );
     }
 
     Imagine::endGraphics();
+
+    // Destruction des unités
+    for (int i = 0; i < unites.size(); ++i){
+        unites[i]->~Unite();
+        delete unites[i];
+        unites[i] = 0;
+    }
     return 0;
 }
 
