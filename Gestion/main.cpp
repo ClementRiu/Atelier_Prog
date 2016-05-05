@@ -52,7 +52,22 @@ int main() {
     unites[0]->ramasse(new Casque("casque"));
     unites[0]->ramasse(new Objet("merde"));
     unites[0]->ramasse(new Objet("merde"));
-    unites[0]->ramasse(new Objet("merde"));
+    unites[0]->ramasse(new Arme("hache"));
+    unites[0]->ramasse(new Jambes("genouillères"));
+    unites[0]->ramasse(new Gants("gants de cuir"));
+    unites[0]->ramasse(new Objet("clafoutis"));
+    unites[0]->ramasse(new Objet("concombre"));
+    unites[0]->ramasse(new Objet("creme brulee"));
+    unites[0]->ramasse(new Objet("pain"));
+    unites[0]->ramasse(new Objet("confiture"));
+    unites[0]->ramasse(new Objet("fromage"));
+    unites[0]->ramasse(new Objet("zinzifruits"));
+    unites[0]->ramasse(new Objet("roche"));
+    unites[0]->ramasse(new Objet("cle"));
+    unites[0]->ramasse(new Objet("rat mort"));
+    unites[0]->ramasse(new Objet("boite a outils"));
+
+
 
     // Ecran de menu
     Bouton nouvellePartie(width/4, height/2-20, 3*width/4, height/2+20, Imagine::BLUE, "Nouvelle Partie");

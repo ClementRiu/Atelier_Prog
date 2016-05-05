@@ -106,9 +106,9 @@ public:
     int hauteur(); // renvoie la la hauteur du bouton
 
     // A changer
-    void affiche(); // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
+    void affiche(int decalementVertical = 0); // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
 
-    bool boutonActive(int x, int y); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
+    bool boutonActive(int x, int y, int decalementVertical = 0); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
 
     bool boutonVide();
 

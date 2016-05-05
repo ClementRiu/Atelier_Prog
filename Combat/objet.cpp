@@ -40,8 +40,8 @@ void Objet::equiper(Heros *h, bool droite){
 Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
     if (typeid(*this) == typeid(*obj)){
         Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
-        ymin += 2 * Police;
-        ymax += 2 * Police;
+        ymin += EcartementLignesInventaire;
+        ymax += EcartementLignesInventaire;
         return b;
     }
     else{
@@ -105,8 +105,28 @@ void Anneau::equiper(Heros *h, bool droite){
 }
 
 
+Anneau::Anneau(){
+
+}
+
+
+Anneau::Anneau(std::string nom_) : Equipement(nom_){
+
+}
+
+
 void Gants::equiper(Heros *h, bool droite){
     *this = h->equipeGants(*this);
+}
+
+
+Gants::Gants(){
+
+}
+
+
+Gants::Gants(std::string nom_) : Equipement(nom_){
+
 }
 
 
@@ -115,8 +135,28 @@ void Jambes::equiper(Heros *h, bool droite){
 }
 
 
+Jambes::Jambes(){
+
+}
+
+
+Jambes::Jambes(std::string nom_) : Equipement(nom_){
+
+}
+
+
 void Bottes::equiper(Heros *h, bool droite){
     *this = h->equipeBottes(*this);
+}
+
+
+Bottes::Bottes(){
+
+}
+
+
+Bottes::Bottes(std::string nom_) : Equipement(nom_){
+
 }
 
 
@@ -130,8 +170,28 @@ void Arme::equiper(Heros *h, bool droite){
 }
 
 
+Arme::Arme(){
+
+}
+
+
+Arme::Arme(std::string nom_) : Equipement(nom_){
+
+}
+
+
 void Torse::equiper(Heros *h, bool droite){
     *this = h->equipeTorse(*this);
+}
+
+
+Torse::Torse(){
+
+}
+
+
+Torse::Torse(std::string nom_) : Equipement(nom_){
+
 }
 
 

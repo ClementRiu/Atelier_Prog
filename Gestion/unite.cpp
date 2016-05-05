@@ -348,8 +348,20 @@ Armee::Armee(const Armee &a) {
 
 
 Heros::Heros(float dep, int num) : Unite(dep, num) {
-    Casque c("base");
-    equipementCasque=c;
+    Casque c("Casque de base");
+    Arme a("Arme de base");
+    Torse t("Armure de Base");
+    Gants g("Gants de base");
+    Anneau an("Anneau de base");
+    Bottes b("Bottes de base");
+    Jambes j("Genouilleres de base");
+    equipementCasque = c;
+    equipementArmeDroite = a;
+    equipementTorse = t;
+    equipementGants = g;
+    equipementAnneauDroite = an;
+    equipementBottes = b;
+    equipementJambes = j;
 }
 
 
@@ -469,7 +481,14 @@ void Heros::ouvreInventaire(){
     Bouton boutonStop(NbCase * Taille + Separation, Taille * (NbCase - 5),
                          NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
                          "Fermer");
+    Bouton boutonUp(NbCase * Taille + Separation, 0, NbCase * Taille + Separation + LargDroite,
+                    LargDroite, Imagine::BLACK, "Up");
+    Bouton boutonDown(NbCase * Taille + Separation, LargDroite + 10,
+                      NbCase * Taille + Separation + LargDroite, 2 * LargDroite + 10,
+                      Imagine::BLACK, "Down");
     boutonStop.affiche();
+    boutonUp.affiche();
+    boutonDown.affiche();
     nomBoutons.push_back("Arme");
     nomBoutons.push_back("Anneau");
     nomBoutons.push_back("Bottes");
@@ -494,11 +513,13 @@ void Heros::ouvreInventaire(){
     nomObjets.push_back(new Casque());
     nomObjets.push_back(new Objet());
     int x, y;
+    int decalementVertical = 0;
     clicSimple(x, y);
     while (!boutonStop.boutonActive(x, y)){
         int xmin = 180, ymin = Police, xmax = width - 100, ymax = 2 * Police;
         for (int i = 0; i < boutonsChoix.size(); ++i){
             if (boutonsChoix[i].boutonActive(x, y)){
+                decalementVertical = 0;
                 boutonEquipement.clear();
                 equipementPresent.clear();
                 for (int j = 0; j < inventaire.size(); ++j){
@@ -510,14 +531,20 @@ void Heros::ouvreInventaire(){
                 }
             }
         }
-        for (int i = 0; i < boutonEquipement.size(); ++i){
-            boutonEquipement[i].affiche();
+        if (boutonUp.boutonActive(x, y)){
+            decalementVertical -= EcartementLignesInventaire;
+        }
+        if (boutonDown.boutonActive(x, y)){
+            decalementVertical += EcartementLignesInventaire;
         }
         for (int i = 0; i < boutonEquipement.size(); ++i){
-            if (boutonEquipement[i].boutonActive(x, y)){
+            boutonEquipement[i].affiche(decalementVertical);
+        }
+        for (int i = 0; i < boutonEquipement.size(); ++i){
+            if (boutonEquipement[i].boutonActive(x, y, decalementVertical)){
                 this->equipe(equipementPresent[i]);
                 boutonEquipement[i].setNom(inventaire[equipementPresent[i]]->getNom());
-                boutonEquipement[i].affiche();
+                boutonEquipement[i].affiche(decalementVertical);
             }
         }
         clicSimple(x, y);

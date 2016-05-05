@@ -155,16 +155,18 @@ int Bouton::hauteur(){
 
 
 // A changer
-void Bouton::affiche(){
-    int taille = std::min(int (1.5 * this->largeur() / nomBouton.size()), this->hauteur());
-    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1], this->largeur(),
+void Bouton::affiche(int decalementVertical){
+    int taille = std::min(int (1.2 * this->largeur() / nomBouton.size()), this->hauteur());
+    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1] + decalementVertical, this->largeur(),
             this->hauteur(), image);
-    Imagine::drawString(zoneDeDelimitation[0], zoneDeDelimitation[1] + taille, nomBouton, Imagine::WHITE, taille);
+    Imagine::drawString(zoneDeDelimitation[0], zoneDeDelimitation[1] + taille + decalementVertical,
+            nomBouton, Imagine::WHITE, taille);
 }
 
 
-bool Bouton::boutonActive(int x, int y){
-    if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] && x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3]) {
+bool Bouton::boutonActive(int x, int y, int decalementVertical){
+    if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] + decalementVertical &&
+            x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3] + decalementVertical) {
         return true;
     }
     return false;

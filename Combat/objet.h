@@ -10,7 +10,8 @@
 
 const int NB_RES = 6;
 const int NB_DEG_PHY = 3;
-const int Police = 15;
+const int Police = 20;
+const int EcartementLignesInventaire = 3 * Police;
 
 
 class Heros;
@@ -74,36 +75,60 @@ public:
 
 class Anneau : public Equipement {
 public:
+    Anneau();
+
+    Anneau(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Gants : public Equipement {
 public:
+    Gants();
+
+    Gants(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Jambes : public Equipement {
 public:
+    Jambes();
+
+    Jambes(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Bottes : public Equipement {
 public:
+    Bottes();
+
+    Bottes(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Arme : public Equipement {
 public:
+    Arme();
+
+    Arme(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
 
 class Torse : public Equipement {
 public:
+    Torse();
+
+    Torse(std::string nom_);
+
     virtual void equiper(Heros *h, bool droite);
 };
 
