@@ -1,13 +1,16 @@
 #include "objet.h"
+#include "../Gestion/unite.h"
 
 
 Objet::Objet() {
 
 }
 
+
 Objet::Objet(std::string nom_) {
     nom = nom_;
 }
+
 
 Objet::Objet(const Objet& o){
     nom = o.nom;
@@ -22,9 +25,21 @@ bool Objet::operator==(const Objet &B) const {
     return false;
 }
 
+
+std::string Objet::getNom(){
+    return nom;
+}
+
+
+void Objet::equiper(Heros *h){
+
+}
+
+
 Equipement::Equipement(){
 
 }
+
 
 Equipement::Equipement(const Equipement &eq) : Objet(eq){
     type=eq.type;
@@ -39,9 +54,63 @@ Equipement::Equipement(const Equipement &eq) : Objet(eq){
     PDep=eq.PDep;
 }
 
+
+Equipement::Equipement(std::string nom_) : Objet(nom_){
+
+}
+
+
 int Equipement::getType() {
     return type;
 }
+
+
+void Casque::equiper(Heros *h){
+    *this = h->equipeCasque(*this);
+    std::cout << this->getNom() << std::endl;
+    std::cout << h->getNomCasque() << std::endl;
+}
+
+
+Casque::Casque(){
+
+}
+
+
+Casque::Casque(std::string nom_) : Equipement(nom_){
+
+}
+
+
+void Anneau::equiper(Heros *h){
+    *this = h->equipeAnneau(*this);
+}
+
+
+void Gants::equiper(Heros *h){
+    *this = h->equipeGants(*this);
+}
+
+
+void Jambes::equiper(Heros *h){
+    *this = h->equipeJambes(*this);
+}
+
+
+void Bottes::equiper(Heros *h){
+    *this = h->equipeBottes(*this);
+}
+
+
+void Arme::equiper(Heros *h){
+    *this = h->equipeArme(*this);
+}
+
+
+void Torse::equiper(Heros *h){
+    *this = h->equipeTorse(*this);
+}
+
 
 /*
 Arme::Arme() {

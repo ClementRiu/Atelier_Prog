@@ -1,4 +1,7 @@
-#pragma once
+#ifndef UNITE_H
+#define UNITE_H
+
+
 
 #include "../Combat/objet.h"
 #include <Imagine/Graphics.h>
@@ -6,8 +9,8 @@
 
 
 const int TAILLE_ARMEE = 6;
-const int TAILLE_INVENTAIRE = 10;
 const int NB_MAX_ATTAQUES = 10;
+
 
 const Imagine::Coords<2> portee10(1, 0);
 const Imagine::Coords<2> portee_10(-1, 0);
@@ -18,6 +21,7 @@ const Imagine::Coords<2> portee02(0, 2);
 const Imagine::Coords<2> portee0_2(0, -2);
 const Imagine::Coords<2> portee0_1(0, -1);
 
+
 /*
   *******************************************ATTENTION AUX CONTRUCTEURS PAR COPIE****************************
   Ils ont été créés principalement pour des tests sur les "deque" (voir documentation C++)
@@ -26,6 +30,7 @@ const Imagine::Coords<2> portee0_1(0, -1);
  *
  ***********************************************************************************************************
  */
+
 
 class Attaque {
     std::vector<Imagine::Coords<2> > zoneInfluence;
@@ -109,13 +114,30 @@ public:
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
     std::vector<Bouton> boutonAction(Case *carte);
+
+    // Fonction vide ici
+    virtual void ramasse(Objet *obj);
+
+    // Fonction vide ici
+    virtual void ouvreInventaire();
+
+    // Fonction vide ici
+    virtual void equipe(int i);
+
+    // Fonction vide ici
+    virtual std::string getNomCasque();
+
+    // Destructeur de la classe Unite (sert a creer celui de la classe Heros)
+    virtual ~Unite();
 };
 
 
 class Sbire : public Unite {
     int nombre;
+
 public:
     Sbire();
+
     Sbire(const Sbire & s);
 };
 
@@ -125,7 +147,9 @@ class Armee {
 
 public :
     Armee();
+
     Armee(std::vector<Sbire> sbires);
+
     Armee(const Armee &a);
 };
 
@@ -136,46 +160,57 @@ class Heros : public Unite {
     int niveau;
     int exp;
 
-    Objet inventaire[TAILLE_INVENTAIRE];
-    Equipement equipementCasque;
-    Equipement equipementArmeDroite;
-    Equipement equipementArmeGauche;
-    Equipement equipementTorse;
-    Equipement equipementGants;
-    Equipement equipementJambes;
-    Equipement equipementBottes;
-    Equipement equipementAnneau1;
-    Equipement equipementAnneau2;
+    std::vector<Objet*> inventaire;
+    Casque equipementCasque;
+    Arme equipementArmeDroite;
+    Arme equipementArmeGauche;
+    Torse equipementTorse;
+    Gants equipementGants;
+    Jambes equipementJambes;
+    Bottes equipementBottes;
+    Anneau equipementAnneau1;
+    Anneau equipementAnneau2;
 
 public:
     Heros(float dep, int num);
+
     Heros(const Heros& h);
 
+    Heros(const Unite& u);
+
     //equipe appelle la méthode adéquate en fonction du type d'équipement
-    Equipement equipe(Equipement eq);
+    virtual void equipe(int i);
 
-    Equipement equipe(Equipement eq, int i);
+    //Equipement equipe(Equipement eq, int i);
 
-    Equipement equipeCasque(Equipement casque);
+    Casque equipeCasque(Casque casque);
 
-    Equipement equipeArmeDroite(Equipement arme);
+    Arme equipeArme(Arme arme);
 
-    Equipement equipeArmeGauche(Equipement arme);
+    //Equipement equipeArmeGauche(Equipement arme);
 
-    Equipement equipeTorse(Equipement torse);
+    Torse equipeTorse(Torse torse);
 
-    Equipement equipeGants(Equipement gants);
+    Gants equipeGants(Gants gants);
 
-    Equipement equipeJambes(Equipement jambes);
+    Jambes equipeJambes(Jambes jambes);
 
-    Equipement equipeBottes(Equipement bottes);
+    Bottes equipeBottes(Bottes bottes);
 
-    Equipement equipeAnneau1(Equipement anneau);
+    Anneau equipeAnneau(Anneau anneau);
 
-    Equipement equipeAnneau2(Equipement anneau);
+    //Equipement equipeAnneau2(Equipement anneau);
+
+    virtual void ouvreInventaire();
+
+    virtual void ramasse(Objet *obj);
+
+    virtual std::string getNomCasque();
+
+    virtual ~Heros();
 };
 
-
+#endif
 
 
 

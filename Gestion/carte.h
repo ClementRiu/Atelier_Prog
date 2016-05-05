@@ -16,6 +16,8 @@ const int NbCase = 30;
 const int LargDroite = 3 * NbCase;
 const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
+const int width = NbCase * Taille + Separation + LargDroite;
+const int height = NbCase * Taille;
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
@@ -113,8 +115,11 @@ public:
 // Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
 int numeroCase(int x, int y);
 
-// Fonction renvoyant en référence dans x et y la position d'un clic
+// Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Case *carte);
+
+// Fonction renvoyant en référence dans x et y la position d'un clic
+void clicSimple(int &x, int &y);
 
 //Termine la journée (=tour dans Gestion)
 void finJournee(std::vector<Unite> &unites);

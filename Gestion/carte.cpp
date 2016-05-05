@@ -198,6 +198,18 @@ void clic(int &x, int &y, Case *carte) {
 }
 
 
+void clicSimple(int &x, int &y) {
+    Imagine::Event e;
+    do {
+        getEvent(0, e);
+        if (e.type == Imagine::EVT_BUT_ON) {
+            x = e.pix[0];
+            y = e.pix[1];
+        }
+    } while (e.type != Imagine::EVT_BUT_OFF);
+}
+
+
 void finJournee(std::vector<Unite> &unites) {
     std::cout << "à compléter !! (fonction finJournee)" << std::endl;
     for (int i = 0; i < unites.size(); ++i) {

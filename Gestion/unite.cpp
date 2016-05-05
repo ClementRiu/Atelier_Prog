@@ -146,24 +146,16 @@ float Unite::getDepMax() const {
 }
 
 
-Heros::Heros(float dep, int num) : Unite(dep, num) {
-}
-
-Heros::Heros(const Heros &h) : Unite(h) {
-    niveau = h.niveau;
-    exp = h.exp;
-    ArmeeHeros = h.ArmeeHeros;
-}
-
-
 //à implémenter
 void Unite::prendDommage(int attRecue) {
     std::cout << "à implémenter !" << std::endl;
 }
 
+
 void Unite::setAttaque(Attaque att, int i) {
     competences[i] = att;
 }
+
 
 bool Unite::estVivant() {
     if (PV <= 0) {
@@ -283,6 +275,31 @@ std::vector<Bouton> Unite::boutonAction(Case *carte){
 }
 
 
+void Unite::ramasse(Objet *obj){
+
+}
+
+
+void Unite::ouvreInventaire(){
+
+}
+
+
+void Unite::equipe(int i){
+
+}
+
+
+std::string Unite::getNomCasque(){
+
+}
+
+
+Unite::~Unite(){
+
+}
+
+
 Sbire::Sbire() {
 
 }
@@ -312,9 +329,28 @@ Armee::Armee(const Armee &a) {
 }
 
 
+Heros::Heros(float dep, int num) : Unite(dep, num) {
+    Casque c("base");
+    equipementCasque=c;
+}
+
+
+Heros::Heros(const Heros &h) : Unite(h) {
+    niveau = h.niveau;
+    exp = h.exp;
+    ArmeeHeros = h.ArmeeHeros;
+}
+
+
+Heros::Heros(const Unite &h) : Unite(h) {
+}
+
+
 //*********************************EQUIPEMENT********************************************
-Equipement Heros::equipeCasque(Equipement casque) {
-    Equipement desequipe = equipementCasque;
+
+
+Casque Heros::equipeCasque(Casque casque) {
+    Casque desequipe = equipementCasque;
 
     equipementCasque = casque;
 
@@ -323,8 +359,8 @@ Equipement Heros::equipeCasque(Equipement casque) {
 
 
 //manque gestion des deux mains !!
-Equipement Heros::equipeArmeDroite(Equipement arme) {
-    Equipement desequipe = equipementArmeDroite;
+Arme Heros::equipeArme(Arme arme) {
+    Arme desequipe = equipementArmeDroite;
 
     equipementArmeDroite = arme;
 
@@ -332,17 +368,8 @@ Equipement Heros::equipeArmeDroite(Equipement arme) {
 }
 
 
-Equipement Heros::equipeArmeGauche(Equipement arme) {
-    Equipement desequipe = equipementArmeGauche;
-
-    equipementArmeGauche = arme;
-
-    return desequipe;
-}
-
-
-Equipement Heros::equipeTorse(Equipement torse) {
-    Equipement desequipe = equipementTorse;
+Torse Heros::equipeTorse(Torse torse) {
+    Torse desequipe = equipementTorse;
 
     equipementTorse = torse;
 
@@ -350,24 +377,24 @@ Equipement Heros::equipeTorse(Equipement torse) {
 
 }
 
-Equipement Heros::equipeGants(Equipement gants) {
-    Equipement desequipe = equipementGants;
+Gants Heros::equipeGants(Gants gants) {
+    Gants desequipe = equipementGants;
 
     equipementGants = gants;
 
     return desequipe;
 }
 
-Equipement Heros::equipeJambes(Equipement jambes) {
-    Equipement desequipe = equipementJambes;
+Jambes Heros::equipeJambes(Jambes jambes) {
+    Jambes desequipe = equipementJambes;
 
     equipementJambes = jambes;
 
     return desequipe;
 }
 
-Equipement Heros::equipeBottes(Equipement bottes) {
-    Equipement desequipe = equipementBottes;
+Bottes Heros::equipeBottes(Bottes bottes) {
+    Bottes desequipe = equipementBottes;
 
     equipementBottes = bottes;
 
@@ -375,8 +402,8 @@ Equipement Heros::equipeBottes(Equipement bottes) {
 }
 
 //manque gestion des deux anneaux !!
-Equipement Heros::equipeAnneau1(Equipement anneau) {
-    Equipement desequipe = equipementAnneau1;
+Anneau Heros::equipeAnneau(Anneau anneau) {
+    Anneau desequipe = equipementAnneau1;
 
     equipementAnneau1 = anneau;
 
@@ -384,15 +411,7 @@ Equipement Heros::equipeAnneau1(Equipement anneau) {
 }
 
 
-Equipement Heros::equipeAnneau2(Equipement anneau) {
-    Equipement desequipe = equipementAnneau2;
-
-    equipementAnneau2 = anneau;
-
-    return desequipe;
-}
-
-
+/*
 Equipement Heros::equipe(Equipement eq, int i) {
     if (eq.getType() == 1) {
         return equipeCasque(eq);
@@ -429,11 +448,39 @@ Equipement Heros::equipe(Equipement eq, int i) {
         }
     }
 }
+*/
 
-
-Equipement Heros::equipe(Equipement eq) {
-    return equipe(eq, 0);
+void Heros::equipe(int i) {
+    if (i < inventaire.size()) {
+        inventaire[i]->equiper(this);
+    }
 }
 
 
+void Heros::ramasse(Objet* obj){
+    inventaire.push_back(obj);
+}
+
+
+void Heros::ouvreInventaire(){
+    Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+    for (int i = 0; i < inventaire.size(); ++i){
+        Imagine::drawString(0, 50 * i + 20, inventaire[i]->getNom(), Imagine::BLACK, 20);
+    }
+    int x, y;
+    clicSimple(x, y);
+}
+
+
+std::string Heros::getNomCasque(){
+    return equipementCasque.getNom();
+}
+
+
+Heros::~Heros(){
+    for (int i = 0; i < inventaire.size(); ++i){
+        delete inventaire[i];
+        inventaire[i] = 0;
+    }
+}
 

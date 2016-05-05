@@ -3,15 +3,17 @@
 
 
 int main() {
-    Imagine::openWindow(NbCase * Taille + Separation + LargDroite, NbCase * Taille);
+    Imagine::openWindow(width, height);
 
     // Initialisation des types de case
     TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
     TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
     TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
     TypeCase ville(1, descVille, Imagine::MAGENTA);
+
     // Initialisation de la carte
     Case carte[NbCase * NbCase];
+
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
@@ -31,26 +33,51 @@ int main() {
     }
     Case c(0, 0, ville);
     carte[0] = c;
+
     // Initialisation des unites
     bool load = false;
     std::vector<Unite> unites;
+    std::vector<Unite*> unites2;
     if (load) {
         charge(unites, carte);
     }
     else{
-        Unite h(5, 304);
+        Heros h(5, 304);
         carte[304].flagHeros();
         Unite h2(10, 303);
         carte[303].flagHeros();
         unites.push_back(h);
         unites.push_back(h2);
+        unites2.push_back(new Heros(5, 304));
+        unites2.push_back(new Unite(10, 303));
     }
+    unites2[0]->ouvreInventaire();
+    unites2[0]->ramasse(new Objet("merde"));
+    unites2[0]->ramasse(new Casque("casque"));
+    unites2[0]->ramasse(new Objet("merde"));
+    unites2[0]->ramasse(new Objet("merde"));
+    unites2[0]->ramasse(new Objet("merde"));
+    unites2[0]->ouvreInventaire();
+    unites2[0]->equipe(1);
+    //std::cout << unites2[0]->getNomCasque();
+    //std::cout << cas.getNom();
+    unites2[0]->ouvreInventaire();
+
+    // Ecran de menu
+    Bouton nouvellePartie(width/4, height/2-20, 3*width/4, height/2+20, Imagine::BLUE, "Nouvelle Partie");
+    int x = 0, y = 0;
+    nouvellePartie.affiche();
+    while (!nouvellePartie.boutonActive(x, y)){
+        clicSimple(x, y);
+    }
+
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
         for (int j = 0; j < NbCase; j++) {
             carte[NbCase * j + i].affiche();
         }
     }
+
     // Creation et affichage des boutons
     Bouton boutonSauvegarde(NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
                             NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5), Imagine::BLUE,
@@ -60,6 +87,7 @@ int main() {
                          "End turn");
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
+
     // Deplacement des unites
     bool save = true;
     while (save) {
@@ -95,6 +123,10 @@ int main() {
                 unites[u].deplacement(carte);
             }
         }
+    }
+    for (int i = 0; i < unites2.size(); ++i){
+        delete unites2[i];
+        unites2[i] = 0;
     }
     Imagine::endGraphics();
     return 0;

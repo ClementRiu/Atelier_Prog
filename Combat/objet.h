@@ -1,23 +1,38 @@
+#ifndef OBJET_H
+#define OBJET_H
+
 #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
 
+
 const int NB_RES = 6;
 const int NB_DEG_PHY = 3;
+
+
+class Heros;
+
 
 class Objet {
     std::string nom;
     std::string type;
 public:
     Objet();
+
     Objet(const Objet& o);
 
     Objet(std::string nom_);
 
     bool operator==(const Objet &B) const;
+
+    std::string getNom();
+
+    virtual void equiper(Heros *h);
 };
 
+
 const Objet nul("NUL");
+
 
 class Equipement : public Objet {
     int type;
@@ -33,11 +48,59 @@ class Equipement : public Objet {
 
 public:
     Equipement();
+
     Equipement(const Equipement &eq);
+
+    Equipement(std::string nom_);
 
     int getType();
 };
 
+
+class Casque : public Equipement {
+public:
+    Casque();
+
+    Casque(std::string nom_);
+
+    virtual void equiper(Heros *h);
+};
+
+
+class Anneau : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
+
+
+class Gants : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
+
+
+class Jambes : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
+
+
+class Bottes : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
+
+
+class Arme : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
+
+
+class Torse : public Equipement {
+public:
+    virtual void equiper(Heros *h);
+};
 
 
 /*
@@ -91,3 +154,6 @@ public:
     void set_bonus_resistance(int res[NB_RES]);
 };
 */
+
+
+#endif // OBJET_H
