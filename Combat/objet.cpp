@@ -36,7 +36,6 @@ void Objet::equiper(Heros *h, bool droite){
 }
 
 
-// Existe-t-il un moyen propre de coder cette fonction ?
 Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
     if (typeid(*this) == typeid(*obj)){
         Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
@@ -47,6 +46,112 @@ Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
     else{
         Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
         return b;
+    }
+}
+
+
+int Inventaire::taille(){
+    return contenu.size();
+}
+
+
+void Inventaire::ajoute(Objet *obj){
+    contenu.push_back(obj);
+}
+
+
+Objet* Inventaire::get(int i){
+    assert (i < this->taille());
+    return contenu[i];
+}
+
+
+// Fonction a modifier
+// faire vien plutot de Unite
+void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
+                                 Unite *unite, void (Unite::*faire)(int, bool)){
+    Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+    std::vector<Bouton> boutonUtile;
+    std::vector<int> objetPresent;
+
+    // Affichage des boutons pour scroller et pour fermer
+    Bouton boutonStop(ZoneBoutonFerme, Imagine::BLACK, "Fermer");
+    Bouton boutonUp(ZoneBoutonUp, Imagine::BLACK, "Up");
+    Bouton boutonDown(ZoneBoutonDown, Imagine::BLACK, "Down");
+    boutonStop.affiche();
+    boutonUp.affiche();
+    boutonDown.affiche();
+
+    // Affichage des boutons des differentes categories
+    for (int i = 0; i < boutonsCategories.size(); ++i){
+        boutonsCategories[i].affiche();
+    }
+
+    // Acrions possibles dans l'inventaire
+    int x, y;
+    int decalementVertical = 0; // Cette variable va servir a scroller
+    clicSimple(x, y);
+    while (!boutonStop.boutonActive(x, y)){
+        // Les entiers suivants vont savoir ou placer le bouton odulo le decalement vertical
+        int xmin = BoutonMilieu[0], ymin = Police, xmax = BoutonMilieu[1], ymax = 2 * Police;
+
+        // On regarde si on a clique sur une des categories
+        for (int i = 0; i < boutonsCategories.size(); ++i){
+            if (boutonsCategories[i].boutonActive(x, y)){
+                // Quand on clique sur une categorie, tout se reinitialise
+                decalementVertical = 0;
+                boutonUtile.clear();
+                objetPresent.clear();
+                for (int j = 0; j < contenu.size(); ++j){
+                    // On cree les differents boutons de la categorie
+                    Bouton b = contenu[j]->creeBouton(classeObjets.get(i), xmin, ymin, xmax, ymax);
+                    // On regarde si le bouton es ide et si c'est n'est pas le cas, on  le stock ainsi que la position
+                    // Dans l'inventaire qui lui est associee
+                    if (!b.boutonVide()){
+                        boutonUtile.push_back(b);
+                        objetPresent.push_back(j);
+                    }
+                }
+            }
+        }
+
+        // On regarde si on a clique sur le bouton Up
+        if (boutonUp.boutonActive(x, y)){
+            decalementVertical -= EcartementLignesInventaire;
+        }
+
+        // On regarde si on a clique sur le bouton down
+        if (boutonDown.boutonActive(x, y)){
+            decalementVertical += EcartementLignesInventaire;
+        }
+
+        // On affiche les boutons de la categorie selectionnee
+        for (int i = 0; i < boutonUtile.size(); ++i){
+            boutonUtile[i].affiche(decalementVertical);
+        }
+
+        // On regarde si on vient de cliquer sur un des boutons specifiques d'une categorie
+        for (int i = 0; i < boutonUtile.size(); ++i){
+            if (boutonUtile[i].boutonActive(x, y, decalementVertical)){
+                // Applique une methode de Unite a travers le pointeur faire
+                (*unite.*faire)(objetPresent[i], true);
+                // On change le nom du bouton et on le reaffiche
+                boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom());
+                boutonUtile[i].affiche(decalementVertical);
+            }
+        }
+
+        // On clique, et on efface les objets
+        clicSimple(x, y);
+        Imagine::fillRect(BoutonMilieu[0], 0, BoutonMilieu[1] - BoutonMilieu[0], height, Imagine::WHITE);
+    }
+}
+
+
+Inventaire::~Inventaire(){
+    for (int i = 0; i < contenu.size(); i++){
+        delete contenu[i];
+        contenu[i] = 0;
     }
 }
 

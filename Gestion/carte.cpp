@@ -134,10 +134,21 @@ std::string Case::getDescription() {
 
 
 Bouton::Bouton (int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom){
-    zoneDeDelimitation[0]=xmin;
-    zoneDeDelimitation[1]=ymin;
-    zoneDeDelimitation[2]=xmax;
-    zoneDeDelimitation[3]=ymax;
+    zoneDeDelimitation[0] = xmin;
+    zoneDeDelimitation[1] = ymin;
+    zoneDeDelimitation[2] = xmax;
+    zoneDeDelimitation[3] = ymax;
+    image=c;
+    nomBouton=nom;
+    taillePolice = 0;
+}
+
+
+Bouton::Bouton(const int zone[4], Imagine::Color c, std::string nom){
+    zoneDeDelimitation[0] = zone[0];
+    zoneDeDelimitation[1] = zone[1];
+    zoneDeDelimitation[2] = zone[2];
+    zoneDeDelimitation[3] = zone[3];
     image=c;
     nomBouton=nom;
     taillePolice = 0;

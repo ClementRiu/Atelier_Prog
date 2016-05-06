@@ -459,36 +459,21 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 
 
 void Heros::equipe(int i, bool droite) {
-    if (i < inventaire.size()) {
-        inventaire[i]->equiper(this, droite);
+    if (i < inventaire.taille()) {
+        inventaire.get(i)->equiper(this, droite);
     }
 }
 
 
 void Heros::ramasse(Objet* obj){
-    inventaire.push_back(obj);
+    inventaire.ajoute(obj);
 }
 
 
-// Fonction a modifier
 void Heros::ouvreInventaire(){
-    Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+    // Creation des differents boutons pour les differentes categories d'objets
     std::vector<Bouton> boutonsChoix;
     std::vector<std::string> nomBoutons;
-    std::vector<Objet*> nomObjets;
-    std::vector<Bouton> boutonEquipement;
-    std::vector<int> equipementPresent;
-    Bouton boutonStop(NbCase * Taille + Separation, Taille * (NbCase - 5),
-                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
-                         "Fermer");
-    Bouton boutonUp(NbCase * Taille + Separation, 0, NbCase * Taille + Separation + LargDroite,
-                    LargDroite, Imagine::BLACK, "Up");
-    Bouton boutonDown(NbCase * Taille + Separation, LargDroite + 10,
-                      NbCase * Taille + Separation + LargDroite, 2 * LargDroite + 10,
-                      Imagine::BLACK, "Down");
-    boutonStop.affiche();
-    boutonUp.affiche();
-    boutonDown.affiche();
     nomBoutons.push_back("Arme");
     nomBoutons.push_back("Anneau");
     nomBoutons.push_back("Bottes");
@@ -501,59 +486,24 @@ void Heros::ouvreInventaire(){
         Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
         boutonsChoix.push_back(b);
     }
-    for (int i = 0; i < boutonsChoix.size(); ++i){
-        boutonsChoix[i].affiche();
-    }
-    nomObjets.push_back(new Arme());
-    nomObjets.push_back(new Anneau());
-    nomObjets.push_back(new Bottes());
-    nomObjets.push_back(new Gants());
-    nomObjets.push_back(new Jambes());
-    nomObjets.push_back(new Torse());
-    nomObjets.push_back(new Casque());
-    nomObjets.push_back(new Objet());
-    int x, y;
-    int decalementVertical = 0;
-    clicSimple(x, y);
-    while (!boutonStop.boutonActive(x, y)){
-        int xmin = 180, ymin = Police, xmax = width - 100, ymax = 2 * Police;
-        for (int i = 0; i < boutonsChoix.size(); ++i){
-            if (boutonsChoix[i].boutonActive(x, y)){
-                decalementVertical = 0;
-                boutonEquipement.clear();
-                equipementPresent.clear();
-                for (int j = 0; j < inventaire.size(); ++j){
-                    Bouton b = inventaire[j]->creeBouton(nomObjets[i], xmin, ymin, xmax, ymax);
-                    if (!b.boutonVide()){
-                        boutonEquipement.push_back(b);
-                        equipementPresent.push_back(j);
-                    }
-                }
-            }
-        }
-        if (boutonUp.boutonActive(x, y)){
-            decalementVertical -= EcartementLignesInventaire;
-        }
-        if (boutonDown.boutonActive(x, y)){
-            decalementVertical += EcartementLignesInventaire;
-        }
-        for (int i = 0; i < boutonEquipement.size(); ++i){
-            boutonEquipement[i].affiche(decalementVertical);
-        }
-        for (int i = 0; i < boutonEquipement.size(); ++i){
-            if (boutonEquipement[i].boutonActive(x, y, decalementVertical)){
-                this->equipe(equipementPresent[i]);
-                boutonEquipement[i].setNom(inventaire[equipementPresent[i]]->getNom());
-                boutonEquipement[i].affiche(decalementVertical);
-            }
-        }
-        clicSimple(x, y);
-        Imagine::fillRect(180, 0, width - 100 - 180, height, Imagine::WHITE);
-    }
-    for (int i = 0; i < nomObjets.size(); ++i){
-        delete nomObjets[i];
-        nomObjets[i] = 0;
-    }
+
+    // Creation des differentes categories d'objets
+    Inventaire categoriesObjets;
+    categoriesObjets.ajoute(new Arme());
+    categoriesObjets.ajoute(new Anneau());
+    categoriesObjets.ajoute(new Bottes());
+    categoriesObjets.ajoute(new Gants());
+    categoriesObjets.ajoute(new Jambes());
+    categoriesObjets.ajoute(new Torse());
+    categoriesObjets.ajoute(new Casque());
+    categoriesObjets.ajoute(new Objet());
+
+    // Creation du pointeur vers la fonction equipe
+    void (Unite::*pointeurFonction)(int, bool) = &Unite::equipe;
+
+    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+
+    categoriesObjets.~Inventaire();
 }
 
 
@@ -563,9 +513,6 @@ std::string Heros::getNomCasque(){
 
 
 Heros::~Heros(){
-    for (int i = 0; i < inventaire.size(); ++i){
-        delete inventaire[i];
-        inventaire[i] = 0;
-    }
+    inventaire.~Inventaire();
 }
 

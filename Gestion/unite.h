@@ -48,7 +48,8 @@ public:
 };
 
 
-class Unite {
+// Unite herite d'objet pour pouvoir etre achetee, vendue et inventorisee aussi
+class Unite : public Objet{
     //caractéristiques de l'unité
     float PV;
     float PVMax;
@@ -162,7 +163,7 @@ class Heros : public Unite {
     int niveau;
     int exp;
 
-    std::vector<Objet*> inventaire;
+    Inventaire inventaire;
     Casque equipementCasque;
     Arme equipementArmeDroite;
     Arme equipementArmeGauche;
@@ -204,8 +205,10 @@ public:
     //Fonction a modifier
     virtual void ouvreInventaire();
 
+    // Fonction pour ajouter un objet a l'inventaire
     virtual void ramasse(Objet *obj);
 
+    // Fonction renvoyant le nom du casque equipe. Utile pour un test
     virtual std::string getNomCasque();
 
     virtual ~Heros();

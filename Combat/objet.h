@@ -11,10 +11,18 @@
 const int NB_RES = 6;
 const int NB_DEG_PHY = 3;
 const int Police = 20;
-const int EcartementLignesInventaire = 3 * Police;
+const int EcartementLignesInventaire = 3 * Police; // Ecartement entre les lignes de l'inventaire
+const int ZoneBoutonFerme[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5),
+                                NbCase * Taille + Separation + LargDroite, NbCase * Taille}; // Zone du bouton ferme
+const int ZoneBoutonUp[4] = {NbCase * Taille + Separation, 0, NbCase * Taille + Separation + LargDroite,
+                             LargDroite}; // Zone du bouton Up
+const int ZoneBoutonDown[4] = {NbCase * Taille + Separation, LargDroite + 10,
+                               NbCase * Taille + Separation + LargDroite, 2 * LargDroite + 10}; // Zone du bouton Down
+const int BoutonMilieu[2] = {180, width - 100};
 
 
 class Heros;
+class Unite;
 
 
 class Objet {
@@ -23,17 +31,42 @@ class Objet {
 public:
     Objet();
 
-    Objet(const Objet& o);
-
     Objet(std::string nom_);
+
+    Objet(const Objet& o);
 
     bool operator==(const Objet &B) const;
 
     std::string getNom();
 
+    // Fonction vide utile uniquement pour les equipements
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Bouton creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax);
+    // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
+    // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
+    Bouton creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax);
+};
+
+
+// Fonction a modifier
+// faire vien plutot de Unite
+class Inventaire{
+    std::vector<Objet*> contenu;
+public:
+    int taille();
+
+    // Ajoute un objet dans l'inventaire
+    void ajoute(Objet *obj);
+
+    // renvoie le pointeur sur l'objet numero i
+    Objet* get(int i);
+
+    // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
+    // Voir unite.h pour avoir un exemple
+    void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
+                                     Unite *unite, void (Unite::*faire)(int, bool));
+
+    ~Inventaire();
 };
 
 

@@ -85,12 +85,8 @@ int main() {
     }
 
     // Creation et affichage des boutons
-    Bouton boutonSauvegarde(NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
-                            NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5), Imagine::BLUE,
-                            "Save & Quit");
-    Bouton boutonFinTour(NbCase * Taille + Separation, Taille * (NbCase - 5),
-                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
-                         "End turn");
+    Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");
+    Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
 
@@ -100,14 +96,19 @@ int main() {
         int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
         clic(x, y, carte);
-        int u = 0;        
+        int u = 0;
+
+        // Le bouton sauvegarde estil active ?
         if (boutonFinTour.boutonActive(x, y)) {
             finJournee(unites);
         }
+
+        // Le bouton FinTour est-il active ?
         if (boutonSauvegarde.boutonActive(x, y)) {
             sauvegarde(unites);
             save = false;
         }
+        // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
             while (unites[u]->getCase() != numeroCase(x, y)) {
                 u += 1;
@@ -147,9 +148,9 @@ int main() {
     }
 
     // Destruction des unités
+    // EST CE QUE CA MARCHE VRAIMENT ????? FUITE ????
     for (int i = 0; i < unites.size(); ++i){
         unites[i]->~Unite();
-        delete unites[i];
         unites[i] = 0;
     }
     Imagine::endGraphics();

@@ -18,6 +18,10 @@ const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
 const int width = NbCase * Taille + Separation + LargDroite;
 const int height = NbCase * Taille;
+const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5),
+                                  NbCase * Taille + Separation + LargDroite, NbCase * Taille};
+const int ZoneBoutonSauvegarde[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
+                                     NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5)};
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
@@ -101,15 +105,22 @@ class Bouton{
 public:
     Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom);
 
-    int largeur(); // Renvoie la largeur du bouton
+    Bouton(const int zone[4], Imagine::Color c, std::string nom);
 
-    int hauteur(); // renvoie la la hauteur du bouton
+    // Renvoie la largeur du bouton
+    int largeur();
+
+    // renvoie la la hauteur du bouton
+    int hauteur();
 
     // A changer
-    void affiche(int decalementVertical = 0); // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
+    // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
+    void affiche(int decalementVertical = 0);
 
-    bool boutonActive(int x, int y, int decalementVertical = 0); // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
+    // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
+    bool boutonActive(int x, int y, int decalementVertical = 0);
 
+    // Regarde si le bouton est vide
     bool boutonVide();
 
     void setNom(std::string nom);

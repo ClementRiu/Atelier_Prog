@@ -7,5 +7,5 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${d}/CMake")
 find_package(Imagine)
 
 project(Ville)
-add_executable(Ville main.cpp ville.h ville.cpp)
+add_executable(Ville main.cpp ville.h ville.cpp ../Combat/objet.h ../Combat/objet.cpp ../Gestion/unite.h ../Gestion/unite.cpp ../Gestion/carte.h ../Gestion/carte.cpp ../Gestion/priorite.h ../Gestion/priorite.cpp)
 ImagineUseModules(Ville Graphics)

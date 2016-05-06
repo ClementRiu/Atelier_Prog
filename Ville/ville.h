@@ -19,20 +19,35 @@ class Ville {
     int camp;                       //le joueur à qui appartient la ville
 public:
     Ville(int faction);
+
     ~Ville();
+
     void construction(int i); //augment le niveau du batiment i
+
     void recrute(int i);    // recrute un soldat
+
     void achat(int i);          //achete un objet
+
     void update_recrutable();    //met a jour la liste des soldats recrutable
+
     void update_ameliorable();   //met a jour la liste des batiments ameliorable
+
     void update_achetable();     //met a jour la liste des objet achetable
+
     void set_heros_present(bool b);
+
     int get_lv_batiment(int i);   //renvoie le niveau du batiment i
+
     Armee get_garnison();
+
     int get_nb_recrue(int type);
+
     Objet* get_magasin();       //renvoie la liste des objet achetables
+
     int get_camp();
+
     bool est_ameliorable(int i); //indique si le batiment i est ameliorable
+
     bool get_heros_present();
 };
 
