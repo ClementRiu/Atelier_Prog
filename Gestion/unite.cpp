@@ -503,7 +503,7 @@ void Heros::ouvreInventaire(){
 
     inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
 
-    categoriesObjets.~Inventaire();
+    //categoriesObjets.~Inventaire();
 }
 
 

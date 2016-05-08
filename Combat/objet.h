@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
-#include "typeinfo.h"
+#include <typeinfo>
 #include "../Gestion/carte.h"
 
 
@@ -55,6 +55,10 @@ class Inventaire{
 public:
     int taille();
 
+    Inventaire();
+
+    Inventaire(const Inventaire& inventaire);
+
     // Ajoute un objet dans l'inventaire
     void ajoute(Objet *obj);
 
@@ -74,8 +78,6 @@ const Objet nul("NUL");
 
 
 class Equipement : public Objet {
-    int type;
-
     int PV;
     int mana;
     int force;
@@ -91,8 +93,6 @@ public:
     Equipement(const Equipement &eq);
 
     Equipement(std::string nom_);
-
-    int getType();
 };
 
 

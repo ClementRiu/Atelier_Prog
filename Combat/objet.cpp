@@ -49,6 +49,16 @@ Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
     }
 }
 
+Inventaire::Inventaire(){
+}
+
+Inventaire::Inventaire(const Inventaire& inventaireACopier){
+    contenu.resize(inventaireACopier.contenu.size());
+    for (int i = 0; i<inventaireACopier.contenu.size(); i++){
+        contenu[i] = new Objet(*(inventaireACopier.contenu[i]));
+    }
+}
+
 
 int Inventaire::taille(){
     return contenu.size();
@@ -162,9 +172,7 @@ Equipement::Equipement(){
 
 
 Equipement::Equipement(const Equipement &eq) : Objet(eq){
-    type=eq.type;
-
-    PV=eq.type;
+    PV=eq.PV;
     mana=eq.mana;
     force=eq.force;
     defense=eq.defense;
@@ -177,11 +185,6 @@ Equipement::Equipement(const Equipement &eq) : Objet(eq){
 
 Equipement::Equipement(std::string nom_) : Objet(nom_){
 
-}
-
-
-int Equipement::getType() {
-    return type;
 }
 
 

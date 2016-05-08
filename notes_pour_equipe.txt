@@ -1,14 +1,3 @@
-Equipement :
-1 = Casque
-2 = Torse
-3 = Gants
-4 = Jambes
-5 = Bottes
-6 = Anneau
-10 = Arme
-11 = Bouclier
-
-
 Types dégats :
 0 : contendant
 1 : tranchant
