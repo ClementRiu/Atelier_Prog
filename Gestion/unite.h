@@ -49,7 +49,7 @@ public:
 
 
 // Unite herite d'objet pour pouvoir etre achetee, vendue et inventorisee aussi
-class Unite : public Objet{
+class Unite : public Mere{
     //caractéristiques de l'unité
     float PV;
     float PVMax;

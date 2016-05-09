@@ -2,19 +2,58 @@
 #include "../Gestion/unite.h"
 
 
-Objet::Objet() {
+std::string Mere::getNom(){
+    return nom;
+}
+
+
+Bouton Mere::creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax){
+    // On teste l'égalité des types 2 Meres, pour ensuite dans une autre fonction voir si on veut afficher l'objet dans la catégorie ou pas
+    if (typeid(*this) == typeid(*obj)){
+        Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
+        ymin += EcartementLignesInventaire;
+        ymax += EcartementLignesInventaire;
+        return b;
+    }
+    // Si on n'a pas envie de créer de bouton, on créé un bouton vide
+    else{
+        Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
+        return b;
+    }
+}
+
+
+void Mere::equiper(Heros *h, bool droite){
 
 }
 
 
-Objet::Objet(std::string nom_) {
+Mere::Mere() {
+
+}
+
+
+Mere::Mere(std::string nom_) {
     nom = nom_;
 }
 
 
-Objet::Objet(const Objet& o){
-    nom = o.nom;
-    type = o.type;
+Mere::Mere(const Mere& m){
+    nom = m.nom;
+}
+
+Objet::Objet() : Mere(){
+
+}
+
+
+Objet::Objet(std::string nom_) : Mere(nom_) {
+
+}
+
+
+Objet::Objet(const Objet& o) : Mere(o) {
+
 }
 
 
@@ -26,36 +65,14 @@ bool Objet::operator==(const Objet &B) const {
 }
 
 
-std::string Objet::getNom(){
-    return nom;
-}
-
-
-void Objet::equiper(Heros *h, bool droite){
-
-}
-
-
-Bouton Objet::creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax){
-    if (typeid(*this) == typeid(*obj)){
-        Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
-        ymin += EcartementLignesInventaire;
-        ymax += EcartementLignesInventaire;
-        return b;
-    }
-    else{
-        Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
-        return b;
-    }
-}
-
 Inventaire::Inventaire(){
 }
 
-Inventaire::Inventaire(const Inventaire& inventaireACopier){
-    contenu.resize(inventaireACopier.contenu.size());
-    for (int i = 0; i<inventaireACopier.contenu.size(); i++){
-        contenu[i] = new Objet(*(inventaireACopier.contenu[i]));
+
+Inventaire::Inventaire(const Inventaire* inventaireACopier){
+    contenu.resize(inventaireACopier->contenu.size());
+    for (int i = 0; i < inventaireACopier->contenu.size(); i++){
+        contenu[i] = new Mere(*(inventaireACopier->contenu[i]));
     }
 }
 
@@ -65,12 +82,12 @@ int Inventaire::taille(){
 }
 
 
-void Inventaire::ajoute(Objet *obj){
+void Inventaire::ajoute(Mere *obj){
     contenu.push_back(obj);
 }
 
 
-Objet* Inventaire::get(int i){
+Mere* Inventaire::get(int i){
     assert (i < this->taille());
     return contenu[i];
 }

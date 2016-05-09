@@ -150,7 +150,7 @@ int main() {
     // Destruction des unités
     // EST CE QUE CA MARCHE VRAIMENT ????? FUITE ????
     for (int i = 0; i < unites.size(); ++i){
-        //unites[i]->~Unite();
+        //delete unites[i];
         unites[i] = 0;
     }
     Imagine::endGraphics();

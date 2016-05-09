@@ -25,7 +25,29 @@ class Heros;
 class Unite;
 
 
-class Objet {
+class Mere{
+    int prix; // A CHANGER
+    std::string nom;
+public:
+
+    Mere();
+
+    Mere(std::string nom_);
+
+    Mere(const Mere& m);
+
+    std::string getNom();
+
+    // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
+    // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
+    Bouton creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax);
+
+    // Fonction vide utile uniquement pour les equipements
+    virtual void equiper(Heros *h, bool droite);
+};
+
+
+class Objet : public Mere{
     std::string nom;
     std::string type;
 public:
@@ -36,34 +58,25 @@ public:
     Objet(const Objet& o);
 
     bool operator==(const Objet &B) const;
-
-    std::string getNom();
-
-    // Fonction vide utile uniquement pour les equipements
-    virtual void equiper(Heros *h, bool droite);
-
-    // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
-    // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
-    Bouton creeBouton(Objet *obj, int xmin, int &ymin, int xmax, int &ymax);
 };
 
 
 // Fonction a modifier
 // faire vien plutot de Unite
 class Inventaire{
-    std::vector<Objet*> contenu;
+    std::vector<Mere*> contenu;
 public:
     int taille();
 
     Inventaire();
 
-    Inventaire(const Inventaire& inventaire);
+    Inventaire(const Inventaire* inventaire);
 
     // Ajoute un objet dans l'inventaire
-    void ajoute(Objet *obj);
+    void ajoute(Mere *obj);
 
     // renvoie le pointeur sur l'objet numero i
-    Objet* get(int i);
+    Mere* get(int i);
 
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple

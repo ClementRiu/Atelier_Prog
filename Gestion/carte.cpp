@@ -277,9 +277,11 @@ void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > different
             y = e.pix[1];
         }
         if (e.type == Imagine::EVT_MOTION) {
+            // On affiche et on efface les chemins qui correspondent à l'emplacement de la souris
             afficheChemins(x, y, carte, differentsChemins);
             x = e.pix[0];
             y = e.pix[1];
+            // On affiche la case que l'on survole
             afficheSurvole(x, y, carte);
             afficheChemins(x, y, carte, differentsChemins);
         }
@@ -312,6 +314,7 @@ void finJournee(std::vector<Unite*> unites) {
         unites[i]->setDep(unites[i]->getDepMax());
     }
 }
+
 
 void finTourCombat(std::vector<Unite*> unites) {
     std::cout << "à modifier !! (fonction finTourCombat)" << std::endl;
@@ -372,16 +375,22 @@ void afficheSurvole(int x, int y, Case *carte) {
 
 
 void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins){
+    // L'entier suivant correspont à la case la plus proche de (x,y) qui est en brillance. == -1 si aucune.
     int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
     if (numeroCase(x, y) != -1){
         int num;
-        if (carte[numeroCase(x, y)].Brillance() || (carte[numeroCase(x, y)].getOccupe() && caseProche != -1)){
+        // La dernière condition signifie que l'on est pas en train de regarder la position du Heros
+        if (carte[numeroCase(x, y)].Brillance() ||
+                (carte[numeroCase(x, y)].getOccupe() && caseProche != -1 &&
+                 numeroCase(x, y) != differentsChemins[0][0] + NbCase)){
+            // On met dans num le numéro de la case où l'on veut aller
             if (carte[numeroCase(x, y)].Brillance()){
                 num = numeroCase(x, y);
             }
             else{
                 num = caseProche;
             }
+            // On met en place et on affiche le chemin
             for (int i = 0; i < differentsChemins.size(); ++i){
                 if (differentsChemins[i][differentsChemins[i].size()-1] == num){
                     for (int j = 0; j < differentsChemins[i].size(); ++j){
