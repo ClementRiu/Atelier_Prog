@@ -57,6 +57,7 @@ class Case {
     int taille;
     bool occupe; // Variable indiquant si le heros est sur la case
     bool brillance; // Variable indiquant si la case est en surbrillance
+    bool utileChemin; // Variable indiquant si la case sert actuellement a montrer un chemin pour le Heros
     TypeCase type;
 
 public:
@@ -86,8 +87,11 @@ public:
     // Accesseur a la brillance de la case
     bool Brillance() const;
 
+    // Change le booleen utileChemin
+    void setChemin();
+
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    void fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
+    std::vector< std::vector<int> > fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
     Imagine::Color getImage();
@@ -131,6 +135,9 @@ public:
 int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
+void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > differentsChemins);
+
+// Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Case *carte);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic
@@ -150,6 +157,10 @@ void survole(int &x, int &y);
 
 // Affiche l'endroit survole par la souris
 void afficheSurvole(int x, int y, Case *carte);
+
+// Affiche le chemin pour le Heros
+void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins);
+
 
 void sauvegarde(std::vector<Unite*> unites);
 void charge(std::vector<Unite*> unites, Case *carte);

@@ -34,6 +34,7 @@ Case::Case(int x1, int y1, TypeCase tc) {
     occupe = false;
     brillance = false;
     type = tc;
+    utileChemin = false;
 }
 
 
@@ -64,6 +65,9 @@ int Case::get(int i) {
 
 void Case::brillanceOnOff(bool flag) {
     brillance = flag;
+    if (!flag) {
+        utileChemin = flag;
+    }
     this->affiche();
 }
 
@@ -73,6 +77,9 @@ void Case::affiche() {
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
     if (brillance) {
         Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
+    }
+    if (utileChemin){
+        Imagine::fillCircle(x + Taille / 2, y + Taille / 2, Taille / 5, Imagine::RED);
     }
     // Mini map
     int taillemax = LargDroite / NbCase;
@@ -95,10 +102,18 @@ bool Case::Brillance() const {
     return brillance;
 }
 
-void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
+
+void Case::setChemin(){
+    utileChemin = !utileChemin;
+}
+
+
+std::vector< std::vector<int> > Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
     int num_case = numeroCase(x, y);
     FilePriorite F;
-    CaseDist depart(num_case, dep);
+    std::vector<int> chemin;
+    std::vector< std::vector<int> > differentsChemins;
+    CaseDist depart(num_case, dep, chemin);
     F.push(depart);
     while (!F.empty()) {
         CaseDist c = F.pop();
@@ -111,7 +126,10 @@ void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_resta
                     carte[c.getNum() + i * j].Brillance() != brillance &&
                     !carte[c.getNum() + i * j].getOccupe()) {
                     carte[c.getNum() + i * j].brillanceOnOff(brillance);
-                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep());
+                    chemin = c.getChemin();
+                    chemin.push_back(c.getNum() + i * j);
+                    differentsChemins.push_back(chemin);
+                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep(), chemin);
                     F.push(c2);
                 }
                 if (case_a_atteindre == c.getNum() && !brillance) {
@@ -120,6 +138,7 @@ void Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_resta
             }
         }
     }
+    return differentsChemins;
 }
 
 
@@ -202,7 +221,7 @@ int numeroCase(int x, int y) {
 }
 
 
-void clic(int &x, int &y, Case *carte) {
+void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > differentsChemins) {
     Imagine::enableMouseTracking(true);
     Imagine::Event e;
     do {
@@ -212,12 +231,20 @@ void clic(int &x, int &y, Case *carte) {
             y = e.pix[1];
         }
         if (e.type == Imagine::EVT_MOTION) {
+            afficheChemins(x, y, carte, differentsChemins);
             x = e.pix[0];
             y = e.pix[1];
             afficheSurvole(x, y, carte);
+            afficheChemins(x, y, carte, differentsChemins);
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
     Imagine::enableMouseTracking(false);
+}
+
+
+void clic(int &x, int &y, Case *carte) {
+    std::vector< std::vector<int> > differentsChemins;
+    clic(x, y, carte, differentsChemins);
 }
 
 
@@ -294,6 +321,20 @@ void afficheSurvole(int x, int y, Case *carte) {
                           carte[numeroCase(x, y)].getImage());
         Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
                             carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
+    }
+}
+
+
+void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins){
+    if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].Brillance()) {
+        for (int i = 0; i < differentsChemins.size(); ++i){
+            if (differentsChemins[i][differentsChemins[i].size()-1] == numeroCase(x, y)){
+                for (int j = 0; j < differentsChemins[i].size(); ++j){
+                    carte[differentsChemins[i][j]].setChemin();
+                    carte[differentsChemins[i][j]].affiche();
+                }
+            }
+        }
     }
 }
 

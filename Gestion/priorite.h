@@ -5,15 +5,20 @@
 class CaseDist {
     int num_case;
     float PDep;
+    std::vector<int> chemin;
 public:
     // Constructeur de caseDist
     CaseDist(int num, float dep);
+    // Constructeur de caseDist avec un vecteur prdéfini
+    CaseDist(int num, float dep, std::vector<int> way);
     // Accesseur au numero de la case
     int getNum();
     // Accesseur au nombre de deplacements restants
     float getDep();
-    // Operateure inferieur ou egal sur la classe
+    // Operateur inferieur ou egal sur la classe
     bool operator<(CaseDist c) const;
+    // Pour récupérer le chemin de la case
+    std::vector<int> getChemin();
 };
 
 class FilePriorite {

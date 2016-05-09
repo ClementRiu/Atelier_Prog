@@ -82,7 +82,7 @@ public:
     void deplacement(Case *carte);
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-    void afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre);
+    std::vector< std::vector<int> > afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre);
 
     void deplaceVersCase(Case &c2, Case &c1);
 

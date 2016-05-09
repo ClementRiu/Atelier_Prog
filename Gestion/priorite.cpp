@@ -7,6 +7,13 @@ CaseDist::CaseDist(int num, float dep){
 }
 
 
+CaseDist::CaseDist(int num, float dep, std::vector<int> way){
+    num_case = num;
+    PDep = dep;
+    chemin = way;
+}
+
+
 int CaseDist::getNum(){
     return num_case;
 }
@@ -21,6 +28,10 @@ float CaseDist::getDep(){
     return PDep;
 }
 
+
+std::vector<int> CaseDist::getChemin(){
+    return chemin;
+}
 
 FilePriorite::FilePriorite(){
     v.push_back(CaseDist(0,0));

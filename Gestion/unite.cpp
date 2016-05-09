@@ -91,9 +91,10 @@ void Unite::deplacement(Case *carte) {
     float dep = PDep;
     if (dep > 0) {
         // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
-        afficheCaseDisponibleOnOff(carte, true, dep, 0);
+        std::vector< std::vector<int> > differentsChemins;
+        differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
         do {
-            clic(x1, y1, carte);
+            clic(x1, y1, carte, differentsChemins);
 
             //Si le joueur clique sur l'unité on annule la phase de déplacement et on retourne au choix d'action
             if (numeroCase(x1, y1) == numcase) {
@@ -111,8 +112,8 @@ void Unite::deplacement(Case *carte) {
 
 
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-void Unite::afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre) {
-    carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
+std::vector< std::vector<int> > Unite::afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre) {
+    return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
 }
 
 
