@@ -86,27 +86,41 @@ Unite::Unite(float dep, float depMax, int num) {
 }
 
 
-void Unite::deplacement(Case *carte) {
+void Unite::choixAction(){
+    std::cout << "Implementer le choix d'action méthode choixAction de Unite";
+}
+
+
+void Unite::deplacement(Case *carte, bool afficheChemin) {
     int x1, y1;
     float dep = PDep;
     if (dep > 0) {
         // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
         std::vector< std::vector<int> > differentsChemins;
-        differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
-        do {
-            clic(x1, y1, carte, differentsChemins);
-
-            //Si le joueur clique sur l'unité on annule la phase de déplacement et on retourne au choix d'action
-            if (numeroCase(x1, y1) == numcase) {
+        if (afficheChemin){
+            differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
+        }
+        else {
+            afficheCaseDisponibleOnOff(carte, true, dep, 0);
+        }
+        clic(x1, y1, carte, differentsChemins);
+        if (numeroCase(x1, y1) != -1){
+            if (carte[numeroCase(x1, y1)].Brillance()){
                 afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+                deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
+                PDep = dep;
                 return;
             }
-        } while (numeroCase(x1, y1) == -1 || !carte[numeroCase(x1, y1)].Brillance());
-
-
+            int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
+            if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1){
+                afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
+                deplaceVersCase(carte[caseDep], carte[numcase]);
+                PDep = dep;
+                this->choixAction();
+                return;
+            }
         afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
-        deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
-        PDep = dep;
+        }
     }
 }
 
@@ -208,7 +222,7 @@ void Unite::tour(Case *carte, std::vector<Unite*> unites, Bouton boutonFinTour) 
 
         // A modifier, voir l'ordre des boutons
         if (boutons[2].boutonActive(x, y)) {
-            deplacement(carte);
+            deplacement(carte, true);
         }
         if (boutons[0].boutonActive(x, y)) {
             competences[1].zone(carte, true, getCase());

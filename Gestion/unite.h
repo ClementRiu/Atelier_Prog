@@ -79,7 +79,11 @@ public:
 
     Unite(float dep, float depMax, int num);
 
-    void deplacement(Case *carte);
+    void deplacement(Case *carte, bool afficheChemin);
+
+    // Permet à l'unité de choisir son action
+    // A IMPLEMENTER
+    void choixAction();
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
     std::vector< std::vector<int> > afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre);

@@ -11,8 +11,8 @@
 
 
 const float INF = 1.0f / 0.0f; // Infini en float
-const int Taille = 20;
-const int NbCase = 30;
+const int Taille = 30;
+const int NbCase = 20;
 const int LargDroite = 3 * NbCase;
 const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
@@ -89,6 +89,13 @@ public:
 
     // Change le booleen utileChemin
     void setChemin();
+
+    // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
+    int plusProcheVoisineBrillante(int x1, int y1, Case *carte, int numcase);
+
+    // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
+    // du point (x, y) au plus éloigné
+    std::vector<int> casesVoisines(int x1, int y1);
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
     std::vector< std::vector<int> > fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);

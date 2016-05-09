@@ -108,6 +108,52 @@ void Case::setChemin(){
 }
 
 
+int Case::plusProcheVoisineBrillante(int x1, int y1, Case *carte, int numcase){
+    std::vector<int> numCase = casesVoisines(x1, y1);
+    for (int i = 0; i < numCase.size(); ++i){
+        if (carte[numCase[i]].Brillance() || numcase == numCase[i]){
+            return numCase[i];
+        }
+    }
+    return -1;
+}
+
+
+std::vector<int> Case::casesVoisines(int x1, int y1){
+    std::vector<int> numCase;
+    std::vector<int> priorite;
+    if (numeroCase(x, y) % NbCase != NbCase - 1) {
+        numCase.push_back(numeroCase(x, y) + 1);
+        priorite.push_back(x + Taille - x1);
+    }
+    if (numeroCase(x, y) % NbCase != 0) {
+        numCase.push_back(numeroCase(x, y) - 1);
+        priorite.push_back(x1 - x);
+    }
+    if(numeroCase(x, y) >= NbCase) {
+        numCase.push_back(numeroCase(x, y) - NbCase);
+        priorite.push_back(y1 - y);
+    }
+    if(numeroCase(x, y) < NbCase * (NbCase - 1)) {
+        numCase.push_back(numeroCase(x, y) + NbCase);
+        priorite.push_back(y + Taille - y1);
+    }
+    for (int i = priorite.size() - 1; i > 0; i = i - 1){
+        for (int j = 0; j < i; ++j){
+            if (priorite[j] > priorite[j + 1]){
+                int echange = priorite[j];
+                priorite[j] = priorite[j + 1];
+                priorite[j + 1] = echange;
+                echange = numCase[j];
+                numCase[j] = numCase[j + 1];
+                numCase[j + 1] = echange;
+            }
+        }
+    }
+    return numCase;
+}
+
+
 std::vector< std::vector<int> > Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
     int num_case = numeroCase(x, y);
     FilePriorite F;
@@ -326,12 +372,22 @@ void afficheSurvole(int x, int y, Case *carte) {
 
 
 void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins){
-    if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].Brillance()) {
-        for (int i = 0; i < differentsChemins.size(); ++i){
-            if (differentsChemins[i][differentsChemins[i].size()-1] == numeroCase(x, y)){
-                for (int j = 0; j < differentsChemins[i].size(); ++j){
-                    carte[differentsChemins[i][j]].setChemin();
-                    carte[differentsChemins[i][j]].affiche();
+    int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
+    if (numeroCase(x, y) != -1){
+        int num;
+        if (carte[numeroCase(x, y)].Brillance() || (carte[numeroCase(x, y)].getOccupe() && caseProche != -1)){
+            if (carte[numeroCase(x, y)].Brillance()){
+                num = numeroCase(x, y);
+            }
+            else{
+                num = caseProche;
+            }
+            for (int i = 0; i < differentsChemins.size(); ++i){
+                if (differentsChemins[i][differentsChemins[i].size()-1] == num){
+                    for (int j = 0; j < differentsChemins[i].size(); ++j){
+                        carte[differentsChemins[i][j]].setChemin();
+                        carte[differentsChemins[i][j]].affiche();
+                    }
                 }
             }
         }

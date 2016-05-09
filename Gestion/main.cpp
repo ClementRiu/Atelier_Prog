@@ -128,7 +128,7 @@ int main() {
             }
             // Bouton deplacement
             if (boutons[2].boutonActive(x, y)) {
-                unites[u]->deplacement(carte);
+                unites[u]->deplacement(carte, false);
             }
             // Bouton inventaire
             if (boutons[1].boutonActive(x, y)) {
