@@ -1,6 +1,7 @@
 #include "carte.h"
 #include "unite.h"
 
+
 TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
     PDep = dep;
     description = desc;
@@ -108,7 +109,8 @@ void Case::setChemin(){
 }
 
 
-int Case::plusProcheVoisineBrillante(int x1, int y1, Case *carte, int numcase){
+int Case::plusProcheVoisineBrillante(int x1, int y1, Carte& carte, int numcase){
+    // Renvoie la case voisine la plus proche du point (x1, y1) qui est en brillance
     std::vector<int> numCase = casesVoisines(x1, y1);
     for (int i = 0; i < numCase.size(); ++i){
         if (carte[numCase[i]].Brillance() || numcase == numCase[i]){
@@ -122,6 +124,7 @@ int Case::plusProcheVoisineBrillante(int x1, int y1, Case *carte, int numcase){
 std::vector<int> Case::casesVoisines(int x1, int y1){
     std::vector<int> numCase;
     std::vector<int> priorite;
+    // On cherche autour de notre case les cases qui sont accessibles
     if (numeroCase(x, y) % NbCase != NbCase - 1) {
         numCase.push_back(numeroCase(x, y) + 1);
         priorite.push_back(x + Taille - x1);
@@ -138,6 +141,7 @@ std::vector<int> Case::casesVoisines(int x1, int y1){
         numCase.push_back(numeroCase(x, y) + NbCase);
         priorite.push_back(y + Taille - y1);
     }
+    // On trie les tableaux pour que les cases voisines apparaissant en premier soient vraiment les plus près du point de clic
     for (int i = priorite.size() - 1; i > 0; i = i - 1){
         for (int j = 0; j < i; ++j){
             if (priorite[j] > priorite[j + 1]){
@@ -154,7 +158,8 @@ std::vector<int> Case::casesVoisines(int x1, int y1){
 }
 
 
-std::vector< std::vector<int> > Case::fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre) {
+std::vector< std::vector<int> > Case::fastMarching(float dep, Carte& carte, bool brillance, float &dep_restant, int case_a_atteindre) {
+    // Algorithme de FastMarching, cf cours d'Algo
     int num_case = numeroCase(x, y);
     FilePriorite F;
     std::vector<int> chemin;
@@ -195,6 +200,40 @@ Imagine::Color Case::getImage() {
 
 std::string Case::getDescription() {
     return type.Description();
+}
+
+
+Carte::Carte(){
+    // Initialisation des types de case
+    TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
+    TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
+    TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
+    TypeCase ville(1, descVille, Imagine::MAGENTA);
+
+    // Creation de la carte
+    for (int i = 0; i < NbCase * Taille; i += Taille) {
+        for (int j = 0; j < NbCase * Taille; j += Taille) {
+            if ((i + 1) % (j + 1) == 0) {
+                Case c(i, j, eau);
+                carte[numeroCase(i, j)] = c;
+            }
+            if ((i + 1) % (j + 1) == 1) {
+                Case c(i, j, herbe);
+                carte[numeroCase(i, j)] = c;
+            }
+            if ((i + 1) % (j + 1) > 1) {
+                Case c(i, j, route);
+                carte[numeroCase(i, j)] = c;
+            }
+        }
+    }
+    Case c(0, 0, ville);
+    carte[0] = c;
+}
+
+
+Case& Carte::operator [](int i){
+    return carte[i];
 }
 
 
@@ -267,7 +306,7 @@ int numeroCase(int x, int y) {
 }
 
 
-void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > differentsChemins) {
+void clic(int &x, int &y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase) {
     Imagine::enableMouseTracking(true);
     Imagine::Event e;
     do {
@@ -278,21 +317,21 @@ void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > different
         }
         if (e.type == Imagine::EVT_MOTION) {
             // On affiche et on efface les chemins qui correspondent à l'emplacement de la souris
-            afficheChemins(x, y, carte, differentsChemins);
+            afficheChemins(x, y, carte, differentsChemins, numcase);
             x = e.pix[0];
             y = e.pix[1];
             // On affiche la case que l'on survole
             afficheSurvole(x, y, carte);
-            afficheChemins(x, y, carte, differentsChemins);
+            afficheChemins(x, y, carte, differentsChemins, numcase);
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
     Imagine::enableMouseTracking(false);
 }
 
 
-void clic(int &x, int &y, Case *carte) {
+void clic(int &x, int &y, Carte& carte) {
     std::vector< std::vector<int> > differentsChemins;
-    clic(x, y, carte, differentsChemins);
+    clic(x, y, carte, differentsChemins, 0);
 }
 
 
@@ -361,7 +400,7 @@ void survole(int &x, int &y) {
 }
 
 
-void afficheSurvole(int x, int y, Case *carte) {
+void afficheSurvole(int x, int y, Carte& carte) {
     // A MODIFIER
     Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
                       Imagine::WHITE);
@@ -374,7 +413,7 @@ void afficheSurvole(int x, int y, Case *carte) {
 }
 
 
-void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins){
+void afficheChemins(int x, int y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase){
     // L'entier suivant correspont à la case la plus proche de (x,y) qui est en brillance. == -1 si aucune.
     int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
     if (numeroCase(x, y) != -1){
@@ -382,7 +421,7 @@ void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > d
         // La dernière condition signifie que l'on est pas en train de regarder la position du Heros
         if (carte[numeroCase(x, y)].Brillance() ||
                 (carte[numeroCase(x, y)].getOccupe() && caseProche != -1 &&
-                 numeroCase(x, y) != differentsChemins[0][0] + NbCase)){
+                 numeroCase(x, y) != numcase)){
             // On met dans num le numéro de la case où l'on veut aller
             if (carte[numeroCase(x, y)].Brillance()){
                 num = numeroCase(x, y);
@@ -421,7 +460,7 @@ void sauvegarde(std::vector<Unite*> unites) {
 }
 
 
-void charge(std::vector<Unite*> unites, Case *carte){
+void charge(std::vector<Unite*> unites, Carte& carte){
     std::ifstream fichier("D:/Charles/cours/Ponts/Info/2sem/Projet/Atelier_Prog/Gestion/sauvegarde.txt", std::ios::in);
         if(fichier){
             std::string ligne;

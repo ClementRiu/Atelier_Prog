@@ -5,34 +5,7 @@
 int main() {
     Imagine::openWindow(width, height);
 
-    // Initialisation des types de case
-    TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
-    TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
-    TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
-    TypeCase ville(1, descVille, Imagine::MAGENTA);
-
-    // Initialisation de la carte
-    Case carte[NbCase * NbCase];
-
-    // Creation de la carte
-    for (int i = 0; i < NbCase * Taille; i += Taille) {
-        for (int j = 0; j < NbCase * Taille; j += Taille) {
-            if ((i + 1) % (j + 1) == 0) {
-                Case c(i, j, eau);
-                carte[numeroCase(i, j)] = c;
-            }
-            if ((i + 1) % (j + 1) == 1) {
-                Case c(i, j, herbe);
-                carte[numeroCase(i, j)] = c;
-            }
-            if ((i + 1) % (j + 1) > 1) {
-                Case c(i, j, route);
-                carte[numeroCase(i, j)] = c;
-            }
-        }
-    }
-    Case c(0, 0, ville);
-    carte[0] = c;
+    Carte carte;
 
     // Initialisation des unites
     bool load = false;
@@ -67,7 +40,11 @@ int main() {
     unites[0]->ramasse(new Objet("rat mort"));
     unites[0]->ramasse(new Objet("boite a outils"));
 
-
+    Inventaire i;
+    i.ajoute(new Objet("merde"));
+    i.ajoute(new Jambes("genouillères"));
+    i.ajoute(new Casque("casque"));
+    Inventaire j(i);
 
     // Ecran de menu
     Bouton nouvellePartie(width/4, height/2-20, 3*width/4, height/2+20, Imagine::BLUE, "Nouvelle Partie");

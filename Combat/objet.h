@@ -44,6 +44,8 @@ public:
 
     // Fonction vide utile uniquement pour les equipements
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Mere* clone() const;
 };
 
 
@@ -55,22 +57,22 @@ public:
 
     Objet(std::string nom_);
 
-    Objet(const Objet& o);
-
     bool operator==(const Objet &B) const;
+
+    virtual Objet* clone() const;
 };
 
 
 // Fonction a modifier
 // faire vien plutot de Unite
-class Inventaire{
+class Inventaire {
     std::vector<Mere*> contenu;
 public:
     int taille();
 
     Inventaire();
 
-    Inventaire(const Inventaire* inventaire);
+    Inventaire(const Inventaire& inventaire);
 
     // Ajoute un objet dans l'inventaire
     void ajoute(Mere *obj);
@@ -116,6 +118,8 @@ public:
     Casque(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Casque* clone() const;
 };
 
 
@@ -126,6 +130,8 @@ public:
     Anneau(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Anneau* clone() const;
 };
 
 
@@ -136,6 +142,8 @@ public:
     Gants(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Gants* clone() const;
 };
 
 
@@ -146,6 +154,8 @@ public:
     Jambes(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Jambes* clone() const;
 };
 
 
@@ -156,6 +166,8 @@ public:
     Bottes(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Bottes* clone() const;
 };
 
 
@@ -166,6 +178,8 @@ public:
     Arme(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Arme* clone() const;
 };
 
 
@@ -176,6 +190,8 @@ public:
     Torse(std::string nom_);
 
     virtual void equiper(Heros *h, bool droite);
+
+    virtual Torse* clone() const;
 };
 
 

@@ -42,7 +42,7 @@ public:
     Attaque(std::vector<Imagine::Coords<2> > zone, int power);
 
     // Affiche la zone d'influence de l'attaque
-    void zone(Case *carte, bool b, int caseUnite);
+    void zone(Carte& carte, bool b, int caseUnite);
 
     int getPuissance();
 };
@@ -79,21 +79,21 @@ public:
 
     Unite(float dep, float depMax, int num);
 
-    void deplacement(Case *carte, bool afficheChemin);
+    void deplacement(Carte& carte, bool afficheChemin);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
     void choixAction();
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-    std::vector< std::vector<int> > afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre);
+    std::vector< std::vector<int> > afficheCaseDisponibleOnOff(Carte& carte, bool b, float &deplacement, int case_a_atteindre);
 
     void deplaceVersCase(Case &c2, Case &c1);
 
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
-    void tour(Case carte[NbCase * NbCase], std::vector<Unite*> unites, Bouton boutonFinTour);
+    void tour(Carte& carte, std::vector<Unite*> unites, Bouton boutonFinTour);
 
-    void attaque(Attaque attq, Case *carte, std::vector<Unite*> unites);
+    void attaque(Attaque attq, Carte& carte, std::vector<Unite*> unites);
 
     void changeOrientation(int i);
 
@@ -120,7 +120,7 @@ public:
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
-    std::vector<Bouton> boutonAction(Case *carte);
+    std::vector<Bouton> boutonAction(Carte& carte);
 
     // Fonction vide ici
     virtual void ramasse(Objet *obj);

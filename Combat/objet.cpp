@@ -42,17 +42,18 @@ Mere::Mere(const Mere& m){
     nom = m.nom;
 }
 
+
+Mere* Mere::clone() const {
+    return new Mere(*this);
+}
+
+
 Objet::Objet() : Mere(){
 
 }
 
 
 Objet::Objet(std::string nom_) : Mere(nom_) {
-
-}
-
-
-Objet::Objet(const Objet& o) : Mere(o) {
 
 }
 
@@ -65,14 +66,20 @@ bool Objet::operator==(const Objet &B) const {
 }
 
 
-Inventaire::Inventaire(){
+Objet* Objet::clone() const {
+    return new Objet(*this);
 }
 
 
-Inventaire::Inventaire(const Inventaire* inventaireACopier){
-    contenu.resize(inventaireACopier->contenu.size());
-    for (int i = 0; i < inventaireACopier->contenu.size(); i++){
-        contenu[i] = new Mere(*(inventaireACopier->contenu[i]));
+Inventaire::Inventaire(){
+
+}
+
+
+Inventaire::Inventaire(const Inventaire& inventaireACopier){
+    contenu.resize(inventaireACopier.contenu.size());
+    for (int i = 0; i < inventaireACopier.contenu.size(); i++){
+        contenu[i] = inventaireACopier.contenu[i]->clone();
     }
 }
 
@@ -230,6 +237,11 @@ void Anneau::equiper(Heros *h, bool droite){
 }
 
 
+Casque* Casque::clone() const {
+    return new Casque(*this);
+}
+
+
 Anneau::Anneau(){
 
 }
@@ -237,6 +249,11 @@ Anneau::Anneau(){
 
 Anneau::Anneau(std::string nom_) : Equipement(nom_){
 
+}
+
+
+Anneau* Anneau::clone() const {
+    return new Anneau(*this);
 }
 
 
@@ -255,6 +272,11 @@ Gants::Gants(std::string nom_) : Equipement(nom_){
 }
 
 
+Gants* Gants::clone() const {
+    return new Gants(*this);
+}
+
+
 void Jambes::equiper(Heros *h, bool droite){
     *this = h->equipeJambes(*this);
 }
@@ -270,6 +292,11 @@ Jambes::Jambes(std::string nom_) : Equipement(nom_){
 }
 
 
+Jambes* Jambes::clone() const {
+    return new Jambes(*this);
+}
+
+
 void Bottes::equiper(Heros *h, bool droite){
     *this = h->equipeBottes(*this);
 }
@@ -282,6 +309,11 @@ Bottes::Bottes(){
 
 Bottes::Bottes(std::string nom_) : Equipement(nom_){
 
+}
+
+
+Bottes* Bottes::clone() const {
+    return new Bottes(*this);
 }
 
 
@@ -305,6 +337,11 @@ Arme::Arme(std::string nom_) : Equipement(nom_){
 }
 
 
+Arme* Arme::clone() const {
+    return new Arme(*this);
+}
+
+
 void Torse::equiper(Heros *h, bool droite){
     *this = h->equipeTorse(*this);
 }
@@ -317,6 +354,11 @@ Torse::Torse(){
 
 Torse::Torse(std::string nom_) : Equipement(nom_){
 
+}
+
+
+Torse* Torse::clone() const {
+    return new Torse(*this);
 }
 
 

@@ -25,7 +25,7 @@ Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
 }
 
 
-void Attaque::zone(Case *carte, bool b, int caseUnite) {
+void Attaque::zone(Carte& carte, bool b, int caseUnite) {
     for (int i = 0; i < zoneInfluence.size(); ++i) {
         if (caseUnite + zoneInfluence[i].y() * NbCase > 0 && caseUnite + zoneInfluence[i].y() * NbCase &&
             (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase)) {
@@ -91,20 +91,23 @@ void Unite::choixAction(){
 }
 
 
-void Unite::deplacement(Case *carte, bool afficheChemin) {
+void Unite::deplacement(Carte& carte, bool afficheChemin) {
     int x1, y1;
     float dep = PDep;
     if (dep > 0) {
         // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
         std::vector< std::vector<int> > differentsChemins;
+        // On stocke les différents chemins si on veiut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
         if (afficheChemin){
             differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
         }
         else {
             afficheCaseDisponibleOnOff(carte, true, dep, 0);
         }
-        clic(x1, y1, carte, differentsChemins);
+        clic(x1, y1, carte, differentsChemins, numcase);
+        // On regarde si on acliquésur une case
         if (numeroCase(x1, y1) != -1){
+            // Cas où l'on a cliqué sur une case en brillance
             if (carte[numeroCase(x1, y1)].Brillance()){
                 afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
                 deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
@@ -112,6 +115,7 @@ void Unite::deplacement(Case *carte, bool afficheChemin) {
                 return;
             }
             int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
+            // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
             if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1){
                 afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
                 deplaceVersCase(carte[caseDep], carte[numcase]);
@@ -126,7 +130,7 @@ void Unite::deplacement(Case *carte, bool afficheChemin) {
 
 
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-std::vector< std::vector<int> > Unite::afficheCaseDisponibleOnOff(Case *carte, bool b, float &deplacement, int case_a_atteindre) {
+std::vector< std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte& carte, bool b, float &deplacement, int case_a_atteindre) {
     return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
 }
 
@@ -196,7 +200,7 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tour(Case *carte, std::vector<Unite*> unites, Bouton boutonFinTour) {
+void Unite::tour(Carte& carte, std::vector<Unite*> unites, Bouton boutonFinTour) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
@@ -241,7 +245,7 @@ void Unite::action(Attaque att, Unite *u) {
 }
 
 
-void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite*> unites) {
+void Unite::attaque(Attaque attq, Carte& carte, std::vector<Unite*> unites) {
     int x1, y1, u2 = 0;
 
     do {
@@ -258,7 +262,7 @@ void Unite::attaque(Attaque attq, Case *carte, std::vector<Unite*> unites) {
 
 
 // La fonction est a modifier niveau affichage et a organiser
-std::vector<Bouton> Unite::boutonAction(Case *carte){
+std::vector<Bouton> Unite::boutonAction(Carte& carte){
     int coin = 0;
     int longMaxMot = 0;
     int taillePolice = Taille / 2 - 2;

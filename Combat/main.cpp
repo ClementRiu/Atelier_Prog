@@ -17,18 +17,7 @@ int main() {
     zoneInfl.push_back(portee0_1);
     Attaque coinCoinOuille(zoneInfl, 10);
 
-    // Initialisation des types de case
-    TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
-    // Initialisation de la carte
-    Case carte[NbCase * NbCase];
-
-    // Creation de la carte
-    for (int i = 0; i < NbCase * Taille; i += Taille) {
-        for (int j = 0; j < NbCase * Taille; j += Taille) {
-            Case c(i, j, route);
-            carte[numeroCase(i, j)] = c;
-        }
-    }
+    Carte carte;
 
     // Initialisation des unites
     std::vector<Unite*> unites;

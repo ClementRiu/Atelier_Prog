@@ -27,6 +27,8 @@ const std::string descVille = "La ville, le doux foyer"; // Descrption de la cas
 
 
 class Unite;
+class Carte;
+
 
 // Classe definissant les différents types de cases que l'on peut trouver
 class TypeCase {
@@ -91,20 +93,30 @@ public:
     void setChemin();
 
     // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
-    int plusProcheVoisineBrillante(int x1, int y1, Case *carte, int numcase);
+    int plusProcheVoisineBrillante(int x1, int y1, Carte& carte, int numcase);
 
     // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
     // du point (x, y) au plus éloigné
     std::vector<int> casesVoisines(int x1, int y1);
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    std::vector< std::vector<int> > fastMarching(float dep, Case *carte, bool brillance, float &dep_restant, int case_a_atteindre);
+    std::vector< std::vector<int> > fastMarching(float dep, Carte& carte, bool brillance, float &dep_restant, int case_a_atteindre);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
     Imagine::Color getImage();
 
     // Renvoie le texte correspondant a la case
     std::string getDescription();
+};
+
+
+class Carte{
+    Case carte[NbCase * NbCase];
+public:
+    // Construit une carte de base
+    Carte();
+    // Permer d'accéder à carte[i]
+    Case& operator[](int i);
 };
 
 
@@ -142,10 +154,10 @@ public:
 int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
-void clic(int &x, int &y, Case *carte, std::vector< std::vector<int> > differentsChemins);
+void clic(int &x, int &y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
-void clic(int &x, int &y, Case *carte);
+void clic(int &x, int &y, Carte& carte);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic
 void clicSimple(int &x, int &y);
@@ -163,13 +175,13 @@ void choisir(int &choix, int &x, int &y);
 void survole(int &x, int &y);
 
 // Affiche l'endroit survole par la souris
-void afficheSurvole(int x, int y, Case *carte);
+void afficheSurvole(int x, int y, Carte& carte);
 
 // Affiche le chemin pour le Heros
-void afficheChemins(int x, int y, Case *carte, std::vector< std::vector<int> > differentsChemins);
+void afficheChemins(int x, int y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase);
 
 
 void sauvegarde(std::vector<Unite*> unites);
-void charge(std::vector<Unite*> unites, Case *carte);
+void charge(std::vector<Unite*> unites, Carte& carte);
 
 #endif // CARTE_H

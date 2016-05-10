@@ -5,6 +5,7 @@
 class CaseDist {
     int num_case;
     float PDep;
+    // Ce vector va servir à stocker le chemin utilisé pour arriver à une case. On en a besoin pour afficher les chemins
     std::vector<int> chemin;
 public:
     // Constructeur de caseDist
