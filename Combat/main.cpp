@@ -5,6 +5,15 @@
 int main() {
     Imagine::openWindow(width, height);
 
+    Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");
+    Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
+    Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
+    Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
+    boutonSauvegarde.affiche();
+    boutonFinTour.affiche();
+    boutonAction.affiche();
+    boutonInventaire.affiche();
+
     // Initialisation d'une attaque
     std::vector<Imagine::Coords<2> > zoneInfl;
     zoneInfl.push_back(portee10);
@@ -20,7 +29,7 @@ int main() {
     Carte carte;
 
     // Initialisation des unites
-    std::vector<Unite*> unites;
+    std::vector<Unite *> unites;
     carte[204].flagHeros();
     carte[203].flagHeros();
     unites.push_back(new Unite(5, 204));
@@ -33,24 +42,20 @@ int main() {
         }
     }
 
-    // Affichage du bouton fin de tour
-    Bouton boutonFinTour(NbCase * Taille + Separation, Taille * (NbCase - 5),
-                         NbCase * Taille + Separation + LargDroite, NbCase * Taille, Imagine::BLACK,
-                         "End turn");
-    boutonFinTour.affiche();
+
     Unite unit;
 
 
     while (true) {
-        unites[0]->tour(carte, unites, boutonFinTour);
-        unites[1]->tour(carte, unites, boutonFinTour
-                       );
+        unites[0]->tourCombat(carte, unites, boutonFinTour, boutonAction);
+        unites[1]->tourCombat(carte, unites, boutonFinTour, boutonAction
+        );
     }
 
     Imagine::endGraphics();
 
     // Destruction des unités
-    for (int i = 0; i < unites.size(); ++i){
+    for (int i = 0; i < unites.size(); ++i) {
         unites[i]->~Unite();
         delete unites[i];
         unites[i] = 0;

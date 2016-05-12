@@ -22,6 +22,8 @@ const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase
                                   NbCase * Taille + Separation + LargDroite, NbCase * Taille};
 const int ZoneBoutonSauvegarde[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
                                      NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5)};
+const int ZoneBoutonAction[4] = {0,NbCase*Taille-Taille*2, Taille*3, NbCase*Taille};
+const int ZoneBoutonInventaire[4] = {Taille*3,NbCase*Taille-Taille*2, Taille*6, NbCase*Taille};
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 

@@ -25,7 +25,7 @@ Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
 }
 
 
-void Attaque::zone(Carte& carte, bool b, int caseUnite) {
+void Attaque::zone(Carte &carte, bool b, int caseUnite) {
     for (int i = 0; i < zoneInfluence.size(); ++i) {
         if (caseUnite + zoneInfluence[i].y() * NbCase > 0 && caseUnite + zoneInfluence[i].y() * NbCase &&
             (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase)) {
@@ -86,51 +86,49 @@ Unite::Unite(float dep, float depMax, int num) {
 }
 
 
-void Unite::choixAction(){
+void Unite::choixAction() {
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
 }
 
 
-void Unite::deplacement(Carte& carte, bool afficheChemin) {
-    int x1, y1;
+void Unite::deplacement(Carte &carte, bool afficheChemin, int x1, int y1) {
     float dep = PDep;
     if (dep > 0) {
         // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
-        std::vector< std::vector<int> > differentsChemins;
-        // On stocke les différents chemins si on veiut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
-        if (afficheChemin){
+        std::vector<std::vector<int> > differentsChemins;
+        // On stocke les différents chemins si on veut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
+        if (afficheChemin) {
             differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
         }
         else {
             afficheCaseDisponibleOnOff(carte, true, dep, 0);
         }
-        clic(x1, y1, carte, differentsChemins, numcase);
-        // On regarde si on acliquésur une case
-        if (numeroCase(x1, y1) != -1){
-            // Cas où l'on a cliqué sur une case en brillance
-            if (carte[numeroCase(x1, y1)].Brillance()){
-                afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
-                deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
-                PDep = dep;
-                return;
-            }
-            int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
-            // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
-            if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1){
-                afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
-                deplaceVersCase(carte[caseDep], carte[numcase]);
-                PDep = dep;
-                this->choixAction();
-                return;
-            }
-        afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+
+        if (carte[numeroCase(x1, y1)].Brillance()) {
+            afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+            deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
+            PDep = dep;
+            return;
         }
+
+        int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
+        // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
+        if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
+            afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
+            deplaceVersCase(carte[caseDep], carte[numcase]);
+            PDep = dep;
+            this->choixAction();
+            return;
+        }
+
+        afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
     }
 }
 
 
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-std::vector< std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte& carte, bool b, float &deplacement, int case_a_atteindre) {
+std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
+                                                                 int case_a_atteindre) {
     return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
 }
 
@@ -200,22 +198,19 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tour(Carte& carte, std::vector<Unite*> unites, Bouton boutonFinTour) {
+void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
     while (tourContinue) {
-
-        std::vector<Bouton> boutons = this->boutonAction(carte);
-        for (int i=0; i < boutons.size(); ++i){
-            boutons[i].affiche();
-        }
+        afficheCaseDisponibleOnOff(carte, true, PDep, 0);
+        boutonAction.affiche();
 
         clic(x, y, carte);
 
         // A modifier
-        for (int i = 0; i < NbCase; ++i){
-            for (int j = 0; j < NbCase; ++j){
+        for (int i = 0; i < NbCase; ++i) {
+            for (int j = 0; j < NbCase; ++j) {
                 carte[j * NbCase + i].affiche();
             }
         }
@@ -225,15 +220,20 @@ void Unite::tour(Carte& carte, std::vector<Unite*> unites, Bouton boutonFinTour)
         }
 
         // A modifier, voir l'ordre des boutons
-        if (boutons[2].boutonActive(x, y)) {
-            deplacement(carte, true);
-        }
-        if (boutons[0].boutonActive(x, y)) {
+
+
+        if (boutonAction.boutonActive(x, y)) {
             competences[1].zone(carte, true, getCase());
             attaque(competences[0], carte, unites);
             competences[1].zone(carte, false, getCase());
             tourContinue = false;
         }
+        else {
+            deplacement(carte, true, x, y);
+        }
+
+        afficheCaseDisponibleOnOff(carte, false, PDep, 0);
+        boutonAction.affiche();
     }
     finTourCombat(unites);
 }
@@ -245,7 +245,7 @@ void Unite::action(Attaque att, Unite *u) {
 }
 
 
-void Unite::attaque(Attaque attq, Carte& carte, std::vector<Unite*> unites) {
+void Unite::attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites) {
     int x1, y1, u2 = 0;
 
     do {
@@ -261,8 +261,9 @@ void Unite::attaque(Attaque attq, Carte& carte, std::vector<Unite*> unites) {
 }
 
 
+/*
 // La fonction est a modifier niveau affichage et a organiser
-std::vector<Bouton> Unite::boutonAction(Carte& carte){
+std::vector<Bouton> Unite::boutonAction(Carte &carte) {
     int coin = 0;
     int longMaxMot = 0;
     int taillePolice = Taille / 2 - 2;
@@ -271,68 +272,68 @@ std::vector<Bouton> Unite::boutonAction(Carte& carte){
     std::vector<std::string> nomBoutons;
     nomBoutons.push_back("Action");
     nomBoutons.push_back("Inventaire");
-    if (PDep!=0){
+    if (PDep != 0) {
         nomBoutons.push_back("Déplacement");
     }
-    if (carte[numcase].getDescription()==descVille){
+    if (carte[numcase].getDescription() == descVille) {
         nomBoutons.push_back("Ville");
     }
-    for (int i = 0; i < nomBoutons.size(); ++i){
-        longMaxMot = std::max(int(nomBoutons[i].size()),longMaxMot);
+    for (int i = 0; i < nomBoutons.size(); ++i) {
+        longMaxMot = std::max(int(nomBoutons[i].size()), longMaxMot);
     }
     int largMax = (int((longMaxMot * taillePolice * 1.5) / Taille) + 1) * Taille - 2;
     std::vector<Bouton> B;
-    if (numcase % NbCase >= NbCase / 2){
+    if (numcase % NbCase >= NbCase / 2) {
         coin += 1;
     }
-    if (numcase >= NbCase * NbCase / 2){
+    if (numcase >= NbCase * NbCase / 2) {
         coin += 2;
     }
-    if (coin == 0){
+    if (coin == 0) {
         caseIni += 1 + NbCase;
     }
-    if (coin == 1){
-        caseIni += - 1 - largMax / Taille + NbCase;
+    if (coin == 1) {
+        caseIni += -1 - largMax / Taille + NbCase;
     }
-    if (coin == 2){
+    if (coin == 2) {
         caseIni += 1 - NbCase;
     }
-    if (coin == 3){
-        caseIni += - 1 - largMax / Taille - NbCase;
+    if (coin == 3) {
+        caseIni += -1 - largMax / Taille - NbCase;
     }
     x = (caseIni % NbCase) * Taille;
     y = (caseIni / NbCase) * Taille;
-    for (int i = 0; i < nomBoutons.size(); ++i){
-        Bouton b(x, y + i *  Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1,
-                  y + Taille - 1 + i * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK,
+    for (int i = 0; i < nomBoutons.size(); ++i) {
+        Bouton b(x, y + i * Taille * ((-1) * (coin > 1) + (coin <= 1)), x + largMax + 1,
+                 y + Taille - 1 + i * Taille * ((-1) * (coin > 1) + (coin <= 1)), Imagine::BLACK,
                  nomBoutons[i]);
         B.push_back(b);
     }
     return B;
 }
+*/
 
-
-void Unite::ramasse(Objet *obj){
-
-}
-
-
-void Unite::ouvreInventaire(){
+void Unite::ramasse(Objet *obj) {
 
 }
 
 
-void Unite::equipe(int i, bool droite){
+void Unite::ouvreInventaire() {
 
 }
 
 
-std::string Unite::getNomCasque(){
+void Unite::equipe(int i, bool droite) {
 
 }
 
 
-Unite::~Unite(){
+std::string Unite::getNomCasque() {
+
+}
+
+
+Unite::~Unite() {
 
 }
 
@@ -484,12 +485,12 @@ void Heros::equipe(int i, bool droite) {
 }
 
 
-void Heros::ramasse(Objet* obj){
+void Heros::ramasse(Objet *obj) {
     inventaire.ajoute(obj);
 }
 
 
-void Heros::ouvreInventaire(){
+void Heros::ouvreInventaire() {
     // Creation des differents boutons pour les differentes categories d'objets
     std::vector<Bouton> boutonsChoix;
     std::vector<std::string> nomBoutons;
@@ -501,7 +502,7 @@ void Heros::ouvreInventaire(){
     nomBoutons.push_back("Torse");
     nomBoutons.push_back("Casque");
     nomBoutons.push_back("Objets divers");
-    for (int i = 0; i < nomBoutons.size(); ++i){
+    for (int i = 0; i < nomBoutons.size(); ++i) {
         Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
         boutonsChoix.push_back(b);
     }
@@ -526,12 +527,12 @@ void Heros::ouvreInventaire(){
 }
 
 
-std::string Heros::getNomCasque(){
+std::string Heros::getNomCasque() {
     return equipementCasque.getNom();
 }
 
 
-Heros::~Heros(){
+Heros::~Heros() {
     inventaire.~Inventaire();
 }
 
