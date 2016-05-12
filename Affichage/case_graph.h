@@ -1,10 +1,8 @@
 #pragma once
 
-//L'inclusion de 'outilsaff.h' donne accès à ces .h, attention ! Permet d'afficher des cases, la map et...
-
 #include "constante.h"
 
-
+/*
 class Case_Graph {
 private:
     const char *nom;  // Nom de la case.
@@ -60,41 +58,5 @@ public:
     //Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des int en argument pour déterminer sa position.
     void affiche_Case_Graph(int x, int y);
 
-    //Méthode qui affiche la case dans la 'mmap'. Prend des Coords en argument pour déterminer sa position.
-    void affiche_mmap(Imagine::Coords<2> pos_case);
-
-    //Méthode qui affiche la case dans la 'mmap'. Prend des int en argument pour déterminer sa position.
-    void affiche_mmap(int x, int y);
 };
-
-//Cette fonction trace l'interface graphique.
-void interface();
-
-//Renvoi la couleur pour la 'mmap' en fonction du type de la case.
-Imagine::Color couleur_case(std::string nom);
-
-
-class CarteduMonde {
-private:
-    Imagine::Coords<2> pos_centre;    // Position du point centrale de la map.
-    Imagine::Image<Case_Graph> listecase; // Image contenant la liste des cases de la map.
-
-public:
-    //Constructeur par défaut.
-    CarteduMonde();
-
-    //Assesseur en lecture de l'attribut pos_centre.
-    void get_pos_centre(Imagine::Coords<2> &pos);
-
-    //Méthode qui affiche la carte dans le 'world' et la minimap sur la 'mmap'.
-    void affiche();
-
-    //Méthode qui décale l'affichage selon la direction dir voulue.
-    void deplace_clavier(int dir);
-
-    //Méthode qui place pos_centre au coordonnée voulue et réaffiche le 'world' et la 'mmap'. Prend des Coords en argument pour déterminer la position voulue.
-    void deplace_souris(Imagine::Coords<2> pos_voulue);
-
-    //Méthode qui place pos_centre au coordonnée voulue et réaffiche le 'world' et la 'mmap'. Prend des int en argument pour déterminer la position voulue.
-    void deplace_souris(int x, int y);
-};
+*/
