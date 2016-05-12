@@ -6,6 +6,7 @@
 #include <iostream>
 #include <typeinfo>
 #include "../Gestion/carte.h"
+#include "../Gestion/boutons.h"
 
 
 const int NB_RES = 6;

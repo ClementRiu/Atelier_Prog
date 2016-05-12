@@ -7,5 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${d}/CMake")
 find_package(Imagine)
 
 project(Carte)
-add_executable(Carte main.cpp carte.h carte.cpp priorite.h priorite.cpp unite.h unite.cpp ../Combat/objet.cpp ../Combat/objet.h ../Ville/ville.h ../Ville/ville.cpp)
+add_executable(Carte main.cpp carte.h carte.cpp priorite.h priorite.cpp unite.h unite.cpp camp.h camp.cpp
+                outils.cpp outils.h boutons.cpp boutons.h ../Combat/objet.cpp ../Combat/objet.h
+                ../Ville/ville.h ../Ville/ville.cpp)
 ImagineUseModules(Carte Graphics)

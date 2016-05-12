@@ -18,6 +18,7 @@ class Ville {
     Objet* achetable;               //liste d'objet disponible a l'achat
     int camp;                       //le joueur à qui appartient la ville
 public:
+    Ville();
     Ville(int faction);
 
     ~Ville();

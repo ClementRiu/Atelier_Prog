@@ -28,7 +28,90 @@ std::string TypeCase::Description() {
 }
 
 
-Case::Case(int x1, int y1, TypeCase tc) {
+bool TypeCase::popUp(std::string question) {
+    Bouton oui(ZoneBoutonOui, Imagine::BLUE, "OUI");
+    Bouton non(ZoneBoutonNon, Imagine::BLUE, "NON");
+    Bouton quest(ZoneBoutonQuestion, Imagine::BLACK, question);
+    quest.affiche();
+    oui.affiche();
+    non.affiche();
+    int x, y;
+    clicSimple(x, y);
+    while (!(oui.boutonActive(x, y)) && !non.boutonActive(x, y)) {
+        clicSimple(x, y);
+    }
+    if (oui.boutonActive(x, y)) {
+        return true;
+    }
+    return false;
+}
+
+
+TypeCase* TypeCase::clone() const {
+    return new TypeCase(*this);
+}
+
+
+bool TypeCase::boutonChoix(){
+
+}
+
+
+CaseVille::CaseVille(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+
+}
+
+
+CaseVille::CaseVille() : TypeCase(){
+
+}
+
+
+CaseVille* CaseVille::clone() const {
+    return new CaseVille(*this);
+}
+
+
+bool CaseVille::boutonChoix(){
+    return this->popUp("Voulez-vous entrer dans la ville ?");
+}
+
+
+CaseCombat::CaseCombat(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+
+}
+
+
+CaseCombat::CaseCombat() : TypeCase() {
+
+}
+
+
+CaseCombat* CaseCombat::clone() const {
+    return new CaseCombat(*this);
+}
+
+
+bool CaseCombat::boutonChoix(){
+    return this->popUp("Voulez-vous vous battre ?");
+}
+
+
+CaseNormale::CaseNormale(float dep, std::string desc, Imagine::Color img) : TypeCase(dep, desc, img){
+
+}
+
+
+CaseNormale::CaseNormale() : TypeCase() {
+}
+
+
+CaseNormale* CaseNormale::clone() const {
+    return new CaseNormale(*this);
+}
+
+
+Case::Case(int x1, int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
@@ -40,6 +123,17 @@ Case::Case(int x1, int y1, TypeCase tc) {
 
 
 Case::Case() {
+}
+
+
+Case::Case(const Case &tuile) {
+    x = tuile.x;
+    y = tuile.y;
+    taille = tuile.taille;
+    occupe = tuile.occupe;
+    brillance = tuile.brillance;
+    utileChemin = utileChemin;
+    type = tuile.type->clone();
 }
 
 
@@ -75,7 +169,7 @@ void Case::brillanceOnOff(bool flag) {
 
 void Case::affiche() {
     Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
-    Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
+    Imagine::fillRect(x, y, Taille - 1, Taille - 1, type->Image());
     if (brillance) {
         Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
     }
@@ -85,7 +179,7 @@ void Case::affiche() {
     // Mini map
     int taillemax = LargDroite / NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
-                      taillemax, type.Image());
+                      taillemax, type->Image());
     if (occupe) {
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
         Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
@@ -95,7 +189,7 @@ void Case::affiche() {
 
 
 float Case::NbDep() const {
-    return type.NbDep();
+    return type->NbDep();
 }
 
 
@@ -106,6 +200,11 @@ bool Case::Brillance() const {
 
 void Case::setChemin() {
     utileChemin = !utileChemin;
+}
+
+
+bool Case::getChemin() {
+    return utileChemin;
 }
 
 
@@ -195,40 +294,39 @@ std::vector<std::vector<int> > Case::fastMarching(float dep, Carte &carte, bool 
 
 
 Imagine::Color Case::getImage() {
-    return type.Image();
+    return type->Image();
 }
 
 
 std::string Case::getDescription() {
-    return type.Description();
+    return type->Description();
+}
+
+
+bool Case::boutonChoix() {
+    return type->boutonChoix();
 }
 
 
 Carte::Carte() {
-    // Initialisation des types de case
-    TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
-    TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
-    TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
-    TypeCase ville(1, descVille, Imagine::MAGENTA);
-
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
             if ((i + 1) % (j + 1) == 0) {
-                Case c(i, j, eau);
+                Case c(i, j, new CaseNormale(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) == 1) {
-                Case c(i, j, herbe);
+                Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) > 1) {
-                Case c(i, j, route);
+                Case c(i, j,  new CaseNormale(1, "Une case a moindre cout de deplacement", Imagine::YELLOW));
                 carte[numeroCase(i, j)] = c;
             }
         }
     }
-    Case c(0, 0, ville);
+    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA));
     carte[0] = c;
 }
 
@@ -238,65 +336,6 @@ Case &Carte::operator[](int i) {
 }
 
 
-Bouton::Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom) {
-    zoneDeDelimitation[0] = xmin;
-    zoneDeDelimitation[1] = ymin;
-    zoneDeDelimitation[2] = xmax;
-    zoneDeDelimitation[3] = ymax;
-    image = c;
-    nomBouton = nom;
-    taillePolice = 0;
-}
-
-
-Bouton::Bouton(const int zone[4], Imagine::Color c, std::string nom) {
-    zoneDeDelimitation[0] = zone[0];
-    zoneDeDelimitation[1] = zone[1];
-    zoneDeDelimitation[2] = zone[2];
-    zoneDeDelimitation[3] = zone[3];
-    image = c;
-    nomBouton = nom;
-    taillePolice = 0;
-}
-
-
-int Bouton::largeur() {
-    return zoneDeDelimitation[2] - zoneDeDelimitation[0];
-}
-
-
-int Bouton::hauteur() {
-    return zoneDeDelimitation[3] - zoneDeDelimitation[1];
-}
-
-
-// A changer
-void Bouton::affiche(int decalementVertical) {
-    int taille = std::min(int(1.2 * this->largeur() / nomBouton.size()), this->hauteur());
-    Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1] + decalementVertical, this->largeur(),
-                      this->hauteur(), image);
-    Imagine::drawString(zoneDeDelimitation[0], zoneDeDelimitation[1] + taille + decalementVertical,
-                        nomBouton, Imagine::WHITE, taille);
-}
-
-
-bool Bouton::boutonActive(int x, int y, int decalementVertical) {
-    if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] + decalementVertical &&
-        x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3] + decalementVertical) {
-        return true;
-    }
-    return false;
-}
-
-
-bool Bouton::boutonVide() {
-    return (this->largeur() == 0 || this->hauteur() == 0);
-}
-
-
-void Bouton::setNom(std::string nom) {
-    nomBouton = nom;
-}
 
 
 int numeroCase(int x, int y) {
@@ -304,185 +343,6 @@ int numeroCase(int x, int y) {
         return ((y / Taille) * NbCase + x / Taille);
     }
     return -1;
-}
-
-
-void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase) {
-    Imagine::enableMouseTracking(true);
-    Imagine::Event e;
-    do {
-        getEvent(0, e);
-        if (e.type == Imagine::EVT_BUT_ON) {
-            x = e.pix[0];
-            y = e.pix[1];
-        }
-        if (e.type == Imagine::EVT_MOTION) {
-            // On affiche et on efface les chemins qui correspondent à l'emplacement de la souris
-            afficheChemins(x, y, carte, differentsChemins, numcase);
-            x = e.pix[0];
-            y = e.pix[1];
-            // On affiche la case que l'on survole
-            afficheSurvole(x, y, carte);
-            afficheChemins(x, y, carte, differentsChemins, numcase);
-        }
-    } while (e.type != Imagine::EVT_BUT_OFF);
-    Imagine::enableMouseTracking(false);
-}
-
-
-void clic(int &x, int &y, Carte &carte) {
-    std::vector<std::vector<int> > differentsChemins;
-    clic(x, y, carte, differentsChemins, 0);
-}
-
-
-void clicSimple(int &x, int &y) {
-    Imagine::Event e;
-    do {
-        getEvent(0, e);
-        if (e.type == Imagine::EVT_BUT_ON) {
-            x = e.pix[0];
-            y = e.pix[1];
-        }
-    } while (e.type != Imagine::EVT_BUT_OFF);
-}
-
-
-void finJournee(std::vector<Unite *> unites) {
-    std::cout << "à compléter !! (fonction finJournee)" << std::endl;
-    for (int i = 0; i < unites.size(); ++i) {
-        unites[i]->setDep(unites[i]->getDepMax());
-    }
-}
-
-
-void finTourCombat(std::vector<Unite *> unites) {
-    std::cout << "à modifier !! (fonction finTourCombat)" << std::endl;
-    for (int i = 0; i < unites.size(); ++i) {
-        unites[i]->setDep(unites[i]->getDepMax());
-    }
-}
-
-
-// A supprimer a la fin, mais on le garde au cas ou on change d'avis
-void choisir(int &choix, int &x, int &y) {
-    choix = -1;
-    x = -1;
-    y = -1;
-    int tailleEcriture = 9;
-    // A MODIFIER
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 3 * (tailleEcriture + 1), "ESP: Fin de tour",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::Event e;
-    do {
-        getEvent(0, e);
-        if (e.type == Imagine::EVT_KEY_ON) {
-            choix = e.key;
-        }
-        if (e.type == Imagine::EVT_BUT_ON) {
-            x = e.pix[0];
-            y = e.pix[1];
-        }
-    } while (e.type != Imagine::EVT_KEY_OFF && e.type != Imagine::EVT_BUT_OFF);
-    // A MODIFIER
-    Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
-}
-
-
-void survole(int &x, int &y) {
-    Imagine::Event e;
-    getEvent(0, e);
-    x = e.pix[0];
-    y = e.pix[1];
-}
-
-
-void afficheSurvole(int x, int y, Carte &carte) {
-    // A MODIFIER
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
-                      Imagine::WHITE);
-    if (numeroCase(x, y) != -1) {
-        Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille,
-                          carte[numeroCase(x, y)].getImage());
-        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
-                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
-    }
-}
-
-
-void afficheChemins(int x, int y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase) {
-    // L'entier suivant correspont à la case la plus proche de (x,y) qui est en brillance. == -1 si aucune.
-    int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
-    if (numeroCase(x, y) != -1) {
-        int num;
-        // La dernière condition signifie que l'on est pas en train de regarder la position du Heros
-        if (carte[numeroCase(x, y)].Brillance() ||
-            (carte[numeroCase(x, y)].getOccupe() && caseProche != -1 &&
-             numeroCase(x, y) != numcase)) {
-            // On met dans num le numéro de la case où l'on veut aller
-            if (carte[numeroCase(x, y)].Brillance()) {
-                num = numeroCase(x, y);
-            }
-            else {
-                num = caseProche;
-            }
-            // On met en place et on affiche le chemin
-            for (int i = 0; i < differentsChemins.size(); ++i) {
-                if (differentsChemins[i][differentsChemins[i].size() - 1] == num) {
-                    for (int j = 0; j < differentsChemins[i].size(); ++j) {
-                        carte[differentsChemins[i][j]].setChemin();
-                        carte[differentsChemins[i][j]].affiche();
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-void sauvegarde(std::vector<Unite *> unites) {
-    std::ofstream fichier("../Gestion/sauvegarde.txt", std::ios::out | std::ios::trunc);
-    if (fichier) {
-        fichier << unites.size() << std::endl;
-        for (int i = 0; i < unites.size(); i++) {
-            fichier << unites[i]->getCase() << std::endl;
-            fichier << unites[i]->getDep() << std::endl;
-            fichier << unites[i]->getDepMax() << std::endl;
-        }
-        fichier.close();
-    }
-    else {
-        std::cout << "Erreur à l'ouverture !" << std::endl;
-    }
-}
-
-
-void charge(std::vector<Unite *> unites, Carte &carte) {
-    std::ifstream fichier("D:/Charles/cours/Ponts/Info/2sem/Projet/Atelier_Prog/Gestion/sauvegarde.txt", std::ios::in);
-    if (fichier) {
-        std::string ligne;
-        std::getline(fichier, ligne);
-        int T = atoi(ligne.c_str());
-        std::cout << T;
-        for (int i = 0; i < T; i++) {
-            std::getline(fichier, ligne);
-            int num = atoi(ligne.c_str());
-            carte[num].flagHeros();
-            std::getline(fichier, ligne);
-            float dep = atoi(ligne.c_str());
-            std::getline(fichier, ligne);
-            float depMax = atoi(ligne.c_str());
-            unites.push_back(new Unite(dep, depMax, num));
-        }
-        fichier.close();
-    }
-    else {
-        std::cerr << "Erreur à l'ouverture !" << std::endl;
-    }
 }
 
 

@@ -1,6 +1,8 @@
 #include "ville.h"
 
 
+Ville::Ville(){
+}
 
 Ville::Ville(int faction){
     for (int i=0; i<NB_BATIMENTS; i++){

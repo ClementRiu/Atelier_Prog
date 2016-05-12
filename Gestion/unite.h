@@ -5,7 +5,7 @@
 #include "../Combat/objet.h"
 #include <Imagine/Graphics.h>
 #include "carte.h"
-
+#include "outils.h"
 
 const int TAILLE_ARMEE = 6;
 const int NB_MAX_ATTAQUES = 10;
@@ -80,7 +80,7 @@ public:
 
     Unite(float dep, float depMax, int num);
 
-    void deplacement(Carte &carte, bool afficheChemin, int x1, int y1);
+    void deplacement(Carte &carte, int x1, int y1);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER

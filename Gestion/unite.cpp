@@ -91,19 +91,9 @@ void Unite::choixAction() {
 }
 
 
-void Unite::deplacement(Carte &carte, bool afficheChemin, int x1, int y1) {
+void Unite::deplacement(Carte &carte, int x1, int y1) {
     float dep = PDep;
     if (dep > 0) {
-        // On met la variable deplacement juste parce qu'on est oblige, elle n'est pas modifiee ici
-        std::vector<std::vector<int> > differentsChemins;
-        // On stocke les différents chemins si on veut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
-        if (afficheChemin) {
-            differentsChemins = afficheCaseDisponibleOnOff(carte, true, dep, 0);
-        }
-        else {
-            afficheCaseDisponibleOnOff(carte, true, dep, 0);
-        }
-
         if (carte[numeroCase(x1, y1)].Brillance()) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
             deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
@@ -113,6 +103,7 @@ void Unite::deplacement(Carte &carte, bool afficheChemin, int x1, int y1) {
 
         int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
         // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
+
         if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
@@ -203,10 +194,13 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
     int x = 0, y = 0;
 
     while (tourContinue) {
-        afficheCaseDisponibleOnOff(carte, true, PDep, 0);
+        // On stocke les différents chemins si on veut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
+        std::vector<std::vector<int> > differentsChemins;
+
+        differentsChemins = afficheCaseDisponibleOnOff(carte, true, PDep, 0);
         boutonAction.affiche();
 
-        clic(x, y, carte);
+        clic(x, y, carte, differentsChemins, numcase);
 
         // A modifier
         for (int i = 0; i < NbCase; ++i) {
@@ -216,6 +210,7 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
         }
 
         if (boutonFinTour.boutonActive(x, y)) {
+            afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             break;
         }
 
@@ -223,16 +218,15 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
 
 
         if (boutonAction.boutonActive(x, y)) {
+            afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             competences[1].zone(carte, true, getCase());
             attaque(competences[0], carte, unites);
             competences[1].zone(carte, false, getCase());
             tourContinue = false;
         }
         else {
-            deplacement(carte, true, x, y);
+            deplacement(carte, x, y);
         }
-
-        afficheCaseDisponibleOnOff(carte, false, PDep, 0);
         boutonAction.affiche();
     }
     finTourCombat(unites);
