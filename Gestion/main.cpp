@@ -9,11 +9,11 @@ int main() {
 
     // Initialisation des unites
     bool load = false;
-    std::vector<Unite*> unites;
+    std::vector<Unite *> unites;
     if (load) {
         charge(unites, carte);
     }
-    else{
+    else {
         carte[304].flagHeros();
         carte[303].flagHeros();
         unites.push_back(new Heros(5, 304));
@@ -47,10 +47,10 @@ int main() {
     Inventaire j(i);
 
     // Ecran de menu
-    Bouton nouvellePartie(width/4, height/2-20, 3*width/4, height/2+20, Imagine::BLUE, "Nouvelle Partie");
+    Bouton nouvellePartie(width / 4, height / 2 - 20, 3 * width / 4, height / 2 + 20, Imagine::BLUE, "Nouvelle Partie");
     int x = 0, y = 0;
     nouvellePartie.affiche();
-    while (!nouvellePartie.boutonActive(x, y)){
+    while (!nouvellePartie.boutonActive(x, y)) {
         clicSimple(x, y);
     }
 
@@ -64,8 +64,12 @@ int main() {
     // Creation et affichage des boutons
     Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
+    Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
+    Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
+    boutonAction.affiche();
+    boutonInventaire.affiche();
 
     // Deplacement des unites
     bool save = true;
@@ -90,25 +94,23 @@ int main() {
             while (unites[u]->getCase() != numeroCase(x, y)) {
                 u += 1;
             }
-            std::vector<Bouton> boutons = unites[u]->boutonAction(carte);
-            for (int i=0; i < boutons.size(); ++i){
-                boutons[i].affiche();
-            }
+
+            float dep = unites[u]->getDep();
+
+            unites[u]->afficheCaseDisponibleOnOff(carte, true, dep, 0);
+            boutonAction.affiche();
+            boutonInventaire.affiche();
 
             clic(x, y, carte);
 
             // A modifier
-            for (int i = 0; i < NbCase; ++i){
-                for (int j = 0; j < NbCase; ++j){
+            for (int i = 0; i < NbCase; ++i) {
+                for (int j = 0; j < NbCase; ++j) {
                     carte[j * NbCase + i].affiche();
                 }
             }
-            // Bouton deplacement
-            if (boutons[2].boutonActive(x, y)) {
-                unites[u]->deplacement(carte, false);
-            }
             // Bouton inventaire
-            if (boutons[1].boutonActive(x, y)) {
+            if (boutonInventaire.boutonActive(x, y)) {
                 unites[u]->ouvreInventaire();
                 // unites[u]->equipe(1);
                 // unites[u]->ouvreInventaire();
@@ -118,15 +120,24 @@ int main() {
                         carte[NbCase * j + i].affiche();
                     }
                 }
-                boutonSauvegarde.affiche();
-                boutonFinTour.affiche();
             }
+            else {
+                unites[u]->deplacement(carte, false, x, y);
+            }
+
+            boutonSauvegarde.affiche();
+            boutonFinTour.affiche();
+
+            unites[u]->afficheCaseDisponibleOnOff(carte, false, dep, 0);
+            boutonAction.affiche();
+            boutonInventaire.affiche();
         }
     }
 
+
     // Destruction des unités
     // EST CE QUE CA MARCHE VRAIMENT ????? FUITE ????
-    for (int i = 0; i < unites.size(); ++i){
+    for (int i = 0; i < unites.size(); ++i) {
         //delete unites[i];
         unites[i] = 0;
     }

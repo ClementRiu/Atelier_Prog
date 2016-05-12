@@ -2,7 +2,6 @@
 #define UNITE_H
 
 
-
 #include "../Combat/objet.h"
 #include <Imagine/Graphics.h>
 #include "carte.h"
@@ -37,19 +36,20 @@ class Attaque {
     int puissance;
 public:
     Attaque();
+
     Attaque(const Attaque &att);
 
     Attaque(std::vector<Imagine::Coords<2> > zone, int power);
 
     // Affiche la zone d'influence de l'attaque
-    void zone(Carte& carte, bool b, int caseUnite);
+    void zone(Carte &carte, bool b, int caseUnite);
 
     int getPuissance();
 };
 
 
 // Unite herite d'objet pour pouvoir etre achetee, vendue et inventorisee aussi
-class Unite : public Mere{
+class Unite : public Mere {
     //caractéristiques de l'unité
     float PV;
     float PVMax;
@@ -73,27 +73,29 @@ class Unite : public Mere{
 
 public:
     Unite();
-    Unite(const Unite& unit);
+
+    Unite(const Unite &unit);
 
     Unite(float dep, int num);
 
     Unite(float dep, float depMax, int num);
 
-    void deplacement(Carte& carte, bool afficheChemin);
+    void deplacement(Carte &carte, bool afficheChemin, int x1, int y1);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
     void choixAction();
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
-    std::vector< std::vector<int> > afficheCaseDisponibleOnOff(Carte& carte, bool b, float &deplacement, int case_a_atteindre);
+    std::vector<std::vector<int> > afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
+                                                              int case_a_atteindre);
 
     void deplaceVersCase(Case &c2, Case &c1);
 
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
-    void tour(Carte& carte, std::vector<Unite*> unites, Bouton boutonFinTour);
+    void tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction);
 
-    void attaque(Attaque attq, Carte& carte, std::vector<Unite*> unites);
+    void attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites);
 
     void changeOrientation(int i);
 
@@ -120,7 +122,7 @@ public:
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
-    std::vector<Bouton> boutonAction(Carte& carte);
+//    std::vector<Bouton> boutonAction(Carte& carte);
 
     // Fonction vide ici
     virtual void ramasse(Objet *obj);
@@ -145,7 +147,7 @@ class Sbire : public Unite {
 public:
     Sbire();
 
-    Sbire(const Sbire & s);
+    Sbire(const Sbire &s);
 };
 
 
@@ -181,9 +183,9 @@ class Heros : public Unite {
 public:
     Heros(float dep, int num);
 
-    Heros(const Heros& h);
+    Heros(const Heros &h);
 
-    Heros(const Unite& u);
+    Heros(const Unite &u);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
     virtual void equipe(int i, bool droite = true);
