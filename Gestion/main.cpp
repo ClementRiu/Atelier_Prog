@@ -20,7 +20,6 @@ int main() {
         unites.push_back(new Heros(5, 304));
         unites.push_back(new Unite(10, 303));
     }
-
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unites[0]->ramasse(new Objet("merde"));
     unites[0]->ramasse(new Casque("casque"));
@@ -76,6 +75,7 @@ int main() {
 
     // Deplacement des unites
     bool save = true;
+
     while(save) {
         allie.tourGestion(carte, unites, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, save);
         finJournee(unites);

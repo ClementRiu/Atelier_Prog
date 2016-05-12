@@ -74,7 +74,7 @@ void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
                 }
             }
             else {
-                unites[u]->deplacement(carte, false, x, y);
+                unites[u]->deplacement(carte, x, y);
             }
 
             boutonSauvegarde.affiche();

@@ -5,11 +5,9 @@
 int main() {
     Imagine::openWindow(width, height);
 
-    Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
-    boutonSauvegarde.affiche();
     boutonFinTour.affiche();
     boutonAction.affiche();
     boutonInventaire.affiche();

@@ -80,7 +80,7 @@ public:
 
     Unite(float dep, float depMax, int num);
 
-    void deplacement(Carte &carte, bool afficheChemin, int x1, int y1);
+    void deplacement(Carte &carte, int x1, int y1);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER

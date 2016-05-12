@@ -28,7 +28,90 @@ std::string TypeCase::Description() {
 }
 
 
-Case::Case(int x1, int y1, TypeCase tc) {
+bool TypeCase::popUp(std::string question) {
+    Bouton oui(ZoneBoutonOui, Imagine::BLUE, "OUI");
+    Bouton non(ZoneBoutonNon, Imagine::BLUE, "NON");
+    Bouton quest(ZoneBoutonQuestion, Imagine::BLACK, question);
+    quest.affiche();
+    oui.affiche();
+    non.affiche();
+    int x, y;
+    clicSimple(x, y);
+    while (!(oui.boutonActive(x, y)) && !non.boutonActive(x, y)) {
+        clicSimple(x, y);
+    }
+    if (oui.boutonActive(x, y)) {
+        return true;
+    }
+    return false;
+}
+
+
+TypeCase* TypeCase::clone() const {
+    return new TypeCase(*this);
+}
+
+
+bool TypeCase::boutonChoix(){
+
+}
+
+
+CaseVille::CaseVille(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+
+}
+
+
+CaseVille::CaseVille() : TypeCase(){
+
+}
+
+
+CaseVille* CaseVille::clone() const {
+    return new CaseVille(*this);
+}
+
+
+bool CaseVille::boutonChoix(){
+    return this->popUp("Voulez-vous entrer dans la ville ?");
+}
+
+
+CaseCombat::CaseCombat(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+
+}
+
+
+CaseCombat::CaseCombat() : TypeCase() {
+
+}
+
+
+CaseCombat* CaseCombat::clone() const {
+    return new CaseCombat(*this);
+}
+
+
+bool CaseCombat::boutonChoix(){
+    return this->popUp("Voulez-vous vous battre ?");
+}
+
+
+CaseNormale::CaseNormale(float dep, std::string desc, Imagine::Color img) : TypeCase(dep, desc, img){
+
+}
+
+
+CaseNormale::CaseNormale() : TypeCase() {
+}
+
+
+CaseNormale* CaseNormale::clone() const {
+    return new CaseNormale(*this);
+}
+
+
+Case::Case(int x1, int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
@@ -40,6 +123,17 @@ Case::Case(int x1, int y1, TypeCase tc) {
 
 
 Case::Case() {
+}
+
+
+Case::Case(const Case &tuile) {
+    x = tuile.x;
+    y = tuile.y;
+    taille = tuile.taille;
+    occupe = tuile.occupe;
+    brillance = tuile.brillance;
+    utileChemin = utileChemin;
+    type = tuile.type->clone();
 }
 
 
@@ -75,7 +169,7 @@ void Case::brillanceOnOff(bool flag) {
 
 void Case::affiche() {
     Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
-    Imagine::fillRect(x, y, Taille - 1, Taille - 1, type.Image());
+    Imagine::fillRect(x, y, Taille - 1, Taille - 1, type->Image());
     if (brillance) {
         Imagine::drawRect(x, y, Taille - 2, Taille - 2, Imagine::BLACK);
     }
@@ -85,7 +179,7 @@ void Case::affiche() {
     // Mini map
     int taillemax = LargDroite / NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
-                      taillemax, type.Image());
+                      taillemax, type->Image());
     if (occupe) {
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
         Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
@@ -95,7 +189,7 @@ void Case::affiche() {
 
 
 float Case::NbDep() const {
-    return type.NbDep();
+    return type->NbDep();
 }
 
 
@@ -106,6 +200,11 @@ bool Case::Brillance() const {
 
 void Case::setChemin() {
     utileChemin = !utileChemin;
+}
+
+
+bool Case::getChemin() {
+    return utileChemin;
 }
 
 
@@ -195,40 +294,39 @@ std::vector<std::vector<int> > Case::fastMarching(float dep, Carte &carte, bool 
 
 
 Imagine::Color Case::getImage() {
-    return type.Image();
+    return type->Image();
 }
 
 
 std::string Case::getDescription() {
-    return type.Description();
+    return type->Description();
+}
+
+
+bool Case::boutonChoix() {
+    return type->boutonChoix();
 }
 
 
 Carte::Carte() {
-    // Initialisation des types de case
-    TypeCase eau(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE);
-    TypeCase herbe(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN);
-    TypeCase route(1, "Une case a moindre cout de deplacement", Imagine::YELLOW);
-    TypeCase ville(1, descVille, Imagine::MAGENTA);
-
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
             if ((i + 1) % (j + 1) == 0) {
-                Case c(i, j, eau);
+                Case c(i, j, new CaseNormale(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) == 1) {
-                Case c(i, j, herbe);
+                Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) > 1) {
-                Case c(i, j, route);
+                Case c(i, j,  new CaseNormale(1, "Une case a moindre cout de deplacement", Imagine::YELLOW));
                 carte[numeroCase(i, j)] = c;
             }
         }
     }
-    Case c(0, 0, ville);
+    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA));
     carte[0] = c;
 }
 
@@ -310,6 +408,14 @@ int numeroCase(int x, int y) {
 void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase) {
     Imagine::enableMouseTracking(true);
     Imagine::Event e;
+    x=-1;
+    y=-1;
+    for (int i = 0; i < NbCase * NbCase; ++i){
+        if (carte[i].getChemin()) {
+            std::cerr << 1 << std::endl;
+        }
+    }
+
     do {
         getEvent(0, e);
         if (e.type == Imagine::EVT_BUT_ON) {
@@ -415,9 +521,9 @@ void afficheSurvole(int x, int y, Carte &carte) {
 
 
 void afficheChemins(int x, int y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase) {
-    // L'entier suivant correspont à la case la plus proche de (x,y) qui est en brillance. == -1 si aucune.
-    int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
     if (numeroCase(x, y) != -1) {
+        // L'entier suivant correspont à la case la plus proche de (x,y) qui est en brillance. == -1 si aucune.
+        int caseProche = carte[numeroCase(x, y)].plusProcheVoisineBrillante(x, y, carte, numeroCase(x, y));
         int num;
         // La dernière condition signifie que l'on est pas en train de regarder la position du Heros
         if (carte[numeroCase(x, y)].Brillance() ||
