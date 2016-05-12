@@ -50,6 +50,38 @@ public:
 
     // Accesseur à la desctiprion de la case
     std::string Description();
+
+    virtual TypeCase* clone() const;
+};
+
+
+class CaseVille : public TypeCase{
+public:
+    CaseVille(std::string desc, Imagine::Color img);
+
+    CaseVille();
+
+    virtual CaseVille* clone() const;
+};
+
+
+class CaseCombat : public TypeCase{
+public:
+    CaseCombat(std::string desc, Imagine::Color img);
+
+    CaseCombat();
+
+    virtual CaseCombat* clone() const;
+};
+
+
+class CaseNormale : public TypeCase{
+public:
+    CaseNormale(float dep, std::string desc, Imagine::Color img);
+
+    CaseNormale();
+
+    virtual CaseNormale* clone() const;
 };
 
 
@@ -60,14 +92,16 @@ class Case {
     bool occupe; // Variable indiquant si le heros est sur la case
     bool brillance; // Variable indiquant si la case est en surbrillance
     bool utileChemin; // Variable indiquant si la case sert actuellement a montrer un chemin pour le Heros
-    TypeCase type;
+    TypeCase* type;
 
 public:
     // Constructeur de la classe Case
-    Case(int x1, int y1, TypeCase tc);
+    Case(int x1, int y1, TypeCase* tc);
 
     // Constructeur vide de la classe Case
     Case();
+
+    Case(const Case& tuile);
 
     // Place le heros sur cette case s'il n'y etait pas et l'enleve s'il y etait
     void flagHeros();
