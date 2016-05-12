@@ -22,6 +22,9 @@ const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase
                                   NbCase * Taille + Separation + LargDroite, NbCase * Taille};
 const int ZoneBoutonSauvegarde[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
                                      NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5)};
+const int ZoneBoutonOui[4]={Taille * NbCase / 2, Taille * NbCase / 3, 3 * Taille * NbCase / 4, 3 * Taille * NbCase / 4};
+const int ZoneBoutonNon[4]={Taille * NbCase / 4, Taille * NbCase / 3, Taille * NbCase / 2, 3 * Taille * NbCase / 4};
+const int ZoneBoutonQuestion[4]={Taille * NbCase / 4, Taille * NbCase / 4, 3 *Taille * NbCase / 4, 3 * Taille * NbCase / 4,};
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
@@ -51,7 +54,14 @@ public:
     // Accesseur à la desctiprion de la case
     std::string Description();
 
+    // affichage à modifier
+    // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
+    bool popUp(std::string question);
+
     virtual TypeCase* clone() const;
+
+    // Cree des boutons où on pour choisir si l'on veut effecter l'action de la case ou non
+    virtual bool boutonChoix();
 };
 
 
@@ -62,6 +72,8 @@ public:
     CaseVille();
 
     virtual CaseVille* clone() const;
+
+    virtual bool boutonChoix();
 };
 
 
@@ -72,6 +84,8 @@ public:
     CaseCombat();
 
     virtual CaseCombat* clone() const;
+
+    virtual bool boutonChoix();
 };
 
 
@@ -141,6 +155,9 @@ public:
 
     // Renvoie le texte correspondant a la case
     std::string getDescription();
+
+    // Permet de choisir si l'on veut effectuer l'action relative à la case
+    bool boutonChoix();
 };
 
 

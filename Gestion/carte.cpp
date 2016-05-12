@@ -28,8 +28,32 @@ std::string TypeCase::Description() {
 }
 
 
+bool TypeCase::popUp(std::string question) {
+    Bouton oui(ZoneBoutonOui, Imagine::BLUE, "OUI");
+    Bouton non(ZoneBoutonNon, Imagine::BLUE, "NON");
+    Bouton quest(ZoneBoutonQuestion, Imagine::BLACK, question);
+    quest.affiche();
+    oui.affiche();
+    non.affiche();
+    int x, y;
+    clicSimple(x, y);
+    while (!(oui.boutonActive(x, y)) && !non.boutonActive(x, y)) {
+        clicSimple(x, y);
+    }
+    if (oui.boutonActive(x, y)) {
+        return true;
+    }
+    return false;
+}
+
+
 TypeCase* TypeCase::clone() const {
     return new TypeCase(*this);
+}
+
+
+bool TypeCase::boutonChoix(){
+
 }
 
 
@@ -48,6 +72,11 @@ CaseVille* CaseVille::clone() const {
 }
 
 
+bool CaseVille::boutonChoix(){
+    return this->popUp("Voulez-vous entrer dans la ville ?");
+}
+
+
 CaseCombat::CaseCombat(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
 
 }
@@ -60,6 +89,11 @@ CaseCombat::CaseCombat() : TypeCase() {
 
 CaseCombat* CaseCombat::clone() const {
     return new CaseCombat(*this);
+}
+
+
+bool CaseCombat::boutonChoix(){
+    return this->popUp("Voulez-vous vous battre ?");
 }
 
 
@@ -260,6 +294,11 @@ Imagine::Color Case::getImage() {
 
 std::string Case::getDescription() {
     return type->Description();
+}
+
+
+bool Case::boutonChoix() {
+    return type->boutonChoix();
 }
 
 
