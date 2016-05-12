@@ -5,7 +5,7 @@
 #include "../Combat/objet.h"
 #include <Imagine/Graphics.h>
 #include "carte.h"
-
+#include "outils.h"
 
 const int TAILLE_ARMEE = 6;
 const int NB_MAX_ATTAQUES = 10;

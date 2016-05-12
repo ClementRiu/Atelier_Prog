@@ -18,20 +18,12 @@ const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
 const int width = NbCase * Taille + Separation + LargDroite;
 const int height = NbCase * Taille;
-const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5),
-                                  NbCase * Taille + Separation + LargDroite, NbCase * Taille};
-const int ZoneBoutonSauvegarde[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5) - LargDroite - 10,
-                                     NbCase * Taille + Separation + LargDroite, Taille * (NbCase - 5)};
-const int ZoneBoutonOui[4]={Taille * NbCase / 2, Taille * NbCase / 3, 3 * Taille * NbCase / 4, 3 * Taille * NbCase / 4};
-const int ZoneBoutonNon[4]={Taille * NbCase / 4, Taille * NbCase / 3, Taille * NbCase / 2, 3 * Taille * NbCase / 4};
-const int ZoneBoutonQuestion[4]={Taille * NbCase / 4, Taille * NbCase / 4, 3 *Taille * NbCase / 4, 3 * Taille * NbCase / 4,};
-const int ZoneBoutonAction[4] = {0,NbCase*Taille-Taille*2, Taille*3, NbCase*Taille};
-const int ZoneBoutonInventaire[4] = {Taille*3,NbCase*Taille-Taille*2, Taille*6, NbCase*Taille};
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
 
 class Unite;
+
 class Carte;
 
 
@@ -60,44 +52,44 @@ public:
     // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
     bool popUp(std::string question);
 
-    virtual TypeCase* clone() const;
+    virtual TypeCase *clone() const;
 
     // Cree des boutons où on pour choisir si l'on veut effecter l'action de la case ou non
     virtual bool boutonChoix();
 };
 
 
-class CaseVille : public TypeCase{
+class CaseVille : public TypeCase {
 public:
     CaseVille(std::string desc, Imagine::Color img);
 
     CaseVille();
 
-    virtual CaseVille* clone() const;
+    virtual CaseVille *clone() const;
 
     virtual bool boutonChoix();
 };
 
 
-class CaseCombat : public TypeCase{
+class CaseCombat : public TypeCase {
 public:
     CaseCombat(std::string desc, Imagine::Color img);
 
     CaseCombat();
 
-    virtual CaseCombat* clone() const;
+    virtual CaseCombat *clone() const;
 
     virtual bool boutonChoix();
 };
 
 
-class CaseNormale : public TypeCase{
+class CaseNormale : public TypeCase {
 public:
     CaseNormale(float dep, std::string desc, Imagine::Color img);
 
     CaseNormale();
 
-    virtual CaseNormale* clone() const;
+    virtual CaseNormale *clone() const;
 };
 
 
@@ -108,16 +100,16 @@ class Case {
     bool occupe; // Variable indiquant si le heros est sur la case
     bool brillance; // Variable indiquant si la case est en surbrillance
     bool utileChemin; // Variable indiquant si la case sert actuellement a montrer un chemin pour le Heros
-    TypeCase* type;
+    TypeCase *type;
 
 public:
     // Constructeur de la classe Case
-    Case(int x1, int y1, TypeCase* tc);
+    Case(int x1, int y1, TypeCase *tc);
 
     // Constructeur vide de la classe Case
     Case();
 
-    Case(const Case& tuile);
+    Case(const Case &tuile);
 
     // Place le heros sur cette case s'il n'y etait pas et l'enleve s'il y etait
     void flagHeros();
@@ -145,14 +137,15 @@ public:
     bool getChemin();
 
     // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
-    int plusProcheVoisineBrillante(int x1, int y1, Carte& carte, int numcase);
+    int plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase);
 
     // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
     // du point (x, y) au plus éloigné
     std::vector<int> casesVoisines(int x1, int y1);
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    std::vector< std::vector<int> > fastMarching(float dep, Carte& carte, bool brillance, float &dep_restant, int case_a_atteindre);
+    std::vector<std::vector<int> > fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
+                                                int case_a_atteindre);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
     Imagine::Color getImage();
@@ -165,43 +158,14 @@ public:
 };
 
 
-class Carte{
+class Carte {
     Case carte[NbCase * NbCase];
 public:
     // Construit une carte de base
     Carte();
+
     // Permer d'accéder à carte[i]
-    Case& operator[](int i);
-};
-
-
-class Bouton{
-    int zoneDeDelimitation[4]; // Tableau de la forme [xmin, ymin, xmax, ymax]
-    Imagine::Color image; // A remplacer par une image #Clement
-    std::string nomBouton;
-    int taillePolice;
-public:
-    Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom);
-
-    Bouton(const int zone[4], Imagine::Color c, std::string nom);
-
-    // Renvoie la largeur du bouton
-    int largeur();
-
-    // renvoie la la hauteur du bouton
-    int hauteur();
-
-    // A changer
-    // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
-    void affiche(int decalementVertical = 0);
-
-    // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
-    bool boutonActive(int x, int y, int decalementVertical = 0);
-
-    // Regarde si le bouton est vide
-    bool boutonVide();
-
-    void setNom(std::string nom);
+    Case &operator[](int i);
 };
 
 
@@ -209,34 +173,7 @@ public:
 int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
-void clic(int &x, int &y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase);
+void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase);
 
-// Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
-void clic(int &x, int &y, Carte& carte);
-
-// Fonction renvoyant en référence dans x et y la position d'un clic
-void clicSimple(int &x, int &y);
-
-//Termine la journée (=tour dans Gestion)
-void finJournee(std::vector<Unite*> unites);
-
-//Termine le tour en combat
-void finTourCombat(std::vector<Unite*> unites);
-
-// Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). choix devient 0 pour le deplacement et 1 pour l'attaque
-void choisir(int &choix, int &x, int &y);
-
-// Renvoie les coordonnees de la case survolee
-void survole(int &x, int &y);
-
-// Affiche l'endroit survole par la souris
-void afficheSurvole(int x, int y, Carte& carte);
-
-// Affiche le chemin pour le Heros
-void afficheChemins(int x, int y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase);
-
-
-void sauvegarde(std::vector<Unite*> unites);
-void charge(std::vector<Unite*> unites, Carte& carte);
 
 #endif // CARTE_H

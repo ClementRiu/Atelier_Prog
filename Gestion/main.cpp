@@ -68,15 +68,13 @@ int main() {
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
-    boutonAction.affiche();
-    boutonInventaire.affiche();
 
     Camp allie(unites);
 
     // Deplacement des unites
     bool save = true;
 
-    while(save) {
+    while (save) {
         allie.tourGestion(carte, unites, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, save);
         finJournee(unites);
     }

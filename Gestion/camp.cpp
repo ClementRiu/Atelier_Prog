@@ -81,8 +81,6 @@ void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             boutonFinTour.affiche();
 
             unites[u]->afficheCaseDisponibleOnOff(carte, false, dep, 0);
-            boutonAction.affiche();
-            boutonInventaire.affiche();
         }
     }
 }

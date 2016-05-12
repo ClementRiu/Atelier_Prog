@@ -189,7 +189,7 @@ bool Unite::estVivant() {
 }
 
 
-void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction){
+void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
