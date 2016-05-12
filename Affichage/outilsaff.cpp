@@ -2,48 +2,59 @@
 
 
 // Fonction relative à Case.
-Case::Case() {
+//Constructeur par défaut.
+Case_Graph::Case_Graph() {
     nom = "Vide";
     p_dep = INF;
 }
 
-const char *Case::get_nom() {
+//Assesseur en lecture de l'attribut nom.
+const char *Case_Graph::get_nom() {
     return nom;
 }
 
-float Case::get_poids() {
+//Assesseur en lecture de l'attribut p_dep.
+float Case_Graph::get_poids() {
     return p_dep;
 }
 
-const char *Case::get_description() {
+//Assesseur en lecture de l'attribut description.
+const char *Case_Graph::get_description() {
     return description;
 }
 
-std::string Case::get_nom_image() {
+//Assesseur en lecture de l'attribut nom_image.
+std::string Case_Graph::get_nom_image() {
     return nom_image;
 }
 
-bool Case::get_occupation() {
+//Assesseur en lecture de l'attribut occupation.
+bool Case_Graph::get_occupation() {
     return occupation;
 }
 
-void Case::set_nom(char *nom_voulu) {
+//Assesseur en écriture de l'attribut nom.
+void Case_Graph::set_nom(char *nom_voulu) {
     nom = nom_voulu;
 }
 
-void Case::set_p_deb(float poids_voulu) {
+//Assesseur en écriture de l'attribut p_dep.
+void Case_Graph::set_p_deb(float poids_voulu) {
     p_dep = poids_voulu;
 }
 
-void Case::set_description(char *description_voulue) {
+//Assesseur en écriture de l'attribut description.
+void Case_Graph::set_description(char *description_voulue) {
     description = description_voulue;
 }
 
-void Case::set_nom_image(const char *nom_image_voulue) {
+//Assesseur en écriture de l'attribut nom_image.
+void Case_Graph::set_nom_image(const char *nom_image_voulue) {
     nom_image = std::string(nom_image_voulue);
 }
 
-void Case::set_frame(const char *nom_image_voulue) {
+//Assesseur en écriture de l'attribut frame.
+void Case_Graph::set_frame(const char *nom_image_voulue) {
     if (std::string(nom_image_voulue) == std::string("foret1")) {
         frame = foret1;
     }
@@ -55,12 +66,14 @@ void Case::set_frame(const char *nom_image_voulue) {
     }
 }
 
-void Case::set_occupation(bool occupation_voulue) {
+//Assesseur en écriture de l'attribut occupation.
+void Case_Graph::set_occupation(bool occupation_voulue) {
     occupation = occupation_voulue;
 }
 
-void Case::set_case(char *nom_voulu, float poids_voulu, char *description_voulue, const char *name,
-                    bool occupation_voulue) {
+//Méthode qui modifie l'intégralité des paramètres de la case.
+void Case_Graph::set_Case_Graph(char *nom_voulu, float poids_voulu, char *description_voulue, const char *name,
+                                bool occupation_voulue) {
     set_nom(nom_voulu);
     set_p_deb(poids_voulu);
     set_description(description_voulue);
@@ -68,80 +81,82 @@ void Case::set_case(char *nom_voulu, float poids_voulu, char *description_voulue
     set_occupation(occupation_voulue);
 }
 
-void Case::affiche_case(Imagine::Coords<2> pos_case) {
-    Imagine::display(frame, pos_case[0] * taille_case, pos_case[1] * taille_case);
+//Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des Coords en argument pour déterminer sa position.
+void Case_Graph::affiche_Case_Graph(Imagine::Coords<2> pos_case) {
+    affiche_Case_Graph(pos_case[0], pos_case[1]);
 }
 
-void Case::affiche_case(int x, int y) {
-    Imagine::display(frame, x * taille_case, y * taille_case);
+//Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des int en argument pour déterminer sa position.
+void Case_Graph::affiche_Case_Graph(int x, int y) {
+    Imagine::display(frame, x * taille_case_graph, y * taille_case_graph);
+    Imagine::drawRect(x * taille_case_graph, y * taille_case_graph, taille_case_graph - 1, taille_case_graph - 1, gris, 1);
 }
-
-// A TESTER : Supposée afficher la description dans une case sur le côté...
-/*void Case::affiche_description() {
-    Imagine::drawString(zonedescription, nom, Imagine::BLACK, 12, 0, false, true);
-    Imagine::drawString(zonedescription + (0, 10), description, Imagine::BLACK);
-}*/
 
 
 // Fonction relative à CarteduMonde.
+//Constructeur par défaut.
 CarteduMonde::CarteduMonde() : listecase(widthmap, heightmap) {
     pos_centre = (widthmap / 2, heightmap / 2);
     // Pour le moment crée de manière simple la map.
     for (int i = 0; i < widthmap; i++) {
         for (int j = 0; j < heightmap; j++) {
             if (i == j) {
-                listecase(i, j).set_case("Etendue d'Eau", INF, "De l'eau, sans vie, sans poisson, rien que de l'eau",
-                                         "eau1", false);
+                listecase(i, j).set_Case_Graph("Etendue d'Eau", INF,
+                                               "De l'eau, sans vie, sans poisson, rien que de l'eau",
+                                               "eau1", false);
 
             }
             else {
                 if (i < 20) {
-                    listecase(i, j).set_case("Foret", 3.0f, "C'est vert, les souris s'y cachent, c'est UNE FORET",
-                                             "foret1", false);
+                    listecase(i, j).set_Case_Graph("Foret", 3.0f, "C'est vert, les souris s'y cachent, c'est UNE FORET",
+                                                   "foret1", false);
                 }
                 else {
-                    listecase(i, j).set_case("Lande", 1.0f, "Les choses les plus chiantes du monde...",
-                                             "lande1", false);
+                    listecase(i, j).set_Case_Graph("Lande", 1.0f, "Les choses les plus chiantes du monde...",
+                                                   "lande1", false);
                 }
             }
         }
     }
 }
 
+
+//Assesseur en lecture de la position du centre.
 void CarteduMonde::get_pos_centre(Imagine::Coords<2> &pos) {
     pos = pos_centre;
 }
 
+//Méthode qui affiche la carte dans le 'world'.
 void CarteduMonde::affiche() {
-    assert(pos_centre[0] * taille_case + widthscreen / 2 - widthmap * taille_case <=
+    assert(pos_centre[0] * taille_case_graph + widthworld / 2 - widthmap * taille_case_graph <=
            0);   // le bord droit de l'écran est dans la map.
-    assert(pos_centre[1] * taille_case + heightscreen / 2 - heightmap * taille_case <=
+    assert(pos_centre[1] * taille_case_graph + heightworld / 2 - heightmap * taille_case_graph <=
            0);  // le bord bas de l'écran est dans la map.
-    assert(pos_centre[0] * taille_case - widthscreen / 2 >= 0);    // le bord gauche de l'écran est dans la map.
-    assert(pos_centre[1] * taille_case - heightscreen / 2 >= 0);   // le bord haut de l'écran est dans la map.
-    for (int i = -widthscreen / taille_case / 2; i < widthscreen / taille_case / 2; i++) {
-        for (int j = -heightscreen / taille_case / 2; j < heightscreen / taille_case / 2; j++) {
-            listecase(pos_centre[0] + i, pos_centre[1] + j).affiche_case(widthscreen / taille_case / 2 + i,
-                                                                         heightscreen / taille_case / 2 + j);
+    assert(pos_centre[0] * taille_case_graph - widthworld / 2 >= 0);    // le bord gauche de l'écran est dans la map.
+    assert(pos_centre[1] * taille_case_graph - heightworld / 2 >= 0);   // le bord haut de l'écran est dans la map.
+    for (int i = -widthworld / taille_case_graph / 2; i < widthworld / taille_case_graph / 2; i++) {
+        for (int j = -heightworld / taille_case_graph / 2; j < heightworld / taille_case_graph / 2; j++) {
+            listecase(pos_centre[0] + i, pos_centre[1] + j).affiche_Case_Graph(widthworld / taille_case_graph / 2 + i,
+                                                                               heightworld / taille_case_graph / 2 + j);
         }
     }
 }
 
-
+//Méthode qui décale l'affichage selon la directio dir voulue.
 void CarteduMonde::deplace(int dir) {
-    if (dir == Imagine::KEY_UP && pos_centre[1] * taille_case - heightscreen / 2 > 0) {
+    if (dir == Imagine::KEY_UP && pos_centre[1] * taille_case_graph - heightworld / 2 > 0) {
         pos_centre[1] -= 1;
         affiche();
     }
-    if (dir == Imagine::KEY_DOWN && pos_centre[1] * taille_case + heightscreen / 2 - heightmap * taille_case < 0) {
+    if (dir == Imagine::KEY_DOWN && pos_centre[1] * taille_case_graph + heightworld / 2 - heightmap * taille_case_graph < 0) {
         pos_centre[1] += 1;
         affiche();
     }
-    if (dir == Imagine::KEY_LEFT && pos_centre[0] * taille_case - widthscreen / 2 > 0) {
+    if (dir == Imagine::KEY_LEFT && pos_centre[0] * taille_case_graph - widthworld / 2 > 0) {
         pos_centre[0] -= 1;
         affiche();
     }
-    if (dir == Imagine::KEY_RIGHT && pos_centre[0] * taille_case + heightscreen / 2 - heightmap * taille_case < 0) {
+    if (dir == Imagine::KEY_RIGHT && pos_centre[0] * taille_case_graph + heightworld / 2 - heightmap * taille_case_graph < 0) {
         pos_centre[0] += 1;
         affiche();
     }
