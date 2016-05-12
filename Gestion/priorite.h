@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <assert.h>
 
@@ -10,14 +11,19 @@ class CaseDist {
 public:
     // Constructeur de caseDist
     CaseDist(int num, float dep);
+
     // Constructeur de caseDist avec un vecteur prdéfini
     CaseDist(int num, float dep, std::vector<int> way);
+
     // Accesseur au numero de la case
     int getNum();
+
     // Accesseur au nombre de deplacements restants
     float getDep();
+
     // Operateur inferieur ou egal sur la classe
     bool operator<(CaseDist c) const;
+
     // Pour récupérer le chemin de la case
     std::vector<int> getChemin();
 };
@@ -27,10 +33,13 @@ class FilePriorite {
 public:
     // Constructeur de la file de priorite
     FilePriorite();
+
     // Methode pour inserer un élément dans la file
     void push(CaseDist d);
+
     // Methode pour retourner le premier element de la file
     CaseDist pop();
+
     // Methode pour determiner si la file est vide
     bool empty();
 };

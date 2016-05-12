@@ -2,28 +2,28 @@
 #include "../Gestion/unite.h"
 
 
-std::string Mere::getNom(){
+std::string Mere::getNom() {
     return nom;
 }
 
 
-Bouton Mere::creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax){
+Bouton Mere::creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax) {
     // On teste l'égalité des types 2 Meres, pour ensuite dans une autre fonction voir si on veut afficher l'objet dans la catégorie ou pas
-    if (typeid(*this) == typeid(*obj)){
+    if (typeid(*this) == typeid(*obj)) {
         Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
         ymin += EcartementLignesInventaire;
         ymax += EcartementLignesInventaire;
         return b;
     }
-    // Si on n'a pas envie de créer de bouton, on créé un bouton vide
-    else{
+        // Si on n'a pas envie de créer de bouton, on créé un bouton vide
+    else {
         Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
         return b;
     }
 }
 
 
-void Mere::equiper(Heros *h, bool droite){
+void Mere::equiper(Heros *h, bool droite) {
 
 }
 
@@ -38,17 +38,17 @@ Mere::Mere(std::string nom_) {
 }
 
 
-Mere::Mere(const Mere& m){
+Mere::Mere(const Mere &m) {
     nom = m.nom;
 }
 
 
-Mere* Mere::clone() const {
+Mere *Mere::clone() const {
     return new Mere(*this);
 }
 
 
-Objet::Objet() : Mere(){
+Objet::Objet() : Mere() {
 
 }
 
@@ -66,35 +66,35 @@ bool Objet::operator==(const Objet &B) const {
 }
 
 
-Objet* Objet::clone() const {
+Objet *Objet::clone() const {
     return new Objet(*this);
 }
 
 
-Inventaire::Inventaire(){
+Inventaire::Inventaire() {
 
 }
 
 
-Inventaire::Inventaire(const Inventaire& inventaireACopier){
+Inventaire::Inventaire(const Inventaire &inventaireACopier) {
     contenu.resize(inventaireACopier.contenu.size());
-    for (int i = 0; i < inventaireACopier.contenu.size(); i++){
+    for (int i = 0; i < inventaireACopier.contenu.size(); i++) {
         contenu[i] = inventaireACopier.contenu[i]->clone();
     }
 }
 
 
-int Inventaire::taille(){
+int Inventaire::taille() {
     return contenu.size();
 }
 
 
-void Inventaire::ajoute(Mere *obj){
+void Inventaire::ajoute(Mere *obj) {
     contenu.push_back(obj);
 }
 
 
-Mere* Inventaire::get(int i){
+Mere *Inventaire::get(int i) {
     assert (i < this->taille());
     return contenu[i];
 }
@@ -103,7 +103,7 @@ Mere* Inventaire::get(int i){
 // Fonction a modifier
 // faire vien plutot de Unite
 void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
-                                 Unite *unite, void (Unite::*faire)(int, bool)){
+                                 Unite *unite, void (Unite::*faire)(int, bool)) {
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
     std::vector<Bouton> boutonUtile;
     std::vector<int> objetPresent;
@@ -117,7 +117,7 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
     boutonDown.affiche();
 
     // Affichage des boutons des differentes categories
-    for (int i = 0; i < boutonsCategories.size(); ++i){
+    for (int i = 0; i < boutonsCategories.size(); ++i) {
         boutonsCategories[i].affiche();
     }
 
@@ -125,23 +125,23 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
     int x, y;
     int decalementVertical = 0; // Cette variable va servir a scroller
     clicSimple(x, y);
-    while (!boutonStop.boutonActive(x, y)){
+    while (!boutonStop.boutonActive(x, y)) {
         // Les entiers suivants vont savoir ou placer le bouton odulo le decalement vertical
         int xmin = BoutonMilieu[0], ymin = Police, xmax = BoutonMilieu[1], ymax = 2 * Police;
 
         // On regarde si on a clique sur une des categories
-        for (int i = 0; i < boutonsCategories.size(); ++i){
-            if (boutonsCategories[i].boutonActive(x, y)){
+        for (int i = 0; i < boutonsCategories.size(); ++i) {
+            if (boutonsCategories[i].boutonActive(x, y)) {
                 // Quand on clique sur une categorie, tout se reinitialise
                 decalementVertical = 0;
                 boutonUtile.clear();
                 objetPresent.clear();
-                for (int j = 0; j < contenu.size(); ++j){
+                for (int j = 0; j < contenu.size(); ++j) {
                     // On cree les differents boutons de la categorie
                     Bouton b = contenu[j]->creeBouton(classeObjets.get(i), xmin, ymin, xmax, ymax);
                     // On regarde si le bouton es ide et si c'est n'est pas le cas, on  le stock ainsi que la position
                     // Dans l'inventaire qui lui est associee
-                    if (!b.boutonVide()){
+                    if (!b.boutonVide()) {
                         boutonUtile.push_back(b);
                         objetPresent.push_back(j);
                     }
@@ -150,23 +150,23 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         }
 
         // On regarde si on a clique sur le bouton Up
-        if (boutonUp.boutonActive(x, y)){
+        if (boutonUp.boutonActive(x, y)) {
             decalementVertical -= EcartementLignesInventaire;
         }
 
         // On regarde si on a clique sur le bouton down
-        if (boutonDown.boutonActive(x, y)){
+        if (boutonDown.boutonActive(x, y)) {
             decalementVertical += EcartementLignesInventaire;
         }
 
         // On affiche les boutons de la categorie selectionnee
-        for (int i = 0; i < boutonUtile.size(); ++i){
+        for (int i = 0; i < boutonUtile.size(); ++i) {
             boutonUtile[i].affiche(decalementVertical);
         }
 
         // On regarde si on vient de cliquer sur un des boutons specifiques d'une categorie
-        for (int i = 0; i < boutonUtile.size(); ++i){
-            if (boutonUtile[i].boutonActive(x, y, decalementVertical)){
+        for (int i = 0; i < boutonUtile.size(); ++i) {
+            if (boutonUtile[i].boutonActive(x, y, decalementVertical)) {
                 // Applique une methode de Unite a travers le pointeur faire
                 (*unite.*faire)(objetPresent[i], true);
                 // On change le nom du bouton et on le reaffiche
@@ -182,182 +182,182 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
 }
 
 
-Inventaire::~Inventaire(){
-    for (int i = 0; i < contenu.size(); i++){
+Inventaire::~Inventaire() {
+    for (int i = 0; i < contenu.size(); i++) {
         delete contenu[i];
         contenu[i] = 0;
     }
 }
 
 
-Equipement::Equipement(){
+Equipement::Equipement() {
 
 }
 
 
-Equipement::Equipement(const Equipement &eq) : Objet(eq){
-    PV=eq.PV;
-    mana=eq.mana;
-    force=eq.force;
-    defense=eq.defense;
-    dexterite=eq.dexterite;
-    initiative=eq.initiative;
+Equipement::Equipement(const Equipement &eq) : Objet(eq) {
+    PV = eq.PV;
+    mana = eq.mana;
+    force = eq.force;
+    defense = eq.defense;
+    dexterite = eq.dexterite;
+    initiative = eq.initiative;
 
-    PDep=eq.PDep;
+    PDep = eq.PDep;
 }
 
 
-Equipement::Equipement(std::string nom_) : Objet(nom_){
+Equipement::Equipement(std::string nom_) : Objet(nom_) {
 
 }
 
 
-void Casque::equiper(Heros *h, bool droite){
+void Casque::equiper(Heros *h, bool droite) {
     *this = h->equipeCasque(*this);
 }
 
 
-Casque::Casque(){
+Casque::Casque() {
 
 }
 
 
-Casque::Casque(std::string nom_) : Equipement(nom_){
+Casque::Casque(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-void Anneau::equiper(Heros *h, bool droite){
-    if (droite){
+void Anneau::equiper(Heros *h, bool droite) {
+    if (droite) {
         *this = h->equipeAnneauDroite(*this);
     }
-    else{
+    else {
         *this = h->equipeAnneauGauche(*this);
     }
 }
 
 
-Casque* Casque::clone() const {
+Casque *Casque::clone() const {
     return new Casque(*this);
 }
 
 
-Anneau::Anneau(){
+Anneau::Anneau() {
 
 }
 
 
-Anneau::Anneau(std::string nom_) : Equipement(nom_){
+Anneau::Anneau(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Anneau* Anneau::clone() const {
+Anneau *Anneau::clone() const {
     return new Anneau(*this);
 }
 
 
-void Gants::equiper(Heros *h, bool droite){
+void Gants::equiper(Heros *h, bool droite) {
     *this = h->equipeGants(*this);
 }
 
 
-Gants::Gants(){
+Gants::Gants() {
 
 }
 
 
-Gants::Gants(std::string nom_) : Equipement(nom_){
+Gants::Gants(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Gants* Gants::clone() const {
+Gants *Gants::clone() const {
     return new Gants(*this);
 }
 
 
-void Jambes::equiper(Heros *h, bool droite){
+void Jambes::equiper(Heros *h, bool droite) {
     *this = h->equipeJambes(*this);
 }
 
 
-Jambes::Jambes(){
+Jambes::Jambes() {
 
 }
 
 
-Jambes::Jambes(std::string nom_) : Equipement(nom_){
+Jambes::Jambes(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Jambes* Jambes::clone() const {
+Jambes *Jambes::clone() const {
     return new Jambes(*this);
 }
 
 
-void Bottes::equiper(Heros *h, bool droite){
+void Bottes::equiper(Heros *h, bool droite) {
     *this = h->equipeBottes(*this);
 }
 
 
-Bottes::Bottes(){
+Bottes::Bottes() {
 
 }
 
 
-Bottes::Bottes(std::string nom_) : Equipement(nom_){
+Bottes::Bottes(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Bottes* Bottes::clone() const {
+Bottes *Bottes::clone() const {
     return new Bottes(*this);
 }
 
 
-void Arme::equiper(Heros *h, bool droite){
-    if (droite){
+void Arme::equiper(Heros *h, bool droite) {
+    if (droite) {
         *this = h->equipeArmeDroite(*this);
     }
-    else{
+    else {
         *this = h->equipeArmeGauche(*this);
     }
 }
 
 
-Arme::Arme(){
+Arme::Arme() {
 
 }
 
 
-Arme::Arme(std::string nom_) : Equipement(nom_){
+Arme::Arme(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Arme* Arme::clone() const {
+Arme *Arme::clone() const {
     return new Arme(*this);
 }
 
 
-void Torse::equiper(Heros *h, bool droite){
+void Torse::equiper(Heros *h, bool droite) {
     *this = h->equipeTorse(*this);
 }
 
 
-Torse::Torse(){
+Torse::Torse() {
 
 }
 
 
-Torse::Torse(std::string nom_) : Equipement(nom_){
+Torse::Torse(std::string nom_) : Equipement(nom_) {
 
 }
 
 
-Torse* Torse::clone() const {
+Torse *Torse::clone() const {
     return new Torse(*this);
 }
 

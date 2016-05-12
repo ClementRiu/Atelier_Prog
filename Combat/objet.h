@@ -22,10 +22,11 @@ const int BoutonMilieu[2] = {180, width - 100};
 
 
 class Heros;
+
 class Unite;
 
 
-class Mere{
+class Mere {
     int prix; // A CHANGER
     std::string nom;
 public:
@@ -34,7 +35,7 @@ public:
 
     Mere(std::string nom_);
 
-    Mere(const Mere& m);
+    Mere(const Mere &m);
 
     std::string getNom();
 
@@ -45,11 +46,11 @@ public:
     // Fonction vide utile uniquement pour les equipements
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Mere* clone() const;
+    virtual Mere *clone() const;
 };
 
 
-class Objet : public Mere{
+class Objet : public Mere {
     std::string nom;
     std::string type;
 public:
@@ -59,31 +60,31 @@ public:
 
     bool operator==(const Objet &B) const;
 
-    virtual Objet* clone() const;
+    virtual Objet *clone() const;
 };
 
 
 // Fonction a modifier
 // faire vien plutot de Unite
 class Inventaire {
-    std::vector<Mere*> contenu;
+    std::vector<Mere *> contenu;
 public:
     int taille();
 
     Inventaire();
 
-    Inventaire(const Inventaire& inventaire);
+    Inventaire(const Inventaire &inventaire);
 
     // Ajoute un objet dans l'inventaire
     void ajoute(Mere *obj);
 
     // renvoie le pointeur sur l'objet numero i
-    Mere* get(int i);
+    Mere *get(int i);
 
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple
     void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
-                                     Unite *unite, void (Unite::*faire)(int, bool));
+                         Unite *unite, void (Unite::*faire)(int, bool));
 
     ~Inventaire();
 };
@@ -119,7 +120,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Casque* clone() const;
+    virtual Casque *clone() const;
 };
 
 
@@ -131,7 +132,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Anneau* clone() const;
+    virtual Anneau *clone() const;
 };
 
 
@@ -143,7 +144,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Gants* clone() const;
+    virtual Gants *clone() const;
 };
 
 
@@ -155,7 +156,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Jambes* clone() const;
+    virtual Jambes *clone() const;
 };
 
 
@@ -167,7 +168,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Bottes* clone() const;
+    virtual Bottes *clone() const;
 };
 
 
@@ -179,7 +180,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Arme* clone() const;
+    virtual Arme *clone() const;
 };
 
 
@@ -191,7 +192,7 @@ public:
 
     virtual void equiper(Heros *h, bool droite);
 
-    virtual Torse* clone() const;
+    virtual Torse *clone() const;
 };
 
 
