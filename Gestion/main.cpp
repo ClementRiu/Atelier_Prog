@@ -17,8 +17,8 @@ int main() {
     else {
         carte[304].flagHeros();
         carte[303].flagHeros();
-        unites.push_back(new Heros(5, 304));
-        unites.push_back(new Unite(10, 303));
+        unites.push_back(new Heros(5, 304, 100));
+        unites.push_back(new Unite(10, 303, 100));
     }
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unites[0]->ramasse(new Objet("merde"));

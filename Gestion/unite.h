@@ -76,9 +76,9 @@ public:
 
     Unite(const Unite &unit);
 
-    Unite(float dep, int num);
+    Unite(float dep, int num, float init);
 
-    Unite(float dep, float depMax, int num);
+    //Unite(float dep, float depMax, int num);
 
     void deplacement(Carte &carte, int x1, int y1);
 
@@ -100,6 +100,8 @@ public:
     void changeOrientation(int i);
 
     int getCase() const;
+
+    float getInit() const;
 
     void setCase(int num);
 
@@ -181,7 +183,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(float dep, int num);
+    Heros(float dep, int num, float init);
 
     Heros(const Heros &h);
 

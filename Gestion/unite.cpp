@@ -72,19 +72,20 @@ Unite::Unite(const Unite &unit) {
 }
 
 
-Unite::Unite(float dep, int num) {
+Unite::Unite(float dep, int num, float init) {
     PDep = dep;
     numcase = num;
     PDepMax = dep;
+    initiative = init;
 }
 
-
+/*
 Unite::Unite(float dep, float depMax, int num) {
     PDep = dep;
     numcase = num;
     PDepMax = depMax;
 }
-
+*/
 
 void Unite::choixAction() {
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
@@ -144,6 +145,10 @@ int Unite::getCase() const {
     return numcase;
 }
 
+float Unite::getInit() const{
+    return initiative;
+}
+
 
 void Unite::setCase(int num) {
     numcase = num;
@@ -179,6 +184,7 @@ void Unite::prendDommage(int attRecue) {
 void Unite::setAttaque(Attaque att, int i) {
     competences[i] = att;
 }
+
 
 
 bool Unite::estVivant() {
@@ -228,6 +234,10 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             deplacement(carte, x, y);
         }
         boutonAction.affiche();
+
+        if (PDep==0){
+            tourContinue=false;
+        }
     }
     finTourCombat(unites);
 }
@@ -361,7 +371,7 @@ Armee::Armee(const Armee &a) {
 }
 
 
-Heros::Heros(float dep, int num) : Unite(dep, num) {
+Heros::Heros(float dep, int num, float init) : Unite(dep, num, init) {
     Casque c("Casque de base");
     Arme a("Arme de base");
     Torse t("Armure de Base");
