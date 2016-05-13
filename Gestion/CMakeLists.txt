@@ -8,6 +8,5 @@ find_package(Imagine)
 
 project(Carte)
 add_executable(Carte main.cpp carte.h carte.cpp priorite.h priorite.cpp unite.h unite.cpp joueurs.h joueurs.cpp
-                outils.cpp outils.h boutons.cpp boutons.h ../Combat/objet.cpp ../Combat/objet.h
-                ../Ville/ville.h ../Ville/ville.cpp)
+                outils.cpp outils.h boutons.cpp boutons.h ../Combat/objet.cpp ../Combat/objet.h)
 ImagineUseModules(Carte Graphics)

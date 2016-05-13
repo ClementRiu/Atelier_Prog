@@ -2,13 +2,66 @@
 #define JOUEURS_H
 
 #include "unite.h"
+#include <stdlib.h>
 #include <iostream>
+#include <Imagine/Graphics.h>
+#include "../Gestion/unite.h"
 
 const int NB_HEROS_MAX=10;
 const int NB_RESSOURCE=3;
 const int population_max=75;
 
-//class Ville;
+const int NB_BATIMENTS = 10;
+const int NB_AMELIORATIONS = 3;
+const int nb_type_unite=10;
+
+class Ville {
+    int id;
+    int batiments[NB_BATIMENTS]; //Chaque élément du tableau représente un batiment, si batiment[i]=0 il n'est pas construit,
+    //batiment[i]=2 il est au niveau 2 etc
+    Armee garnison;
+    bool heros_present;
+    int recrutables[nb_type_unite]; //recrutable[i] contient le nombre d'unite de type i que l'on peut recruter
+    bool amelioration[NB_BATIMENTS]; //indiqe si le bâtiment est améliorable
+    Objet* achetable;               //liste d'objet disponible a l'achat
+    int camp;                       //le joueur à qui appartient la ville
+public:
+    Ville();
+    Ville(int num);
+    Ville(int faction, int num);
+
+    ~Ville();
+
+    void construction(int i); //augment le niveau du batiment i
+
+    void recrute(int i);    // recrute un soldat
+
+    void achat(int i);          //achete un objet
+
+    void update_recrutable();    //met a jour la liste des soldats recrutable
+
+    void update_ameliorable();   //met a jour la liste des batiments ameliorable
+
+    void update_achetable();     //met a jour la liste des objet achetable
+
+    void set_heros_present(bool b);
+
+    int get_lv_batiment(int i);   //renvoie le niveau du batiment i
+
+    Armee get_garnison();
+
+    int get_id() const;
+
+    int get_nb_recrue(int type);
+
+    Objet* get_magasin();       //renvoie la liste des objet achetables
+
+    int get_camp();
+
+    bool est_ameliorable(int i); //indique si le batiment i est ameliorable
+
+    bool get_heros_present();
+};
 
 class Joueur{
     int id;
@@ -19,24 +72,24 @@ class Joueur{
     int population;
     int nb_heros_max_joueur;
     std::vector<Unite> herosJoueur; //ATTENTION herosJoueurs EST UN VECTEUR d'UNITES !!
-//    std::vector<Ville> villesJoueur;
+    std::vector<Ville> villesJoueur;
 
 public:
     Joueur(int num);
-    //Joueur(std::vector<Unite*> unites, std::vector<Ville*> villes);
+    Joueur(std::vector<Unite*> unites, std::vector<Ville*> villes);
     Joueur(std::vector<Unite*> unites); //uniquement pour tester
 
 
     //gros tas de get
     int get_id();
-    //bool get_humain();
+    bool get_humain();
     int get_ressources(int i);
     int get_score();
     int get_couleur();
     int get_population();
     int get_nb_heros_max_joueur();
     std::vector<Unite> get_herosJoueur(); //ATTENTION herosJoueurs EST UN VECTEUR d'UNITES !!
-//    std::vector<Ville> get_villesJoueur();
+    std::vector<Ville> get_villesJoueur();
 
     //modifications des valeurs
     void modifie_ressources(int res, int valeur);
@@ -44,8 +97,8 @@ public:
     void update_pop(int valeur);
     void tue_heros(Heros mort);
     void recrute_heros(Heros recrue);
-//    void conquiert_ville(Ville conquete);
-//    void perd_ville(Ville perte);
+    void conquiert_ville(Ville conquete);
+    void perd_ville(Ville perte);
 
 
     void tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &save);

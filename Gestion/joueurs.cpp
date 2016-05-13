@@ -1,4 +1,110 @@
 #include "joueurs.h"
+#include <iterator>
+
+Ville::Ville(){
+
+}
+
+Ville::Ville(int num){
+    id=num;
+}
+
+Ville::Ville(int faction, int num){
+    id=num;
+    for (int i=0; i<NB_BATIMENTS; i++){
+        batiments[i] = 0;
+    }
+    camp = faction;
+    heros_present = false;
+    achetable = new Objet[0];
+    update_ameliorable();
+    update_recrutable();
+    update_achetable();
+}
+
+
+Ville::~Ville(){
+    delete [] achetable;
+}
+
+
+void Ville::construction(int i){
+    batiments[i] += 1;
+    update_ameliorable();
+}
+
+
+void Ville::recrute(int i){     //on suppose que la fonction ne se lance pas si recrutable[i] = 0
+    //ICI RAJOUTER FONCTION POUR RAJOUTER DES SOLDATS DANS L'ARMEE
+    //ICI RAJOUTER FONCTION POUR DIMINUER LES RESSOURCES
+    recrutables[i] -= 1;
+}
+
+
+void Ville::achat(int i){
+    //a faire
+}
+
+
+void Ville::update_recrutable(){
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
+
+void Ville::update_ameliorable(){
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
+
+void Ville::update_achetable(){
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
+
+void Ville::set_heros_present(bool b){
+    heros_present = b;
+}
+
+
+int Ville::get_lv_batiment(int i){
+    return batiments[i];
+}
+
+
+Armee Ville::get_garnison(){
+    return garnison;
+}
+
+int Ville::get_id() const{
+    return id;
+}
+
+
+int Ville::get_nb_recrue(int type){
+    return recrutables[type];
+}
+
+
+Objet* Ville::get_magasin(){
+    return achetable;
+}
+
+
+int Ville::get_camp(){
+    return camp;
+}
+
+
+bool Ville::est_ameliorable(int i){
+    return amelioration[i];
+}
+
+
+bool Ville::get_heros_present(){
+    return heros_present;
+}
+
+
 
 Joueur::Joueur(int num){
     id=num;
@@ -11,7 +117,7 @@ Joueur::Joueur(int num){
     nb_heros_max_joueur=1;
 
 }
-/*
+
 Joueur::Joueur(std::vector<Unite*> unite, std::vector<Ville*> villes){
     herosJoueur.resize(unite.size());
     for (int i = 0; i < unite.size(); i++) {
@@ -23,7 +129,7 @@ Joueur::Joueur(std::vector<Unite*> unite, std::vector<Ville*> villes){
         villesJoueur[i] = *villes[i];
     }
 }
-*/
+
 Joueur::Joueur(std::vector<Unite*> unite){
     herosJoueur.resize(unite.size());
     for (int i = 0; i < unite.size(); i++) {
@@ -68,14 +174,14 @@ int Joueur::get_nb_heros_max_joueur(){
     return nb_heros_max_joueur;
 }
 
-/*
+
 std::vector<Unite> Joueur::get_herosJoueur() {
     return herosJoueur;
 }//ATTENTION herosJoueurs EST UN VECTEUR d'UNITES !!
 std::vector<Ville> Joueur::get_villesJoueur(){
     return villesJoueur;
 }
- */
+
 
 //modifications des valeurs
 void Joueur::modifie_ressources(int res, int valeur){
@@ -98,7 +204,7 @@ void Joueur::recrute_heros(Heros recrue){
     herosJoueur.push_back(recrue);
 }
 
-/*
+
 void Joueur::conquiert_ville(Ville conquete){
     villesJoueur.push_back(conquete);
 }
@@ -112,9 +218,10 @@ void Joueur::perd_ville(Ville perte){
         }
     }
     assert (k!=-1);
-    villesJoueur.erase(k);
+
+    villesJoueur.erase(villesJoueur.begin() + k);
 }
-*/
+
 
 
 void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &save) {
