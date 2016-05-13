@@ -47,6 +47,7 @@ const int heightmap = 300;  //En case. Hauteur de la 'map'
 const Imagine::RGB<double> gris(100, 100, 100); //Couleur de l'encadré gris des cases.
 
 extern Imagine::Image<Imagine::Color> fond_ecran;   //Frame de fond d'écran.
+extern Imagine::Image<Imagine::Color> parchemin;    //Frame du parchemin d'écran d'accueil.
 
 extern Imagine::Image<Imagine::Color> foret1;   //Première frame de forêt.
 extern Imagine::Image<Imagine::Color> eau1; //Première frame d'eau.

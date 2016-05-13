@@ -5,3 +5,4 @@
 #include "outilscontr.h"
 #include "map_graph.h"
 #include "case_graph.h"
+#include "ecran_menu.h"

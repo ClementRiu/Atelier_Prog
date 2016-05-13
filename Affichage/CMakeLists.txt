@@ -7,5 +7,5 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${d}/CMake")
 find_package(Imagine)
 
 project(Graphique)
-add_executable(Graphique testgraph.cpp outilsaff.h outilsaff.cpp outilscontr.h outilscontr.cpp constante.h constante.cpp)
+add_executable(Graphique testgraph.cpp outilsaff.h outilsaff.cpp outilscontr.h outilscontr.cpp constante.h constante.cpp case_graph.h case_graph.cpp map_graph.h map_graph.cpp include_graph.h ecran_menu.h ecran_menu.cpp)
 ImagineUseModules(Graphique Graphics Images)
