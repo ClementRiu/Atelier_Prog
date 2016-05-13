@@ -8,9 +8,9 @@
 #include <bits/stl_deque.h>
 #include <iostream>
 #include <fstream>
-#include "../Affichage/include_graph.h"
 
 
+const float INF = 1.0f / 0.0f; // Infini en float
 const int Taille = 30;
 const int NbCase = 20;
 const int LargDroite = 3 * NbCase;

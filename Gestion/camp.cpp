@@ -22,7 +22,7 @@ Camp::Camp(std::vector<Unite*> unite){
     }
 }
 
-void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &save) {
+void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &quit) {
     int x = 0, y = 0;
 
     while (true) {
@@ -31,15 +31,16 @@ void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
         clic(x, y, carte);
         int u = 0;
 
-        // Le bouton sauvegarde estil active ?
+        // Le bouton FinTour est-il active ?
         if (boutonFinTour.boutonActive(x, y)) {
             break;
         }
 
-        // Le bouton FinTour est-il active ?
+        // Le bouton sauvegarde estil active ?
         if (boutonSauvegarde.boutonActive(x, y)) {
             sauvegarde(unites);
-            save = false;
+            quit = true;
+            break;
         }
         // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
@@ -81,6 +82,7 @@ void Camp::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             boutonFinTour.affiche();
 
             unites[u]->afficheCaseDisponibleOnOff(carte, false, dep, 0);
+
         }
     }
 }

@@ -72,8 +72,9 @@ Unite::Unite(const Unite &unit) {
 }
 
 
-Unite::Unite(float dep, int num, float init) {
+Unite::Unite(float dep, float depMax, int num, float init) {
     PDep = dep;
+    PDepMax = depMax;
     numcase = num;
     PDepMax = dep;
     initiative = init;
@@ -371,7 +372,7 @@ Armee::Armee(const Armee &a) {
 }
 
 
-Heros::Heros(float dep, int num, float init) : Unite(dep, num, init) {
+Heros::Heros(float dep, float depMax, int num, float init) : Unite(dep, depMax, num, init) {
     Casque c("Casque de base");
     Arme a("Arme de base");
     Torse t("Armure de Base");

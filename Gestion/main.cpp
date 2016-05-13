@@ -9,36 +9,58 @@ int main() {
     Carte carte;
 
     // Initialisation des unites
-    bool load = false;
-    std::vector<Unite *> unites;
+    // Ecran de menu
+    std::vector<Unite *> unitesAlliees;
+    std::vector<Unite *> unitesEnnemies;
+
+    Bouton nouvellePartie(width / 4, height / 2 - 40, 3 * width / 4, height / 2, Imagine::BLUE, "Nouvelle Partie");
+    Bouton chargePartie(width / 4, height / 2 + 50, 3 * width / 4, height / 2 + 90, Imagine::BLUE, "Charge Partie");
+    int x = 0, y = 0;
+    nouvellePartie.affiche();
+    chargePartie.affiche();
+    while (!nouvellePartie.boutonActive(x, y) && !chargePartie.boutonActive(x, y)) {
+        clicSimple(x, y);
+    }
+
+    bool load = true;
+
+    if (nouvellePartie.boutonActive(x, y)) {
+        load = false;
+    }
+
     if (load) {
-        charge(unites, carte);
+        charge(unitesAlliees, carte);
     }
     else {
         carte[304].flagHeros();
         carte[303].flagHeros();
-        unites.push_back(new Heros(5, 304, 100));
-        unites.push_back(new Unite(10, 303, 100));
+        unitesAlliees.push_back(new Heros(5, 5, 304, 100));
+        unitesAlliees.push_back(new Heros(10, 10, 303, 100));
     }
+
+    carte[308].flagHeros();
+    carte[312].flagHeros();
+    unitesEnnemies.push_back(new Heros(6, 6, 308, 100));
+    unitesEnnemies.push_back(new Heros(7, 7, 312, 100));
     // Remplissage de l'inventaire de la première unité qui est bien un héros
-    unites[0]->ramasse(new Objet("merde"));
-    unites[0]->ramasse(new Casque("casque"));
-    unites[0]->ramasse(new Objet("merde"));
-    unites[0]->ramasse(new Objet("merde"));
-    unites[0]->ramasse(new Arme("hache"));
-    unites[0]->ramasse(new Jambes("genouillères"));
-    unites[0]->ramasse(new Gants("gants de cuir"));
-    unites[0]->ramasse(new Objet("clafoutis"));
-    unites[0]->ramasse(new Objet("concombre"));
-    unites[0]->ramasse(new Objet("creme brulee"));
-    unites[0]->ramasse(new Objet("pain"));
-    unites[0]->ramasse(new Objet("confiture"));
-    unites[0]->ramasse(new Objet("fromage"));
-    unites[0]->ramasse(new Objet("zinzifruits"));
-    unites[0]->ramasse(new Objet("roche"));
-    unites[0]->ramasse(new Objet("cle"));
-    unites[0]->ramasse(new Objet("rat mort"));
-    unites[0]->ramasse(new Objet("boite a outils"));
+    unitesAlliees[0]->ramasse(new Objet("merde"));
+    unitesAlliees[0]->ramasse(new Casque("casque"));
+    unitesAlliees[0]->ramasse(new Objet("merde"));
+    unitesAlliees[0]->ramasse(new Objet("merde"));
+    unitesAlliees[0]->ramasse(new Arme("hache"));
+    unitesAlliees[0]->ramasse(new Jambes("genouillères"));
+    unitesAlliees[0]->ramasse(new Gants("gants de cuir"));
+    unitesAlliees[0]->ramasse(new Objet("clafoutis"));
+    unitesAlliees[0]->ramasse(new Objet("concombre"));
+    unitesAlliees[0]->ramasse(new Objet("creme brulee"));
+    unitesAlliees[0]->ramasse(new Objet("pain"));
+    unitesAlliees[0]->ramasse(new Objet("confiture"));
+    unitesAlliees[0]->ramasse(new Objet("fromage"));
+    unitesAlliees[0]->ramasse(new Objet("zinzifruits"));
+    unitesAlliees[0]->ramasse(new Objet("roche"));
+    unitesAlliees[0]->ramasse(new Objet("cle"));
+    unitesAlliees[0]->ramasse(new Objet("rat mort"));
+    unitesAlliees[0]->ramasse(new Objet("boite a outils"));
 
     Inventaire i;
     i.ajoute(new Objet("merde"));
@@ -46,13 +68,6 @@ int main() {
     i.ajoute(new Casque("casque"));
     Inventaire j(i);
 
-    // Ecran de menu
-    Bouton nouvellePartie(width / 4, height / 2 - 20, 3 * width / 4, height / 2 + 20, Imagine::BLUE, "Nouvelle Partie");
-    int x = 0, y = 0;
-    nouvellePartie.affiche();
-    while (!nouvellePartie.boutonActive(x, y)) {
-        clicSimple(x, y);
-    }
 
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
@@ -69,23 +84,30 @@ int main() {
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
 
-    Camp allie(unites);
+    Camp allie(unitesAlliees);
+    Camp ennemi(unitesEnnemies);
 
     // Deplacement des unites
-    bool save = true;
+    bool quit = false;
 
-    while (save) {
-        allie.tourGestion(carte, unites, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, save);
-        finJournee(unites);
+    while (!quit) {
+        allie.tourGestion(carte, unitesAlliees, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
+        finJournee(unitesAlliees);
+        if (quit) {
+            break;
+        }
+        ennemi.tourGestion(carte, unitesEnnemies, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
+                           quit);
+        finJournee(unitesEnnemies);
     }
 
 
 
     // Destruction des unités
     // EST CE QUE CA MARCHE VRAIMENT ????? FUITE ????
-    for (int i = 0; i < unites.size(); ++i) {
-        //delete unites[i];
-        unites[i] = 0;
+    for (int i = 0; i < unitesAlliees.size(); ++i) {
+        //delete unitesAlliees[i];
+        unitesAlliees[i] = 0;
     }
     Imagine::endGraphics();
     return 0;

@@ -76,7 +76,7 @@ public:
 
     Unite(const Unite &unit);
 
-    Unite(float dep, int num, float init);
+    Unite(float dep, float depMax, int num, float init);
 
     //Unite(float dep, float depMax, int num);
 
@@ -183,7 +183,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(float dep, int num, float init);
+    Heros(float dep, float depMax, int num, float init);
 
     Heros(const Heros &h);
 
