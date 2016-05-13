@@ -1,6 +1,6 @@
 #include "carte.h"
 #include "unite.h"
-#include "camp.h"
+#include "joueurs.h"
 
 
 int main() {
@@ -69,7 +69,7 @@ int main() {
     boutonSauvegarde.affiche();
     boutonFinTour.affiche();
 
-    Camp allie(unites);
+    Joueur allie(unites);
 
     // Deplacement des unites
     bool save = true;

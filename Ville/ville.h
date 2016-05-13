@@ -9,6 +9,7 @@ const int NB_AMELIORATIONS = 3;
 const int nb_type_unite=10;
 
 class Ville {
+    int id;
     int batiments[NB_BATIMENTS]; //Chaque élément du tableau représente un batiment, si batiment[i]=0 il n'est pas construit,
                                 //batiment[i]=2 il est au niveau 2 etc
     Armee garnison;
@@ -18,8 +19,8 @@ class Ville {
     Objet* achetable;               //liste d'objet disponible a l'achat
     int camp;                       //le joueur à qui appartient la ville
 public:
-    Ville();
-    Ville(int faction);
+    Ville(int num);
+    Ville(int faction, int num);
 
     ~Ville();
 
