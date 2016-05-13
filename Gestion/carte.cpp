@@ -261,33 +261,32 @@ std::vector<std::vector<int> > Case::fastMarching(float dep, Carte &carte, bool 
                                                   int case_a_atteindre) {
     // Algorithme de FastMarching, cf cours d'Algo
     int num_case = numeroCase(x, y);
-    FilePriorite F;
+    FilePriorite<CaseDist> F;
     std::vector<int> chemin;
     std::vector<std::vector<int> > differentsChemins;
-    CaseDist depart(num_case, dep, chemin);
-    F.push(depart);
+    F.push(new CaseDist(num_case, dep, chemin));
     while (!F.empty()) {
-        CaseDist c = F.pop();
+        CaseDist* c = F.pop();
         for (int i = -1; i <= 1; i = i + 2) {
             for (int j = 1; j <= NbCase; j = j + NbCase - 1) {
-                if (c.getNum() + i * j >= 0 && c.getNum() + i * j < NbCase * NbCase &&
-                    ((c.getNum() + i * j) % NbCase != 0 || c.getNum() % NbCase != NbCase - 1) &&
-                    ((c.getNum() + i * j) % NbCase != NbCase - 1 || c.getNum() % NbCase != 0) &&
-                    c.getDep() - carte[c.getNum() + i * j].NbDep() >= 0 &&
-                    carte[c.getNum() + i * j].Brillance() != brillance &&
-                    !carte[c.getNum() + i * j].getOccupe()) {
-                    carte[c.getNum() + i * j].brillanceOnOff(brillance);
-                    chemin = c.getChemin();
-                    chemin.push_back(c.getNum() + i * j);
+                if (c->getNum() + i * j >= 0 && c->getNum() + i * j < NbCase * NbCase &&
+                    ((c->getNum() + i * j) % NbCase != 0 || c->getNum() % NbCase != NbCase - 1) &&
+                    ((c->getNum() + i * j) % NbCase != NbCase - 1 || c->getNum() % NbCase != 0) &&
+                    c->getDep() - carte[c->getNum() + i * j].NbDep() >= 0 &&
+                    carte[c->getNum() + i * j].Brillance() != brillance &&
+                    !carte[c->getNum() + i * j].getOccupe()) {
+                    carte[c->getNum() + i * j].brillanceOnOff(brillance);
+                    chemin = c->getChemin();
+                    chemin.push_back(c->getNum() + i * j);
                     differentsChemins.push_back(chemin);
-                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep(), chemin);
-                    F.push(c2);
+                    F.push(new CaseDist(c->getNum() + i * j, c->getDep() - carte[c->getNum() + i * j].NbDep(), chemin));
                 }
-                if (case_a_atteindre == c.getNum() && !brillance) {
-                    dep_restant = c.getDep();
+                if (case_a_atteindre == c->getNum() && !brillance) {
+                    dep_restant = c->getDep();
                 }
             }
         }
+        delete c;
     }
     return differentsChemins;
 }
