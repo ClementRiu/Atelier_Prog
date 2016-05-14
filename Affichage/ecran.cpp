@@ -1,6 +1,5 @@
 #include "ecran.h"
 
-
 /*
     // Ecran de menu
     Bouton nouvellePartie(width / 4, height / 2 - 20, 3 * width / 4, height / 2 + 20, Imagine::BLUE, "Nouvelle Partie");
@@ -19,9 +18,13 @@
     */
 
 int affiche_menu() {
-
+    Bouton NouvellePartieG(200, 160, 520, 190, std::string("Nouvelle Partie"), 0);
+    Bouton ChargerPartieG(200, 240, 520, 270, std::string("Charger Partie"), 0);
+    Bouton QuitterJeuG(200, 320, 520, 350, std::string("Quitter le Jeu"), 0);
     Imagine::display(parchemin, 0, 0);
-    Imagine::milliSleep(1000);
+    NouvellePartieG.affiche_graph();
+    ChargerPartieG.affiche_graph();
+    QuitterJeuG.affiche_graph();
     return 1;
 }
 

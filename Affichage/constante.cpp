@@ -3,6 +3,8 @@
 Imagine::Image<Imagine::Color> fond_ecran;
 Imagine::Image<Imagine::Color> parchemin;
 
+Imagine::Image<Imagine::Color> pierre_bouton;
+
 Imagine::Image<Imagine::Color> foret1;
 Imagine::Image<Imagine::Color> eau1;
 Imagine::Image<Imagine::Color> lande1;
@@ -17,6 +19,13 @@ bool charge_image() {
 
     if (!Imagine::load(parchemin, srcPath("/Image/Parchemin/fondetparchemin.jpg"))) {
         std::cout << "Image \"fondetparchemin.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+
+
+    //ATTENTION : CHARGE L'IMAGE À TAILLE MAXIMALE, NÉCESSITE UN REDIMENSIONNEMENT !
+    if (!Imagine::load(pierre_bouton, srcPath("/Image/Pierre_bouton/pierre1.jpg"))) {
+        std::cout << "Image \"pierre1.jpg\" non trouvée." << std::endl;
         return false;
     }
 

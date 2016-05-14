@@ -49,6 +49,8 @@ const Imagine::RGB<double> gris(100, 100, 100); //Couleur de l'encadré gris des
 extern Imagine::Image<Imagine::Color> fond_ecran;   //Frame de fond d'écran.
 extern Imagine::Image<Imagine::Color> parchemin;    //Frame du parchemin d'écran d'accueil.
 
+extern Imagine::Image<Imagine::Color> pierre_bouton;    //Frame pour les boutons de type 1; non transparent.
+
 extern Imagine::Image<Imagine::Color> foret1;   //Première frame de forêt.
 extern Imagine::Image<Imagine::Color> eau1; //Première frame d'eau.
 extern Imagine::Image<Imagine::Color> lande1;   //Première frame de lande.

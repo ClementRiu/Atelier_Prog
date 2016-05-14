@@ -26,7 +26,9 @@ void mouvement_ecran(CarteduMonde &carte) {
         if (e.button = 1) {
             Imagine::Coords<2> pos_centrelu;
             carte.get_pos_centre(pos_centrelu);
-            carte.deplace_souris(translate(e.pix, pos_centrelu));
+            Imagine::Coords<2> pos_clique = translate(e.pix, pos_centrelu);
+            Imagine::flushEvents();
+            carte.deplace_souris(pos_clique);
         }
 
     }
