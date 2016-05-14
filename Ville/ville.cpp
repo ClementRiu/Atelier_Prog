@@ -1,10 +1,12 @@
 #include "ville.h"
 
 
-Ville::Ville(){
+Ville::Ville(int num){
+    id=num;
 }
 
-Ville::Ville(int faction){
+Ville::Ville(int faction, int num){
+    id=num;
     for (int i=0; i<NB_BATIMENTS; i++){
         batiments[i] = 0;
     }
@@ -67,6 +69,10 @@ int Ville::get_lv_batiment(int i){
 
 Armee Ville::get_garnison(){
     return garnison;
+}
+
+int Ville::get_id() const{
+    return id;
 }
 
 

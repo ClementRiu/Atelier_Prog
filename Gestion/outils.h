@@ -5,7 +5,7 @@
 #include "unite.h"
 
 void sauvegarde(std::vector<Unite*> unites);
-void charge(std::vector<Unite*> unites, Carte& carte);
+void charge(std::vector<Unite*> & unites, Carte& carte);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Carte& carte);

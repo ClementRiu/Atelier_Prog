@@ -1,13 +1,15 @@
 #include "outils.h"
 
 void sauvegarde(std::vector<Unite *> unites) {
-    std::ofstream fichier("../Gestion/sauvegarde.txt", std::ios::out | std::ios::trunc);
+    std::ofstream fichier(srcPath("sauvegarde.txt"), std::ios::out | std::ios::trunc);
+    std::cout << "Bonjour" << std::endl;
     if (fichier) {
         fichier << unites.size() << std::endl;
         for (int i = 0; i < unites.size(); i++) {
             fichier << unites[i]->getCase() << std::endl;
             fichier << unites[i]->getDep() << std::endl;
             fichier << unites[i]->getDepMax() << std::endl;
+            fichier << unites[i]->getInit() << std::endl;
         }
         fichier.close();
     }
@@ -17,13 +19,14 @@ void sauvegarde(std::vector<Unite *> unites) {
 }
 
 
-void charge(std::vector<Unite *> unites, Carte &carte) {
-    std::ifstream fichier("D:/Charles/cours/Ponts/Info/2sem/Projet/Atelier_Prog/Gestion/sauvegarde.txt", std::ios::in);
+void charge(std::vector<Unite *> &unites, Carte &carte) {
+    std::ifstream fichier(srcPath("sauvegarde.txt"), std::ios::in);
     if (fichier) {
         std::string ligne;
         std::getline(fichier, ligne);
         int T = atoi(ligne.c_str());
         std::cout << T;
+
         for (int i = 0; i < T; i++) {
             std::getline(fichier, ligne);
             int num = atoi(ligne.c_str());
@@ -32,7 +35,10 @@ void charge(std::vector<Unite *> unites, Carte &carte) {
             float dep = atoi(ligne.c_str());
             std::getline(fichier, ligne);
             float depMax = atoi(ligne.c_str());
-            unites.push_back(new Unite(dep, depMax, num));
+            std::cout << depMax << std::endl;
+            std::getline(fichier, ligne);
+            float init = atoi(ligne.c_str());
+            unites.push_back(new Unite(dep, depMax, num, init));
         }
         fichier.close();
     }
