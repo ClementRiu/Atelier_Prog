@@ -44,16 +44,4 @@ public:
     //Méthode qui modifie l'intégralité des paramètres de la case.
     void set_Case_Graph(char *nom_voulu, std::string description_voulue, const char *name,
                         bool occupation_voulue);
-
-    //Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des Coords en argument pour déterminer sa position.
-    void affiche_Case_Graph(Imagine::Coords<2> pos_case);
-
-    //Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des int en argument pour déterminer sa position.
-    void affiche_Case_Graph(int x, int y);
-
-    //Méthode qui affiche la case dans la 'mmap'. Prend des Coords en argument pour déterminer sa position.
-    void affiche_mmap(Imagine::Coords<2> pos_case);
-
-    //Méthode qui affiche la case dans la 'mmap'. Prend des int en argument pour déterminer sa position.
-    void affiche_mmap(int x, int y);
 };

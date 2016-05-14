@@ -12,13 +12,14 @@ int main() {
     }
 
     Imagine::openWindow(widthscreen, heightscreen);
-    if (affiche_menu()==1) {
+
+    if (affiche_menu() == 1) {
 
         // Overture de l'écran de gestion.
-        interface();
+        affiche_chargement();
         CarteduMonde carte;
+        interface();
         carte.affiche();
-
 
         // Test du mouvement au clavier.
         int i = 0;

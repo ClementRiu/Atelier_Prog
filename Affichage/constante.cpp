@@ -43,3 +43,29 @@ bool charge_image() {
     std::cout << "Toutes les images sont chargées" << std::endl;
     return true;
 }
+
+//Fonction qui renvoie la frame assossiée au nom, pour les cases.
+Imagine::Image<Imagine::Color> entre_image_case(std::string nom_image_voulue) {
+    if (std::string(nom_image_voulue) == std::string("foret1")) {
+        return foret1;
+    }
+    if (std::string(nom_image_voulue) == std::string("eau1")) {
+        return eau1;
+    }
+    if (std::string(nom_image_voulue) == std::string("lande1")) {
+        return lande1;
+    }
+}
+
+//Fonction qui renvoie la couleur assossiée au nom, pour les cases de 'mmap'.
+Imagine::Color entre_couleur_case(std::string nom_image_voulue){
+    if (std::string(nom_image_voulue) == std::string("Foret")) {
+        return Imagine::GREEN;
+    }
+    if (std::string(nom_image_voulue) == std::string("Etendu d'Eau")) {
+        return Imagine::BLUE;
+    }
+    if (std::string(nom_image_voulue) == std::string("Lande")) {
+        return Imagine::YELLOW;
+    }
+}

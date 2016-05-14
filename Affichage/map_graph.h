@@ -5,12 +5,19 @@
 
 class CarteduMonde {
 private:
-    Imagine::Coords<2> pos_centre;    // Position du point centrale de la map.
-    Imagine::Image<Case_Graph> listecase; // Image contenant la liste des cases de la map.
-
+    Imagine::Coords<2> pos_centre;    // Position du point centrale du 'world'.
+    Imagine::Image<Case_Graph> listecase; // Image contenant la liste des cases de la 'map'.
+    Imagine::Image<Imagine::Color> image_map;   //Image de la 'map' totale.
+    Imagine::Image<Imagine::Color> image_mmap;  //Image de la 'mmap' totale.
 public:
     //Constructeur par défaut.
     CarteduMonde();
+
+    //Générateur de 'map'. Rempli listecase.
+    void generation();
+
+    //Rempli image_map et image_mmap en fonction de la listecase.
+    void cree_map_mmap();
 
     //Assesseur en lecture de l'attribut pos_centre.
     void get_pos_centre(Imagine::Coords<2> &pos);

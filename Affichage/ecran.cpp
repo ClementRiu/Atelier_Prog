@@ -1,4 +1,4 @@
-#include "ecran_menu.h"
+#include "ecran.h"
 
 
 /*
@@ -18,9 +18,14 @@
     }
     */
 
-int affiche_menu(){
-    Imagine::display(fond_ecran,0,0);
-    Imagine::display(parchemin,0,0);
+int affiche_menu() {
+
+    Imagine::display(parchemin, 0, 0);
     Imagine::milliSleep(1000);
     return 1;
+}
+
+void affiche_chargement() {
+    Imagine::display(fond_ecran, 0, 0);
+    Imagine::drawString(widthscreen / 2 - 11 * 6 * 1.2, heightscreen / 2 - 6, "Chargement en cours...", gris);
 }

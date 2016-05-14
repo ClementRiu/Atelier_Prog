@@ -18,6 +18,7 @@ void mouvement_ecran(CarteduMonde &carte) {
     //Gestion du déplacement au clavier.
     if (e.type == Imagine::EVT_KEY_ON) {
         directiondem = e.key;
+        Imagine::flushEvents();
         carte.deplace_clavier(directiondem);
     }
     //Gestion du déplacement à la souris.
