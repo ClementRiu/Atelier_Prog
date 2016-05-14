@@ -131,6 +131,9 @@ public:
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
 
+    // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
+    void attaqueDeBase(Unite& u);
+
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
 //    std::vector<Bouton> boutonAction(Carte& carte);

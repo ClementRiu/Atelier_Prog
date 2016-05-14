@@ -271,6 +271,11 @@ void Unite::action(Attaque att, Unite *u) {
 }
 
 
+void Unite::attaqueDeBase(Unite &u) {
+    u.PV -= force;
+}
+
+
 void Unite::attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites) {
     int x1, y1, u2 = 0;
 

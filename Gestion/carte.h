@@ -34,23 +34,23 @@ class TypeCase {
     Imagine::Color image; // Sera remplace par une image ulterieurement
 public:
     // Constructeur de la classe TypeCase
-    TypeCase(float dep, std::string desc, Imagine::Color img);
+    TypeCase(const float dep, const std::string desc, const Imagine::Color img);
 
     // Constructeur vide de la classe TypeCase
     TypeCase();
 
     // Accesseur a l'image du type de la case
-    Imagine::Color Image();
+    Imagine::Color Image() const;
 
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;
 
     // Accesseur à la desctiprion de la case
-    std::string Description();
+    std::string Description() const;
 
     // affichage à modifier
     // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
-    bool popUp(std::string question);
+    bool popUp(const std::string question) const;
 
     virtual TypeCase *clone() const;
 
@@ -61,7 +61,7 @@ public:
 
 class CaseVille : public TypeCase {
 public:
-    CaseVille(std::string desc, Imagine::Color img);
+    CaseVille(const std::string desc, const Imagine::Color img);
 
     CaseVille();
 
@@ -73,7 +73,7 @@ public:
 
 class CaseCombat : public TypeCase {
 public:
-    CaseCombat(std::string desc, Imagine::Color img);
+    CaseCombat(const std::string desc, const Imagine::Color img);
 
     CaseCombat();
 
@@ -85,7 +85,7 @@ public:
 
 class CaseNormale : public TypeCase {
 public:
-    CaseNormale(float dep, std::string desc, Imagine::Color img);
+    CaseNormale(const float dep, const std::string desc, const Imagine::Color img);
 
     CaseNormale();
 
@@ -104,7 +104,7 @@ class Case {
 
 public:
     // Constructeur de la classe Case
-    Case(int x1, int y1, TypeCase *tc);
+    Case(const int x1, const int y1, TypeCase* tc);
 
     // Constructeur vide de la classe Case
     Case();
@@ -117,13 +117,13 @@ public:
     bool getOccupe() const;
 
     //get temporaire à se débarasser !!
-    int get(int i);
+    int get(const int i) const;
 
     // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
-    void brillanceOnOff(bool flag);
+    void brillanceOnOff(const bool flag);
 
     // Affiche la case
-    void affiche(); // Cette methode devrait être const mais je n'arrive pas a le faire !!!!!
+    void affiche() const;
 
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;
@@ -134,27 +134,27 @@ public:
     // Change le booleen utileChemin
     void setChemin();
 
-    bool getChemin();
+    bool getChemin() const;
 
     // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
-    int plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase);
+    int plusProcheVoisineBrillante(const int x1, const int y1, Carte &carte, const int numcase) const;
 
     // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
     // du point (x, y) au plus éloigné
-    std::vector<int> casesVoisines(int x1, int y1);
+    std::vector<int> casesVoisines(const int x1, const int y1) const;
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    std::vector<std::vector<int> > fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
-                                                int case_a_atteindre);
+    std::vector<std::vector<int> > fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
+                                                const int case_a_atteindre);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
-    Imagine::Color getImage();
+    Imagine::Color getImage() const;
 
     // Renvoie le texte correspondant a la case
-    std::string getDescription();
+    std::string getDescription() const;
 
     // Permet de choisir si l'on veut effectuer l'action relative à la case
-    bool boutonChoix();
+    bool boutonChoix() const;
 };
 
 
@@ -165,12 +165,12 @@ public:
     Carte();
 
     // Permer d'accéder à carte[i]
-    Case &operator[](int i);
+    Case &operator[](const int i);
 };
 
 
 // Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
-int numeroCase(int x, int y);
+int numeroCase(const int x, const int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase);
