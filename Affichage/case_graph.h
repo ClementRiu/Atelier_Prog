@@ -2,11 +2,10 @@
 
 #include "constante.h"
 
-/*
+
 class Case_Graph {
 private:
     const char *nom;  // Nom de la case.
-    float p_dep;    // Nombre de deplacements nécessaires pour aller sur cette case.
     std::string description;  // Texte à afficher sur le côté.
     std::string nom_image;    // Nom de l'image.
     Imagine::Image<Imagine::Color> frame;   // Image de la case.
@@ -17,9 +16,6 @@ public:
 
     //Assesseur en lecture de l'attribut nom.
     const char *get_nom();
-
-    //Assesseur en lecture de l'attribut p_dep.
-    float get_poids();
 
     //Assesseur en lecture de l'attribut description.
     std::string get_description();
@@ -32,9 +28,6 @@ public:
 
     //Assesseur en écriture de l'attribut nom.
     void set_nom(char *nom_voulu);
-
-    //Assesseur en écriture de l'attribut p_dep.
-    void set_p_deb(float poids_voulu);
 
     //Assesseur en écriture de l'attribut description.
     void set_description(std::string description_voulue);
@@ -49,14 +42,6 @@ public:
     void set_occupation(bool occupation_voulue);
 
     //Méthode qui modifie l'intégralité des paramètres de la case.
-    void set_Case_Graph(char *nom_voulu, float poids_voulu, std::string description_voulue, const char *name,
+    void set_Case_Graph(char *nom_voulu, std::string description_voulue, const char *name,
                         bool occupation_voulue);
-
-    //Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des Coords en argument pour déterminer sa position.
-    void affiche_Case_Graph(Imagine::Coords<2> pos_case);
-
-    //Méthode qui affiche la case à sa position, encadré d'un carré de couleur 'gris'. Prend des int en argument pour déterminer sa position.
-    void affiche_Case_Graph(int x, int y);
-
 };
-*/

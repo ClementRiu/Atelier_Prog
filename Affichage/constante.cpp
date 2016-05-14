@@ -1,6 +1,7 @@
 #include "constante.h"
 
 Imagine::Image<Imagine::Color> fond_ecran;
+Imagine::Image<Imagine::Color> parchemin;
 
 Imagine::Image<Imagine::Color> foret1;
 Imagine::Image<Imagine::Color> eau1;
@@ -13,6 +14,12 @@ bool charge_image() {
         return false;
     }
     fond_ecran = fond_ecran.getSubImage(0, 0, widthscreen, heightscreen);
+
+    if (!Imagine::load(parchemin, srcPath("/Image/Parchemin/fondetparchemin.jpg"))) {
+        std::cout << "Image \"fondetparchemin.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+
 
     if (!Imagine::load(foret1, srcPath("Image/Foret/forest_texture.jpg"))) {
         std::cout << "Image \"forest_texture.jpg\" non trouvée." << std::endl;
@@ -35,4 +42,30 @@ bool charge_image() {
 
     std::cout << "Toutes les images sont chargées" << std::endl;
     return true;
+}
+
+//Fonction qui renvoie la frame assossiée au nom, pour les cases.
+Imagine::Image<Imagine::Color> entre_image_case(std::string nom_image_voulue) {
+    if (std::string(nom_image_voulue) == std::string("foret1")) {
+        return foret1;
+    }
+    if (std::string(nom_image_voulue) == std::string("eau1")) {
+        return eau1;
+    }
+    if (std::string(nom_image_voulue) == std::string("lande1")) {
+        return lande1;
+    }
+}
+
+//Fonction qui renvoie la couleur assossiée au nom, pour les cases de 'mmap'.
+Imagine::Color entre_couleur_case(std::string nom_image_voulue){
+    if (std::string(nom_image_voulue) == std::string("Foret")) {
+        return Imagine::GREEN;
+    }
+    if (std::string(nom_image_voulue) == std::string("Etendu d'Eau")) {
+        return Imagine::BLUE;
+    }
+    if (std::string(nom_image_voulue) == std::string("Lande")) {
+        return Imagine::YELLOW;
+    }
 }

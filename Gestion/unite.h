@@ -60,6 +60,7 @@ class Unite : public Mere {
     float defenseMag[NB_RES];
     float dexterite;
     float initiative;
+    float initiativeTemporaire;
 
     int numcase;
     float PDep;
@@ -80,6 +81,11 @@ public:
 
     //Unite(float dep, float depMax, int num);
 
+    Unite(float dep, int num);
+
+    bool operator<(Unite u) const;
+
+
     void deplacement(Carte &carte, int x1, int y1);
 
     // Permet à l'unité de choisir son action
@@ -98,6 +104,9 @@ public:
     void attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites);
 
     void changeOrientation(int i);
+
+    // FONCTION A MODIFIER ABSOLUMENT
+    void changeInitiativeTemporaire();
 
     int getCase() const;
 
@@ -121,6 +130,9 @@ public:
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
+
+    // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
+    void attaqueDeBase(Unite& u);
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser

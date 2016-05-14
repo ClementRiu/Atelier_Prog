@@ -2,6 +2,7 @@
 #define BOUTONS_H
 
 #include "carte.h"
+#include "../Affichage/include_graph.h"
 
 const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5),
                                   NbCase * Taille + Separation + LargDroite, NbCase * Taille};
@@ -21,6 +22,8 @@ class Bouton {
     Imagine::Color image; // A remplacer par une image #Clement
     std::string nomBouton;
     int taillePolice;
+    //PARTIE GRAPHIQUE SUPPLEMENTAIRE :
+    //Bouton_Graph boutonaff; //Objet d'affichage.
 public:
     Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom);
 

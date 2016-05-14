@@ -2,7 +2,7 @@
 #include "unite.h"
 
 
-TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
+TypeCase::TypeCase(const float dep, const std::string desc, const Imagine::Color img) {
     PDep = dep;
     description = desc;
     image = img;
@@ -13,7 +13,7 @@ TypeCase::TypeCase() {
 }
 
 
-Imagine::Color TypeCase::Image() {
+Imagine::Color TypeCase::Image() const{
     return image;
 }
 
@@ -23,12 +23,12 @@ float TypeCase::NbDep() const {
 }
 
 
-std::string TypeCase::Description() {
+std::string TypeCase::Description() const{
     return description;
 }
 
 
-bool TypeCase::popUp(std::string question) {
+bool TypeCase::popUp(const std::string question) const{
     Bouton oui(ZoneBoutonOui, Imagine::BLUE, "OUI");
     Bouton non(ZoneBoutonNon, Imagine::BLUE, "NON");
     Bouton quest(ZoneBoutonQuestion, Imagine::BLACK, question);
@@ -57,7 +57,7 @@ bool TypeCase::boutonChoix(){
 }
 
 
-CaseVille::CaseVille(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+CaseVille::CaseVille(const std::string desc, const Imagine::Color img) : TypeCase(INF, desc, img){
 
 }
 
@@ -77,7 +77,7 @@ bool CaseVille::boutonChoix(){
 }
 
 
-CaseCombat::CaseCombat(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
+CaseCombat::CaseCombat(const std::string desc, const Imagine::Color img) : TypeCase(INF, desc, img){
 
 }
 
@@ -97,7 +97,7 @@ bool CaseCombat::boutonChoix(){
 }
 
 
-CaseNormale::CaseNormale(float dep, std::string desc, Imagine::Color img) : TypeCase(dep, desc, img){
+CaseNormale::CaseNormale(const float dep, const std::string desc, const Imagine::Color img) : TypeCase(dep, desc, img){
 
 }
 
@@ -111,7 +111,7 @@ CaseNormale* CaseNormale::clone() const {
 }
 
 
-Case::Case(int x1, int y1, TypeCase* tc) {
+Case::Case(const int x1, const int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
@@ -148,7 +148,7 @@ bool Case::getOccupe() const {
 
 
 //à se débarasser, présent uniquement dans Unite::deplaceVersCase
-int Case::get(int i) {
+int Case::get(const int i) const{
     if (i == 0) {
         return x;
     }
@@ -158,7 +158,7 @@ int Case::get(int i) {
 }
 
 
-void Case::brillanceOnOff(bool flag) {
+void Case::brillanceOnOff(const bool flag) {
     brillance = flag;
     if (!flag) {
         utileChemin = flag;
@@ -167,7 +167,7 @@ void Case::brillanceOnOff(bool flag) {
 }
 
 
-void Case::affiche() {
+void Case::affiche() const{
     Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type->Image());
     if (brillance) {
@@ -203,12 +203,12 @@ void Case::setChemin() {
 }
 
 
-bool Case::getChemin() {
+bool Case::getChemin() const{
     return utileChemin;
 }
 
 
-int Case::plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase) {
+int Case::plusProcheVoisineBrillante(const int x1, const int y1, Carte &carte, const int numcase) const{
     // Renvoie la case voisine la plus proche du point (x1, y1) qui est en brillance
     std::vector<int> numCase = casesVoisines(x1, y1);
     for (int i = 0; i < numCase.size(); ++i) {
@@ -220,7 +220,7 @@ int Case::plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase) 
 }
 
 
-std::vector<int> Case::casesVoisines(int x1, int y1) {
+std::vector<int> Case::casesVoisines(const int x1, const int y1) const{
     std::vector<int> numCase;
     std::vector<int> priorite;
     // On cherche autour de notre case les cases qui sont accessibles
@@ -257,53 +257,52 @@ std::vector<int> Case::casesVoisines(int x1, int y1) {
 }
 
 
-std::vector<std::vector<int> > Case::fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
-                                                  int case_a_atteindre) {
+std::vector<std::vector<int> > Case::fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
+                                                  const int case_a_atteindre) {
     // Algorithme de FastMarching, cf cours d'Algo
     int num_case = numeroCase(x, y);
-    FilePriorite F;
+    FilePriorite<CaseDist> F;
     std::vector<int> chemin;
     std::vector<std::vector<int> > differentsChemins;
-    CaseDist depart(num_case, dep, chemin);
-    F.push(depart);
+    F.push(new CaseDist(num_case, dep, chemin));
     while (!F.empty()) {
-        CaseDist c = F.pop();
+        CaseDist* c = F.pop();
         for (int i = -1; i <= 1; i = i + 2) {
             for (int j = 1; j <= NbCase; j = j + NbCase - 1) {
-                if (c.getNum() + i * j >= 0 && c.getNum() + i * j < NbCase * NbCase &&
-                    ((c.getNum() + i * j) % NbCase != 0 || c.getNum() % NbCase != NbCase - 1) &&
-                    ((c.getNum() + i * j) % NbCase != NbCase - 1 || c.getNum() % NbCase != 0) &&
-                    c.getDep() - carte[c.getNum() + i * j].NbDep() >= 0 &&
-                    carte[c.getNum() + i * j].Brillance() != brillance &&
-                    !carte[c.getNum() + i * j].getOccupe()) {
-                    carte[c.getNum() + i * j].brillanceOnOff(brillance);
-                    chemin = c.getChemin();
-                    chemin.push_back(c.getNum() + i * j);
+                if (c->getNum() + i * j >= 0 && c->getNum() + i * j < NbCase * NbCase &&
+                    ((c->getNum() + i * j) % NbCase != 0 || c->getNum() % NbCase != NbCase - 1) &&
+                    ((c->getNum() + i * j) % NbCase != NbCase - 1 || c->getNum() % NbCase != 0) &&
+                    c->getDep() - carte[c->getNum() + i * j].NbDep() >= 0 &&
+                    carte[c->getNum() + i * j].Brillance() != brillance &&
+                    !carte[c->getNum() + i * j].getOccupe()) {
+                    carte[c->getNum() + i * j].brillanceOnOff(brillance);
+                    chemin = c->getChemin();
+                    chemin.push_back(c->getNum() + i * j);
                     differentsChemins.push_back(chemin);
-                    CaseDist c2(c.getNum() + i * j, c.getDep() - carte[c.getNum() + i * j].NbDep(), chemin);
-                    F.push(c2);
+                    F.push(new CaseDist(c->getNum() + i * j, c->getDep() - carte[c->getNum() + i * j].NbDep(), chemin));
                 }
-                if (case_a_atteindre == c.getNum() && !brillance) {
-                    dep_restant = c.getDep();
+                if (case_a_atteindre == c->getNum() && !brillance) {
+                    dep_restant = c->getDep();
                 }
             }
         }
+        delete c;
     }
     return differentsChemins;
 }
 
 
-Imagine::Color Case::getImage() {
+Imagine::Color Case::getImage() const{
     return type->Image();
 }
 
 
-std::string Case::getDescription() {
+std::string Case::getDescription() const{
     return type->Description();
 }
 
 
-bool Case::boutonChoix() {
+bool Case::boutonChoix() const{
     return type->boutonChoix();
 }
 
@@ -331,14 +330,14 @@ Carte::Carte() {
 }
 
 
-Case &Carte::operator[](int i) {
+Case &Carte::operator[](const int i) {
     return carte[i];
 }
 
 
 
 
-int numeroCase(int x, int y) {
+int numeroCase(const int x, const int y) {
     if (x >= LargGauche && x < LargGauche + NbCase * Taille && y < NbCase * Taille) {
         return ((y / Taille) * NbCase + x / Taille);
     }

@@ -57,6 +57,7 @@ Unite::Unite(const Unite &unit) {
     numcase = unit.numcase;
     PDep = unit.PDep;
     PDepMax = unit.PDepMax;
+    initiativeTemporaire = unit.initiativeTemporaire;
 
     for (int i = 0; i++; i < NB_DEG_PHY) {
         defensePhy[i] = unit.defensePhy[i];
@@ -78,7 +79,9 @@ Unite::Unite(float dep, float depMax, int num, float init) {
     numcase = num;
     PDepMax = dep;
     initiative = init;
+    initiativeTemporaire = init;
 }
+
 
 /*
 Unite::Unite(float dep, float depMax, int num) {
@@ -87,6 +90,19 @@ Unite::Unite(float dep, float depMax, int num) {
     PDepMax = depMax;
 }
 */
+
+
+Unite::Unite(float dep, int num){
+    PDep = dep;
+    numcase = num;
+    initiative = 0;
+    initiativeTemporaire = 0;
+}
+
+
+bool Unite::operator<(Unite u) const{
+    return (initiativeTemporaire < u.initiativeTemporaire);
+}
 
 void Unite::choixAction() {
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
@@ -142,12 +158,17 @@ void Unite::changeOrientation(int i) {
 }
 
 
+void Unite::changeInitiativeTemporaire() {
+    initiativeTemporaire -= 30;
+}
+
+
 int Unite::getCase() const {
     return numcase;
 }
 
 float Unite::getInit() const{
-    return initiative;
+    return initiativeTemporaire;
 }
 
 
@@ -247,6 +268,11 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
 void Unite::action(Attaque att, Unite *u) {
     // A MODIFIER
     u->prendDommage(att.getPuissance());
+}
+
+
+void Unite::attaqueDeBase(Unite &u) {
+    u.PV -= force;
 }
 
 

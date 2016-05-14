@@ -30,8 +30,8 @@ int main() {
     std::vector<Unite *> unites;
     carte[204].flagHeros();
     carte[203].flagHeros();
-    unites.push_back(new Unite(5, 204, 120));
-    unites.push_back(new Unite(10, 203, 100));
+    unites.push_back(new Unite(5, 5, 204, 120));
+    unites.push_back(new Unite(10, 10, 203, 100));
 
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
@@ -40,18 +40,19 @@ int main() {
         }
     }
 
-    FileUnite fileUnites;
-    fileUnites.push(unites[1], unites[1]->getInit());
-    fileUnites.push(unites[0], unites[0]->getInit());
+    FilePriorite<Unite> fileUnites;
+    fileUnites.push(unites[1]);
+    fileUnites.push(unites[0]);
 
 
     int i = 1; //numéro du tour, à remplacer
 
     while (true) {
         //règles d'initiative assez arbitraires, à modifier #Nathanael
-        Unite *unitJouable = fileUnites.pop();
+        Unite* unitJouable = fileUnites.pop();
         unitJouable->tourCombat(carte, unites, boutonFinTour, boutonAction);
-        fileUnites.push(unitJouable, unitJouable->getInit() + 100 * i);
+        unitJouable->changeInitiativeTemporaire();
+        fileUnites.push(unitJouable);
         i += 1;
     }
 

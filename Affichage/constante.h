@@ -47,9 +47,16 @@ const int heightmap = 300;  //En case. Hauteur de la 'map'
 const Imagine::RGB<double> gris(100, 100, 100); //Couleur de l'encadré gris des cases.
 
 extern Imagine::Image<Imagine::Color> fond_ecran;   //Frame de fond d'écran.
+extern Imagine::Image<Imagine::Color> parchemin;    //Frame du parchemin d'écran d'accueil.
 
 extern Imagine::Image<Imagine::Color> foret1;   //Première frame de forêt.
 extern Imagine::Image<Imagine::Color> eau1; //Première frame d'eau.
 extern Imagine::Image<Imagine::Color> lande1;   //Première frame de lande.
 
 bool charge_image();    //Fonction qui charge toutes les frames dans leur variables et vérifie qu'il n'y a pas d'erreur. Adapte également l'image à taille_case_graph.
+
+Imagine::Image<Imagine::Color> entre_image_case(
+        std::string nom_image_voulue);  //Fonction qui renvoie la frame assossiée au nom, pour les cases de 'map'.
+
+Imagine::Color entre_couleur_case(
+        std::string nom_image_voulue);    //Fonction qui renvoie la couleur assossiée au nom, pour les cases de 'mmap'.
