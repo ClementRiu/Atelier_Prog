@@ -1,7 +1,9 @@
 #pragma once
 
+
 #include <vector>
 #include <assert.h>
+
 
 class CaseDist {
     int num_case;
@@ -28,18 +30,24 @@ public:
     std::vector<int> getChemin();
 };
 
+
+template<typename T>
 class FilePriorite {
-    std::vector<CaseDist> v;
+    std::vector<T*> v;
 public:
     // Constructeur de la file de priorite
     FilePriorite();
 
     // Methode pour inserer un élément dans la file
-    void push(CaseDist d);
+    void push(T* d);
+
+    // Echange les éléments i et j de v
+    void echange(int i, int j);
 
     // Methode pour retourner le premier element de la file
-    CaseDist pop();
+    T* pop();
 
     // Methode pour determiner si la file est vide
     bool empty();
 };
+

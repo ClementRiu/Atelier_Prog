@@ -57,6 +57,7 @@ Unite::Unite(const Unite &unit) {
     numcase = unit.numcase;
     PDep = unit.PDep;
     PDepMax = unit.PDepMax;
+    initiativeTemporaire = unit.initiativeTemporaire;
 
     for (int i = 0; i++; i < NB_DEG_PHY) {
         defensePhy[i] = unit.defensePhy[i];
@@ -72,19 +73,36 @@ Unite::Unite(const Unite &unit) {
 }
 
 
-Unite::Unite(float dep, int num) {
+Unite::Unite(float dep, float depMax, int num, float init) {
     PDep = dep;
+    PDepMax = depMax;
     numcase = num;
     PDepMax = dep;
+    initiative = init;
+    initiativeTemporaire = init;
 }
 
 
+/*
 Unite::Unite(float dep, float depMax, int num) {
     PDep = dep;
     numcase = num;
     PDepMax = depMax;
 }
+*/
 
+
+Unite::Unite(float dep, int num){
+    PDep = dep;
+    numcase = num;
+    initiative = 0;
+    initiativeTemporaire = 0;
+}
+
+
+bool Unite::operator<(Unite u) const{
+    return (initiativeTemporaire < u.initiativeTemporaire);
+}
 
 void Unite::choixAction() {
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
@@ -140,8 +158,17 @@ void Unite::changeOrientation(int i) {
 }
 
 
+void Unite::changeInitiativeTemporaire() {
+    initiativeTemporaire -= 30;
+}
+
+
 int Unite::getCase() const {
     return numcase;
+}
+
+float Unite::getInit() const{
+    return initiativeTemporaire;
 }
 
 
@@ -179,6 +206,7 @@ void Unite::prendDommage(int attRecue) {
 void Unite::setAttaque(Attaque att, int i) {
     competences[i] = att;
 }
+
 
 
 bool Unite::estVivant() {
@@ -228,6 +256,10 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             deplacement(carte, x, y);
         }
         boutonAction.affiche();
+
+        if (PDep==0){
+            tourContinue=false;
+        }
     }
     finTourCombat(unites);
 }
@@ -236,6 +268,11 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
 void Unite::action(Attaque att, Unite *u) {
     // A MODIFIER
     u->prendDommage(att.getPuissance());
+}
+
+
+void Unite::attaqueDeBase(Unite &u) {
+    u.PV -= force;
 }
 
 
@@ -361,7 +398,7 @@ Armee::Armee(const Armee &a) {
 }
 
 
-Heros::Heros(float dep, int num) : Unite(dep, num) {
+Heros::Heros(float dep, float depMax, int num, float init) : Unite(dep, depMax, num, init) {
     Casque c("Casque de base");
     Arme a("Arme de base");
     Torse t("Armure de Base");

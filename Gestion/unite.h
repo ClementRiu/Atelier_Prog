@@ -60,6 +60,7 @@ class Unite : public Mere {
     float defenseMag[NB_RES];
     float dexterite;
     float initiative;
+    float initiativeTemporaire;
 
     int numcase;
     float PDep;
@@ -76,9 +77,14 @@ public:
 
     Unite(const Unite &unit);
 
+    Unite(float dep, float depMax, int num, float init);
+
+    //Unite(float dep, float depMax, int num);
+
     Unite(float dep, int num);
 
-    Unite(float dep, float depMax, int num);
+    bool operator<(Unite u) const;
+
 
     void deplacement(Carte &carte, int x1, int y1);
 
@@ -99,7 +105,12 @@ public:
 
     void changeOrientation(int i);
 
+    // FONCTION A MODIFIER ABSOLUMENT
+    void changeInitiativeTemporaire();
+
     int getCase() const;
+
+    float getInit() const;
 
     void setCase(int num);
 
@@ -119,6 +130,9 @@ public:
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
+
+    // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
+    void attaqueDeBase(Unite& u);
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
@@ -181,7 +195,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(float dep, int num);
+    Heros(float dep, float depMax, int num, float init);
 
     Heros(const Heros &h);
 

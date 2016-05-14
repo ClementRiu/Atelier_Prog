@@ -1,4 +1,5 @@
 #include "priorite.h"
+#include "unite.h"
 
 
 CaseDist::CaseDist(int num, float dep) {
@@ -33,14 +34,16 @@ std::vector<int> CaseDist::getChemin() {
     return chemin;
 }
 
-FilePriorite::FilePriorite() {
-    v.push_back(CaseDist(0, 0));
+
+template <typename T>
+FilePriorite<T>::FilePriorite() {
+    v.push_back(new T(0,0));
 }
 
-
-bool FilePriorite::empty() {
+template <typename T>
+bool FilePriorite<T>::empty() {
     if (!v.empty()) {
-        CaseDist a = v.back();
+        T* a = v.back();
         v.pop_back();
         if (v.empty()) {
             v.push_back(a);
@@ -50,40 +53,54 @@ bool FilePriorite::empty() {
         return false;
     }
     else {
-        v.push_back(CaseDist(0, 0));
+        v.push_back(new T(0,0));
         return true;
     }
 }
 
-void FilePriorite::push(CaseDist d) {
+template <typename T>
+void FilePriorite<T>::push(T* d) {
     v.push_back(d);
     int i = v.size() - 1;
-    while (!(v[i] < v[i / 2]) && i > 1) {
-        std::swap(v[i], v[i / 2]);
+    while (!((*v[i]) < (*v[i / 2])) && i > 1) {
+        this->echange(i, i / 2);
         i = i / 2;
     }
 }
 
 
-CaseDist FilePriorite::pop() {
+template <typename T>
+void FilePriorite<T>::echange(int i, int j) {
+    T* a = v[i];
+    v[i] = v[j];
+    v[j] = a;
+}
+
+
+template <typename T>
+T* FilePriorite< T >::pop() {
     assert(v.size() > 1 && "file vide");
     if (!v.empty()) {
         int i = 1;
-        std::swap(v[i], v[v.size() - 1]);
-        while ((2 * i + 1 < v.size() - 1 && (v[i] < v[2 * i + 1] || v[i] < v[2 * i])) ||
-               (2 * i < v.size() - 1 && v[i] < v[2 * i])) {
-            if (v[2 * i + 1] < v[2 * i] || 2 * i + 1 == v.size() - 1) {
-                std::swap(v[i], v[2 * i]);
+        this->echange(i, v.size() - 1);
+        while ((2 * i + 1 < v.size() - 1 && (*v[i] < *v[2 * i + 1] || *v[i] < *v[2 * i])) ||
+               (2 * i < v.size() - 1 && *v[i] < *v[2 * i])) {
+            if (*v[2 * i + 1] < *v[2 * i] || 2 * i + 1 == v.size() - 1) {
+                this->echange(i, 2 * i);
                 i = 2 * i;
             }
             else {
-                std::swap(v[i], v[2 * i + 1]);
+                this->echange(i, 2 * i + 1);
                 i = 2 * i + 1;
             }
         }
     }
-    CaseDist a = v.back();
+    T* a = v.back();
     v.pop_back();
     v.empty();
     return a;
 }
+
+template class FilePriorite<CaseDist>;
+template class FilePriorite<Unite>;
+

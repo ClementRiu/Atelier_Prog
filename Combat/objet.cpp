@@ -15,7 +15,7 @@ Bouton Mere::creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax) {
         ymax += EcartementLignesInventaire;
         return b;
     }
-        // Si on n'a pas envie de créer de bouton, on créé un bouton vide
+        // Si on n'a pas envie de créer de bouton, on crée un bouton vide
     else {
         Bouton b(0, 0, 0, 0, Imagine::BLACK, "");
         return b;
