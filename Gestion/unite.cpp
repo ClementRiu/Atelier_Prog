@@ -43,6 +43,8 @@ int Attaque::getPuissance() {
 Unite::Unite() {
     PDep = 8;
     numcase = 0;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -80,6 +82,8 @@ Unite::Unite(float dep, float depMax, int num, float init) {
     PDepMax = dep;
     initiative = init;
     initiativeTemporaire = init;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -97,6 +101,8 @@ Unite::Unite(float dep, int num){
     numcase = num;
     initiative = 0;
     initiativeTemporaire = 0;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -126,7 +132,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
-            this->choixAction();
+            this->attaqueDeBase(carte[numeroCase(x1,y1)].getUnite());
             return;
         }
 
@@ -200,6 +206,7 @@ float Unite::getDepMax() const {
 //à implémenter
 void Unite::prendDommage(int attRecue) {
     std::cout << "à implémenter !" << std::endl;
+    PV = PV - 10;
 }
 
 
@@ -248,7 +255,7 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
         if (boutonAction.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             competences[1].zone(carte, true, getCase());
-            attaque(competences[0], carte, unites);
+            attaque(competences[0], carte);
             competences[1].zone(carte, false, getCase());
             tourContinue = false;
         }
@@ -271,23 +278,19 @@ void Unite::action(Attaque att, Unite *u) {
 }
 
 
-void Unite::attaqueDeBase(Unite &u) {
-    u.PV -= force;
+void Unite::attaqueDeBase(Unite* u) {
+    u->prendDommage(force);
 }
 
 
-void Unite::attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites) {
-    int x1, y1, u2 = 0;
+void Unite::attaque(Attaque attq, Carte &carte) {
+    int x1, y1 = 0;
 
     do {
         clic(x1, y1, carte);
     } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
-    //CETTE PARTIE DU CODE EST ATROCE !!!!!!!!
     if (carte[numeroCase(x1, y1)].getOccupe()) {
-        while (unites[u2]->getCase() != numeroCase(x1, y1)) {
-            u2 += 1;
-        }
-        action(attq, unites[u2]);
+        action(attq, carte[numeroCase(x1, y1)].getUnite());
     }
 }
 

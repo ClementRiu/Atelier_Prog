@@ -210,14 +210,14 @@ void Joueur::conquiert_ville(Ville conquete){
 }
 
 void Joueur::perd_ville(Ville perte){
-    int k=-1;
+    int k = - 1;
     int n=villesJoueur.size();
-    for (int i=0;i<n;i++){
-        if (villesJoueur[i].get_id()==perte.get_id()){
-            k=i;
+    for (int i = 0; i < n; i++){
+        if (villesJoueur[i].get_id() == perte.get_id()) {
+            k = i;
         }
     }
-    assert (k!=-1);
+    assert (k != - 1);
 
     villesJoueur.erase(villesJoueur.begin() + k);
 }

@@ -30,8 +30,8 @@ int main() {
     std::vector<Unite *> unites;
     unites.push_back(new Unite(5, 5, 204, 120));
     unites.push_back(new Unite(10, 10, 203, 100));
-    carte[204].flagHeros(unites[1]);
-    carte[203].flagHeros(unites[2]);
+    carte[204].flagHeros(unites[0]);
+    carte[203].flagHeros(unites[1]);
 
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {
@@ -41,8 +41,8 @@ int main() {
     }
 
     FilePriorite<Unite> fileUnites;
-    fileUnites.push(unites[1]);
     fileUnites.push(unites[0]);
+    fileUnites.push(unites[1]);
 
 
     int i = 1; //numéro du tour, à remplacer

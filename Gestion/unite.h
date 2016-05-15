@@ -101,7 +101,7 @@ public:
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
     void tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction);
 
-    void attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites);
+    void attaque(Attaque attq, Carte &carte);
 
     void changeOrientation(int i);
 
@@ -132,7 +132,7 @@ public:
     void action(Attaque a, Unite *u);
 
     // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
-    void attaqueDeBase(Unite& u);
+    void attaqueDeBase(Unite* u);
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser

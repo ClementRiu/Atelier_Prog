@@ -339,6 +339,9 @@ Case &Carte::operator[](const int i) {
 }
 
 
+Case::~Case(){
+
+}
 
 
 int numeroCase(const int x, const int y) {

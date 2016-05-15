@@ -158,6 +158,8 @@ public:
 
     // Permet de choisir si l'on veut effectuer l'action relative à la case
     bool boutonChoix() const;
+
+    ~Case();
 };
 
 
