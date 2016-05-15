@@ -32,16 +32,16 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        carte[304].flagHeros();
-        carte[303].flagHeros();
         unitesAlliees.push_back(new Heros(5, 5, 304, 100));
         unitesAlliees.push_back(new Heros(10, 10, 303, 100));
+        carte[304].flagHeros(unitesAlliees[0]);
+        carte[303].flagHeros(unitesAlliees[1]);
     }
 
-    carte[308].flagHeros();
-    carte[312].flagHeros();
     unitesEnnemies.push_back(new Heros(6, 6, 308, 100));
     unitesEnnemies.push_back(new Heros(7, 7, 312, 100));
+    carte[308].flagHeros(unitesEnnemies[0]);
+    carte[312].flagHeros(unitesEnnemies[1]);
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unitesAlliees[0]->ramasse(new Objet("merde"));
     unitesAlliees[0]->ramasse(new Casque("casque"));

@@ -30,7 +30,6 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
         for (int i = 0; i < T; i++) {
             std::getline(fichier, ligne);
             int num = atoi(ligne.c_str());
-            carte[num].flagHeros();
             std::getline(fichier, ligne);
             float dep = atoi(ligne.c_str());
             std::getline(fichier, ligne);
@@ -39,6 +38,7 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
             std::getline(fichier, ligne);
             float init = atoi(ligne.c_str());
             unites.push_back(new Unite(dep, depMax, num, init));
+            carte[num].flagHeros(unites[unites.size()-1]);
         }
         fichier.close();
     }

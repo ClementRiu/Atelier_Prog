@@ -115,7 +115,7 @@ Case::Case(const int x1, const int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
-    occupe = false;
+    pointeurUnite = NULL;
     brillance = false;
     type = tc;
     utileChemin = false;
@@ -130,22 +130,26 @@ Case::Case(const Case &tuile) {
     x = tuile.x;
     y = tuile.y;
     taille = tuile.taille;
-    occupe = tuile.occupe;
+    pointeurUnite = tuile.pointeurUnite;
     brillance = tuile.brillance;
     utileChemin = utileChemin;
     type = tuile.type->clone();
 }
 
 
-void Case::flagHeros() {
-    occupe = !occupe;
+void Case::flagHeros(Unite* u) {
+    pointeurUnite = u;
 }
 
 
 bool Case::getOccupe() const {
-    return occupe;
+    return (pointeurUnite!=NULL);
 }
 
+
+Unite* Case::getUnite() {
+    return pointeurUnite;
+}
 
 //à se débarasser, présent uniquement dans Unite::deplaceVersCase
 int Case::get(const int i) const{
@@ -180,7 +184,7 @@ void Case::affiche() const{
     int taillemax = LargDroite / NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                       taillemax, type->Image());
-    if (occupe) {
+    if (this->getOccupe()) {
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
         Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                           taillemax, Imagine::BLACK);

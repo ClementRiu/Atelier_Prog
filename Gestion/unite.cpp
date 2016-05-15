@@ -144,8 +144,8 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 
 void Unite::deplaceVersCase(Case &c2, Case &c1) {
     if (!c2.getOccupe()) {
-        c1.flagHeros();
-        c2.flagHeros();
+        c2.flagHeros(c1.getUnite());
+        c1.flagHeros(NULL);
         c1.affiche();
         c2.affiche();
         numcase = numeroCase(c2.get(0), c2.get(1));

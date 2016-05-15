@@ -80,7 +80,7 @@ public:
     Joueur(std::vector<Unite*> unites); //uniquement pour tester
 
 
-    //gros tas de get
+    //gros tas de get #BIEN FAT
     int get_id();
     bool get_humain();
     int get_ressources(int i);

@@ -28,10 +28,10 @@ int main() {
 
     // Initialisation des unites
     std::vector<Unite *> unites;
-    carte[204].flagHeros();
-    carte[203].flagHeros();
     unites.push_back(new Unite(5, 5, 204, 120));
     unites.push_back(new Unite(10, 10, 203, 100));
+    carte[204].flagHeros(unites[1]);
+    carte[203].flagHeros(unites[2]);
 
     // Affichage des cases
     for (int i = 0; i < NbCase; i++) {

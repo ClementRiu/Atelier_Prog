@@ -97,7 +97,7 @@ public:
 class Case {
     int x, y; // Position effective du coin haut gauche de la case
     int taille;
-    bool occupe; // Variable indiquant si le heros est sur la case
+    Unite* pointeurUnite;
     bool brillance; // Variable indiquant si la case est en surbrillance
     bool utileChemin; // Variable indiquant si la case sert actuellement a montrer un chemin pour le Heros
     TypeCase *type;
@@ -112,9 +112,12 @@ public:
     Case(const Case &tuile);
 
     // Place le heros sur cette case s'il n'y etait pas et l'enleve s'il y etait
-    void flagHeros();
+    void flagHeros(Unite* u);
 
     bool getOccupe() const;
+
+    // renvoie le pointeur de l'unité sur la case
+    Unite* getUnite();
 
     //get temporaire à se débarasser !!
     int get(const int i) const;
