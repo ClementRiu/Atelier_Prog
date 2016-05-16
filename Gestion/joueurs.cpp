@@ -16,7 +16,7 @@ Ville::Ville(int faction, int num) {
     }
     camp = faction;
     heros_present = false;
-    achetable = new Objet[0];
+    achetable = Inventaire();
     update_ameliorable();
     update_recrutable();
     update_achetable();
@@ -24,7 +24,7 @@ Ville::Ville(int faction, int num) {
 
 
 Ville::~Ville() {
-    delete[] achetable;
+    achetable.~Inventaire();
 }
 
 
@@ -85,10 +85,6 @@ int Ville::get_nb_recrue(int type) {
 }
 
 
-Objet *Ville::get_magasin() {
-    return achetable;
-}
-
 
 int Ville::get_camp() {
     return camp;
@@ -105,6 +101,52 @@ bool Ville::get_heros_present() {
 }
 
 
+void Ville::ouvreVille(Heros* h) {
+    // Creation des differents boutons pour les differentes categories d'objets
+    std::vector<Bouton> boutonsChoix;
+    std::vector<std::string> nomBoutons;
+    nomBoutons.push_back("Arme");
+    nomBoutons.push_back("Anneau");
+    nomBoutons.push_back("Bottes");
+    nomBoutons.push_back("Gants");
+    nomBoutons.push_back("Jambes");
+    nomBoutons.push_back("Torse");
+    nomBoutons.push_back("Casque");
+    nomBoutons.push_back("Objets divers");
+    for (int i = 0; i < nomBoutons.size(); ++i) {
+        Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
+        boutonsChoix.push_back(b);
+    }
+
+    // Creation des differentes categories d'objets
+    Inventaire categoriesObjets;
+    categoriesObjets.ajoute(new Arme());
+    categoriesObjets.ajoute(new Anneau());
+    categoriesObjets.ajoute(new Bottes());
+    categoriesObjets.ajoute(new Gants());
+    categoriesObjets.ajoute(new Jambes());
+    categoriesObjets.ajoute(new Torse());
+    categoriesObjets.ajoute(new Casque());
+    categoriesObjets.ajoute(new Objet());
+
+    // Creation du pointeur vers la fonction equipe
+    void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::achete;
+
+    achetable.ouvreInventaire(boutonsChoix, categoriesObjets, this, h, pointeurFonction);
+    //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+}
+
+
+void Ville::retire(int i) {
+    achetable.retire(i);
+}
+
+
+Mere* Ville::getObjet(int i) {
+    return achetable.get(i);
+}
+
+
 Joueur::Joueur(int num) {
     id = num;
     for (int i = 0; i < NB_RESSOURCE; i++) {
@@ -116,6 +158,7 @@ Joueur::Joueur(int num) {
     nb_heros_max_joueur = 1;
 
 }
+
 
 Joueur::Joueur(int idj, std::vector<Unite *> unite, std::vector<Ville *> villes) {
     id = idj;

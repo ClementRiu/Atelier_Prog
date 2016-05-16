@@ -11,6 +11,9 @@ const int TAILLE_ARMEE = 6;
 const int NB_MAX_ATTAQUES = 10;
 
 
+class Ville;
+
+
 const Imagine::Coords<2> portee10(1, 0);
 const Imagine::Coords<2> portee_10(-1, 0);
 const Imagine::Coords<2> portee20(2, 0);
@@ -130,6 +133,9 @@ public:
 
     void setAttaque(Attaque att, int i);
 
+    // Achète le i-ème objet dans la ville
+    virtual void achete(Ville* ville, int i, bool b);
+
     bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
@@ -142,14 +148,17 @@ public:
     // La fonction est a modifier niveau affichage et a organiser
 //    std::vector<Bouton> boutonAction(Carte& carte);
 
+    // Retire l'objet numéro i de l'inventaire
+    virtual void retire(int i);
+
     // Fonction vide ici
-    virtual void ramasse(Objet *obj);
+    virtual void ramasse(Mere *obj);
 
     // Fonction vide ici
     virtual void ouvreInventaire();
 
     // Fonction vide ici
-    virtual void equipe(int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite = true);
 
     // Fonction vide ici
     virtual std::string getNomCasque();
@@ -206,7 +215,7 @@ public:
     Heros(const Unite &u);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
-    virtual void equipe(int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite = true);
 
     Casque equipeCasque(Casque casque);
 
@@ -226,11 +235,18 @@ public:
 
     Anneau equipeAnneauGauche(Anneau anneau);
 
+    // Retire l'objet numéro i de l'inventaire
+    virtual void retire(int i);
+
     //Fonction a modifier
     virtual void ouvreInventaire();
 
     // Fonction pour ajouter un objet a l'inventaire
-    virtual void ramasse(Objet *obj);
+    virtual void ramasse(Mere *obj);
+
+
+    // Achète le i-ème objet dans la ville
+    virtual void achete(Ville* ville, int i, bool b);
 
     // Fonction renvoyant le nom du casque equipe. Utile pour un test
     virtual std::string getNomCasque();

@@ -102,8 +102,8 @@ Mere *Inventaire::get(int i) {
 
 // Fonction a modifier
 // faire vien plutot de Unite
-void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
-                                 Unite *unite, void (Unite::*faire)(int, bool)) {
+void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
+                                 Unite *unite, void (Unite::*faire)(Ville*, int, bool)) {
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
     std::vector<Bouton> boutonUtile;
     std::vector<int> objetPresent;
@@ -168,7 +168,7 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         for (int i = 0; i < boutonUtile.size(); ++i) {
             if (boutonUtile[i].boutonActive(x, y, decalementVertical)) {
                 // Applique une methode de Unite a travers le pointeur faire
-                (*unite.*faire)(objetPresent[i], true);
+                (*unite.*faire)(ville, objetPresent[i], true);
                 // On change le nom du bouton et on le reaffiche
                 boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom());
                 boutonUtile[i].affiche(decalementVertical);
@@ -179,6 +179,13 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         clicSimple(x, y);
         Imagine::fillRect(BoutonMilieu[0], 0, BoutonMilieu[1] - BoutonMilieu[0], height, Imagine::WHITE);
     }
+}
+
+
+void Inventaire::retire(int i){
+    std::vector<Mere*>::iterator it;
+    it = contenu.begin();
+    contenu.erase(it + i);
 }
 
 

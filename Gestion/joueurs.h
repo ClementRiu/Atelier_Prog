@@ -23,7 +23,7 @@ class Ville {
     bool heros_present;
     int recrutables[nb_type_unite]; //recrutable[i] contient le nombre d'unite de type i que l'on peut recruter
     bool amelioration[NB_BATIMENTS]; //indiqe si le bâtiment est améliorable
-    Objet* achetable;               //liste d'objet disponible a l'achat
+    Inventaire achetable;               //liste d'objet disponible a l'achat
     int camp;                       //le joueur à qui appartient la ville
 public:
     Ville();
@@ -54,13 +54,17 @@ public:
 
     int get_nb_recrue(int type);
 
-    Objet* get_magasin();       //renvoie la liste des objet achetables
-
     int get_camp();
 
     bool est_ameliorable(int i); //indique si le batiment i est ameliorable
 
     bool get_heros_present();
+
+    void ouvreVille(Heros* h);
+
+    void retire(int i);
+
+    Mere* getObjet(int i);
 };
 
 class Joueur{

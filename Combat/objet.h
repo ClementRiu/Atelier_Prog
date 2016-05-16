@@ -23,7 +23,7 @@ const int BoutonMilieu[2] = {180, width - 100};
 
 
 class Heros;
-
+class Ville;
 class Unite;
 
 
@@ -84,8 +84,11 @@ public:
 
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple
-    void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets,
-                         Unite *unite, void (Unite::*faire)(int, bool));
+    void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
+                         Unite *unite, void (Unite::*faire)(Ville*, int, bool));
+
+    // Retire le i-ème objet de l'nventaire
+    void retire(int i);
 
     ~Inventaire();
 };

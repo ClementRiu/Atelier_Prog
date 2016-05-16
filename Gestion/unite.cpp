@@ -1,5 +1,6 @@
 #include "unite.h"
 #include <iostream>
+#include "joueurs.h"
 
 
 //attaque de base
@@ -288,6 +289,11 @@ void Unite::attaqueDeBase(Unite* u) {
 }
 
 
+void Unite::retire(int i) {
+
+}
+
+
 void Unite::attaque(Attaque attq, Carte &carte) {
     int x1, y1 = 0;
 
@@ -352,8 +358,11 @@ std::vector<Bouton> Unite::boutonAction(Carte &carte) {
 }
 */
 
-void Unite::ramasse(Objet *obj) {
+void Unite::ramasse(Mere *obj) {
 
+}
+
+void Unite::achete(Ville* ville, int i, bool b) {
 }
 
 
@@ -362,7 +371,7 @@ void Unite::ouvreInventaire() {
 }
 
 
-void Unite::equipe(int i, bool droite) {
+void Unite::equipe(Ville* ville, int i, bool droite) {
 
 }
 
@@ -428,6 +437,16 @@ Heros::Heros(const Heros &h) : Unite(h) {
     niveau = h.niveau;
     exp = h.exp;
     ArmeeHeros = h.ArmeeHeros;
+}
+
+void Heros::retire(int i) {
+    inventaire.retire(i);
+}
+
+
+void Heros::achete(Ville* ville, int i, bool b) {
+    this->ramasse(ville->getObjet(i));
+    ville->retire(i);
 }
 
 
@@ -517,14 +536,14 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 }
 
 
-void Heros::equipe(int i, bool droite) {
+void Heros::equipe(Ville* ville, int i, bool droite) {
     if (i < inventaire.taille()) {
         inventaire.get(i)->equiper(this, droite);
     }
 }
 
 
-void Heros::ramasse(Objet *obj) {
+void Heros::ramasse(Mere *obj) {
     inventaire.ajoute(obj);
 }
 
@@ -558,9 +577,9 @@ void Heros::ouvreInventaire() {
     categoriesObjets.ajoute(new Objet());
 
     // Creation du pointeur vers la fonction equipe
-    void (Unite::*pointeurFonction)(int, bool) = &Unite::equipe;
+    void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::equipe;
 
-    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
 
     //categoriesObjets.~Inventaire();
 }
