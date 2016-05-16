@@ -301,7 +301,7 @@ void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton bouto
                 }
             }
             else {
-                unite->deplacement(carte, x, y);
+                unite->deplacement(carte, x, y, true);
             }
 
             boutonSauvegarde.affiche();

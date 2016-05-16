@@ -117,12 +117,15 @@ void Unite::choixAction() {
 }
 
 
-void Unite::deplacement(Carte &carte, int x1, int y1) {
+void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
     float dep = PDep;
-    if ((abs(numcase-numeroCase(x1,y1)) == 1 || abs(numcase-numeroCase(x1,y1)) == NbCase) && numeroCase(x1,y1) != -1) {
+    if (gestion && (abs(numcase-numeroCase(x1,y1)) == 1 || abs(numcase-numeroCase(x1,y1)) == NbCase) && numeroCase(x1,y1) != -1) {
         carte[numeroCase(x1, y1)].action(this);
         carte.affiche();
-        // return ;
+        if (carte[numeroCase(x1, y1)].getOccupe()) {
+            this->combat(carte[numeroCase(x1, y1)].getUnite());
+        }
+        return ;
     }
     if (dep > 0) {
         if (carte[numeroCase(x1, y1)].Brillance()) {
@@ -135,7 +138,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1) {
         int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
         // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
 
-        if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
+        if (!gestion && numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
@@ -276,7 +279,7 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             tourContinue = false;
         }
         else {
-            deplacement(carte, x, y);
+            deplacement(carte, x, y, false);
         }
         boutonAction.affiche();
 
@@ -298,6 +301,10 @@ void Unite::attaqueDeBase(Unite* u) {
     u->prendDommage(force);
 }
 
+
+void Unite::combat(Unite* u) {
+
+}
 
 void Unite::retire(int i) {
 
@@ -496,6 +503,62 @@ void Heros::ouvreVille(Ville* v) {
 
 void Heros::achete(Ville* ville, int i, bool b) {
     this->ramasse(ville->getObjet(i)->clone());
+}
+
+
+void Heros::combat(Unite* u) {
+    Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
+    Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
+    Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
+    boutonFinTour.affiche();
+    boutonAction.affiche();
+    boutonInventaire.affiche();
+
+    // Initialisation d'une attaque
+    std::vector<Imagine::Coords<2> > zoneInfl;
+    zoneInfl.push_back(portee10);
+    zoneInfl.push_back(portee_10);
+    zoneInfl.push_back(portee20);
+    zoneInfl.push_back(portee_20);
+    zoneInfl.push_back(portee01);
+    zoneInfl.push_back(portee02);
+    zoneInfl.push_back(portee0_2);
+    zoneInfl.push_back(portee0_1);
+    Attaque coinCoinOuille(zoneInfl, 10);
+
+    Carte carte(0);
+
+    int positionGestion[2] = {this->getCase(), u->getCase()};
+
+    // Initialisation des unites
+    this->setCase(100);
+    u->setCase(200);
+    std::vector<Unite *> unites;
+    unites.push_back(this);
+    unites.push_back(u);
+    carte[100].flagHeros(unites[0]);
+    carte[200].flagHeros(unites[1]);
+
+    carte.affiche();
+
+    FilePriorite<Unite> fileUnites;
+    fileUnites.push(unites[0]);
+    fileUnites.push(unites[1]);
+
+
+    int i = 1; //numéro du tour, à remplacer
+
+    while (true) {
+        //règles d'initiative assez arbitraires, à modifier #Nathanael
+        Unite* unitJouable = fileUnites.pop();
+        unitJouable->tourCombat(carte, unites, boutonFinTour, boutonAction);
+        unitJouable->changeInitiativeTemporaire();
+        fileUnites.push(unitJouable);
+        i += 1;
+    }
+
+    this->setCase(positionGestion[0]);
+    u->setCase(positionGestion[1]);
 }
 
 

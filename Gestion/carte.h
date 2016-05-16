@@ -174,6 +174,9 @@ public:
 class Carte {
     Case carte[NbCase * NbCase];
 public:
+    //Construit une carte aléatoire (ou on aimerait que ça le fasse)
+    Carte(int inutilePourLInstant);
+
     // Construit une carte de base
     Carte(Ville* v);
 

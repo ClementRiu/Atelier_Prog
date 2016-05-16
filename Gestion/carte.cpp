@@ -331,6 +331,16 @@ void Case::action(Unite* u) {
     }
 }
 
+
+Carte::Carte(int inutilePourLInstant) {
+    for (int i = 0; i < NbCase * Taille; i += Taille) {
+        for (int j = 0; j < NbCase * Taille; j += Taille) {
+            Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
+            carte[numeroCase(i, j)] = c;
+        }
+    }
+}
+
 Carte::Carte(Ville *v) {
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
@@ -350,7 +360,9 @@ Carte::Carte(Ville *v) {
         }
     }
     Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA, v));
+    Case c2((NbCase - 1) * Taille, (NbCase - 1) * Taille, new CaseVille(descVille, Imagine::MAGENTA, v));
     carte[0] = c;
+    carte[NbCase * NbCase - 1] = c2;
 }
 
 

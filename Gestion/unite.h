@@ -91,7 +91,7 @@ public:
     bool operator<(Unite u) const;
 
 
-    void deplacement(Carte &carte, int x1, int y1);
+    void deplacement(Carte &carte, int x1, int y1, bool gestion);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
@@ -149,6 +149,9 @@ public:
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
 //    std::vector<Bouton> boutonAction(Carte& carte);
+
+
+    virtual void combat(Unite* u);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
@@ -237,6 +240,8 @@ public:
 
     Anneau equipeAnneauGauche(Anneau anneau);
 
+    // Lance l'unité dans un combat avec une autre unité
+    virtual void combat(Unite* u);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
