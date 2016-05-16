@@ -6,7 +6,11 @@
 int main() {
     Imagine::openWindow(width, height);
 
-    Carte carte;
+    Ville* v = new Ville();
+    v->ajoute(new Objet("essai"));
+    v->ajoute(new Objet("poup"));;
+
+    Carte carte(v);
 
     // Initialisation des unites
     // Ecran de menu
@@ -32,9 +36,9 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        unitesAlliees.push_back(new Heros(1, 5, 5, 304, 100));
+        unitesAlliees.push_back(new Heros(1, 5, 5, 20, 100));
         unitesAlliees.push_back(new Heros(1, 10, 10, 303, 100));
-        carte[304].flagHeros(unitesAlliees[0]);
+        carte[20].flagHeros(unitesAlliees[0]);
         carte[303].flagHeros(unitesAlliees[1]);
     }
 
@@ -69,12 +73,7 @@ int main() {
     Inventaire j(i);
 
 
-    // Affichage des cases
-    for (int i = 0; i < NbCase; i++) {
-        for (int j = 0; j < NbCase; j++) {
-            carte[NbCase * j + i].affiche();
-        }
-    }
+    carte.affiche();
 
     // Creation et affichage des boutons
     Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");

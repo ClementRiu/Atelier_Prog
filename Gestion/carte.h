@@ -21,9 +21,9 @@ const int height = NbCase * Taille;
 const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
-
+class Heros;
 class Unite;
-
+class Ville;
 class Carte;
 
 
@@ -52,6 +52,8 @@ public:
     // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
     bool popUp(const std::string question) const;
 
+    virtual void action(Unite* h);
+
     virtual TypeCase *clone() const;
 
     // Cree des boutons où on pour choisir si l'on veut effecter l'action de la case ou non
@@ -60,10 +62,13 @@ public:
 
 
 class CaseVille : public TypeCase {
+    Ville* ville;
 public:
-    CaseVille(const std::string desc, const Imagine::Color img);
+    CaseVille(const std::string desc, const Imagine::Color img, Ville* v);
 
     CaseVille();
+
+    virtual void action(Unite* h);
 
     virtual CaseVille *clone() const;
 
@@ -159,6 +164,9 @@ public:
     // Permet de choisir si l'on veut effectuer l'action relative à la case
     bool boutonChoix() const;
 
+    // Fais l'action sur la case s'il y en a une A CHANGER
+    void action(Unite* u);
+
     ~Case();
 };
 
@@ -167,7 +175,10 @@ class Carte {
     Case carte[NbCase * NbCase];
 public:
     // Construit une carte de base
-    Carte();
+    Carte(Ville* v);
+
+    // affiche la carte
+    void affiche();
 
     // Permer d'accéder à carte[i]
     Case &operator[](const int i);

@@ -119,6 +119,11 @@ void Unite::choixAction() {
 
 void Unite::deplacement(Carte &carte, int x1, int y1) {
     float dep = PDep;
+    if ((abs(numcase-numeroCase(x1,y1)) == 1 || abs(numcase-numeroCase(x1,y1)) == NbCase) && numeroCase(x1,y1) != -1) {
+        carte[numeroCase(x1, y1)].action(this);
+        carte.affiche();
+        // return ;
+    }
     if (dep > 0) {
         if (carte[numeroCase(x1, y1)].Brillance()) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
@@ -181,6 +186,11 @@ int Unite::getID() const {
 
 float Unite::getInit() const{
     return initiativeTemporaire;
+}
+
+
+void Unite::ouvreVille(Ville* v) {
+
 }
 
 
@@ -444,9 +454,48 @@ void Heros::retire(int i) {
 }
 
 
+void Heros::ouvreVille(Ville* v) {
+    Heros* h2 = new Heros(1,1,1,1,1);
+    if (typeid(this)== typeid(h2)){
+        // Creation des differents boutons pour les differentes categories d'objets
+        std::vector<Bouton> boutonsChoix;
+        std::vector<std::string> nomBoutons;
+        nomBoutons.push_back("Arme");
+        nomBoutons.push_back("Anneau");
+        nomBoutons.push_back("Bottes");
+        nomBoutons.push_back("Gants");
+        nomBoutons.push_back("Jambes");
+        nomBoutons.push_back("Torse");
+        nomBoutons.push_back("Casque");
+        nomBoutons.push_back("Objets divers");
+        for (int i = 0; i < nomBoutons.size(); ++i) {
+            Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
+            boutonsChoix.push_back(b);
+        }
+
+        // Creation des differentes categories d'objets
+        Inventaire categoriesObjets;
+        categoriesObjets.ajoute(new Arme());
+        categoriesObjets.ajoute(new Anneau());
+        categoriesObjets.ajoute(new Bottes());
+        categoriesObjets.ajoute(new Gants());
+        categoriesObjets.ajoute(new Jambes());
+        categoriesObjets.ajoute(new Torse());
+        categoriesObjets.ajoute(new Casque());
+        categoriesObjets.ajoute(new Objet());
+
+        // Creation du pointeur vers la fonction equipe
+        void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::achete;
+
+        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
+        //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+    }
+    delete h2;
+}
+
+
 void Heros::achete(Ville* ville, int i, bool b) {
-    this->ramasse(ville->getObjet(i));
-    ville->retire(i);
+    this->ramasse(ville->getObjet(i)->clone());
 }
 
 

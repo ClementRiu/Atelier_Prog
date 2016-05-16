@@ -1,5 +1,6 @@
 #include "carte.h"
 #include "unite.h"
+#include "joueurs.h"
 
 
 TypeCase::TypeCase(const float dep, const std::string desc, const Imagine::Color img) {
@@ -47,6 +48,11 @@ bool TypeCase::popUp(const std::string question) const{
 }
 
 
+void TypeCase::action(Unite* h) {
+
+}
+
+
 TypeCase* TypeCase::clone() const {
     return new TypeCase(*this);
 }
@@ -57,8 +63,8 @@ bool TypeCase::boutonChoix(){
 }
 
 
-CaseVille::CaseVille(const std::string desc, const Imagine::Color img) : TypeCase(INF, desc, img){
-
+CaseVille::CaseVille(const std::string desc, const Imagine::Color img, Ville* v) : TypeCase(INF, desc, img){
+    ville = v;
 }
 
 
@@ -69,6 +75,13 @@ CaseVille::CaseVille() : TypeCase(){
 
 CaseVille* CaseVille::clone() const {
     return new CaseVille(*this);
+}
+
+
+void CaseVille::action(Unite* h) {
+    if (this->boutonChoix()){
+        ville->ouvreVille(h);
+    }
 }
 
 
@@ -311,7 +324,14 @@ bool Case::boutonChoix() const{
 }
 
 
-Carte::Carte() {
+void Case::action(Unite* u) {
+    type->action(u);
+    if (this->getOccupe()) {
+        // Engager phase de combat
+    }
+}
+
+Carte::Carte(Ville *v) {
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
@@ -329,8 +349,17 @@ Carte::Carte() {
             }
         }
     }
-    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA));
+    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA, v));
     carte[0] = c;
+}
+
+
+void Carte::affiche() {
+    for (int i = 0; i < NbCase; ++i) {
+        for (int j = 0; j < NbCase; ++j) {
+            carte[j * NbCase + i].affiche();
+        }
+    }
 }
 
 

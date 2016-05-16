@@ -60,9 +60,13 @@ public:
 
     bool get_heros_present();
 
-    void ouvreVille(Heros* h);
+    Inventaire& getInventaire();
+
+    void ouvreVille(Unite* h);
 
     void retire(int i);
+
+    void ajoute (Mere* obj);
 
     Mere* getObjet(int i);
 };

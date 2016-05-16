@@ -1,9 +1,14 @@
+// C'est très bizarre/sale, tant pis
+#include "../Gestion/joueurs.cpp"
+
 #include "../Gestion/unite.h"
 #include <Imagine/Graphics.h>
 #include "../Gestion/carte.h"
 
 int main() {
     Imagine::openWindow(width, height);
+
+    Ville* v = new Ville();
 
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
@@ -24,7 +29,7 @@ int main() {
     zoneInfl.push_back(portee0_1);
     Attaque coinCoinOuille(zoneInfl, 10);
 
-    Carte carte;
+    Carte carte(v);
 
     // Initialisation des unites
     std::vector<Unite *> unites;

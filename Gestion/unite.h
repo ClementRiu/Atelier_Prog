@@ -136,6 +136,8 @@ public:
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b);
 
+    virtual void ouvreVille(Ville* v);
+
     bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
@@ -235,8 +237,12 @@ public:
 
     Anneau equipeAnneauGauche(Anneau anneau);
 
+
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
+
+    // Fontion pour ouvrir la ville
+    virtual void ouvreVille(Ville* v);
 
     //Fonction a modifier
     virtual void ouvreInventaire();

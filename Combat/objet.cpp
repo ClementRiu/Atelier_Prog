@@ -139,7 +139,7 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
                 for (int j = 0; j < contenu.size(); ++j) {
                     // On cree les differents boutons de la categorie
                     Bouton b = contenu[j]->creeBouton(classeObjets.get(i), xmin, ymin, xmax, ymax);
-                    // On regarde si le bouton es ide et si c'est n'est pas le cas, on  le stock ainsi que la position
+                    // On regarde si le bouton es vide et si c'est n'est pas le cas, on  le stock ainsi que la position
                     // Dans l'inventaire qui lui est associee
                     if (!b.boutonVide()) {
                         boutonUtile.push_back(b);
