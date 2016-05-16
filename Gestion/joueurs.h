@@ -76,12 +76,12 @@ class Joueur{
 
 public:
     Joueur(int num);
-    Joueur(std::vector<Unite*> unites, std::vector<Ville*> villes);
-    Joueur(std::vector<Unite*> unites); //uniquement pour tester
+    Joueur(int id, std::vector<Unite*> unites, std::vector<Ville*> villes);
+    Joueur(int id, std::vector<Unite*> unites); //uniquement pour tester
 
 
     //gros tas de get #BIEN FAT
-    int get_id();
+    int get_id() const;
     bool get_humain();
     int get_ressources(int i);
     int get_score();

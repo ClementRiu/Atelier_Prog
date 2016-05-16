@@ -28,8 +28,8 @@ int main() {
 
     // Initialisation des unites
     std::vector<Unite *> unites;
-    unites.push_back(new Unite(5, 5, 204, 120));
-    unites.push_back(new Unite(10, 10, 203, 100));
+    unites.push_back(new Unite(1, 5, 5, 204, 120));
+    unites.push_back(new Unite(1, 10, 10, 203, 100));
     carte[204].flagHeros(unites[0]);
     carte[203].flagHeros(unites[1]);
 

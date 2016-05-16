@@ -75,7 +75,8 @@ Unite::Unite(const Unite &unit) {
 }
 
 
-Unite::Unite(float dep, float depMax, int num, float init) {
+Unite::Unite(int ID, float dep, float depMax, int num, float init) {
+    IDjoueur = ID;
     PDep = dep;
     PDepMax = depMax;
     numcase = num;
@@ -171,6 +172,10 @@ void Unite::changeInitiativeTemporaire() {
 
 int Unite::getCase() const {
     return numcase;
+}
+
+int Unite::getID() const {
+    return IDjoueur;
 }
 
 float Unite::getInit() const{
@@ -401,7 +406,7 @@ Armee::Armee(const Armee &a) {
 }
 
 
-Heros::Heros(float dep, float depMax, int num, float init) : Unite(dep, depMax, num, init) {
+Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, dep, depMax, num, init) {
     Casque c("Casque de base");
     Arme a("Arme de base");
     Torse t("Armure de Base");

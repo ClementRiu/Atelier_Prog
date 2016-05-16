@@ -32,14 +32,14 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        unitesAlliees.push_back(new Heros(5, 5, 304, 100));
-        unitesAlliees.push_back(new Heros(10, 10, 303, 100));
+        unitesAlliees.push_back(new Heros(1, 5, 5, 304, 100));
+        unitesAlliees.push_back(new Heros(1, 10, 10, 303, 100));
         carte[304].flagHeros(unitesAlliees[0]);
         carte[303].flagHeros(unitesAlliees[1]);
     }
 
-    unitesEnnemies.push_back(new Heros(6, 6, 308, 100));
-    unitesEnnemies.push_back(new Heros(7, 7, 312, 100));
+    unitesEnnemies.push_back(new Heros(2, 6, 6, 308, 100));
+    unitesEnnemies.push_back(new Heros(2, 7, 7, 312, 100));
     carte[308].flagHeros(unitesEnnemies[0]);
     carte[312].flagHeros(unitesEnnemies[1]);
     // Remplissage de l'inventaire de la première unité qui est bien un héros
@@ -85,18 +85,20 @@ int main() {
     boutonFinTour.affiche();
 
 
-    Joueur allie(unitesAlliees);
-    Joueur ennemi(unitesEnnemies);
+    Joueur allie(1, unitesAlliees);
+    Joueur ennemi(2, unitesEnnemies);
 
     // Deplacement des unites
     bool quit = false;
 
     while (!quit) {
+        std::cout << "Tour joueur 1" << std::endl;
         allie.tourGestion(carte, unitesAlliees, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
         finJournee(unitesAlliees);
         if (quit) {
             break;
         }
+        std::cout << " Tour joueur 2" << std::endl;
         ennemi.tourGestion(carte, unitesEnnemies, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
                            quit);
         finJournee(unitesEnnemies);

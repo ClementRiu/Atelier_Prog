@@ -62,6 +62,8 @@ class Unite : public Mere {
     float initiative;
     float initiativeTemporaire;
 
+    int IDjoueur;
+
     int numcase;
     float PDep;
     float PDepMax;
@@ -77,7 +79,7 @@ public:
 
     Unite(const Unite &unit);
 
-    Unite(float dep, float depMax, int num, float init);
+    Unite(int IDjoueur, float dep, float depMax, int num, float init);
 
     //Unite(float dep, float depMax, int num);
 
@@ -109,6 +111,8 @@ public:
     void changeInitiativeTemporaire();
 
     int getCase() const;
+
+    int getID() const;
 
     float getInit() const;
 
@@ -195,7 +199,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(float dep, float depMax, int num, float init);
+    Heros(int ID, float dep, float depMax, int num, float init);
 
     Heros(const Heros &h);
 
