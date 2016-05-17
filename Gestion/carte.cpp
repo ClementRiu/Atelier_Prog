@@ -1,5 +1,6 @@
 #include "carte.h"
 #include "unite.h"
+#include "joueurs.h"
 
 
 TypeCase::TypeCase(const float dep, const std::string desc, const Imagine::Color img) {
@@ -47,6 +48,11 @@ bool TypeCase::popUp(const std::string question) const{
 }
 
 
+void TypeCase::action(Unite* h) {
+
+}
+
+
 TypeCase* TypeCase::clone() const {
     return new TypeCase(*this);
 }
@@ -57,8 +63,8 @@ bool TypeCase::boutonChoix(){
 }
 
 
-CaseVille::CaseVille(const std::string desc, const Imagine::Color img) : TypeCase(INF, desc, img){
-
+CaseVille::CaseVille(const std::string desc, const Imagine::Color img, Ville* v) : TypeCase(INF, desc, img){
+    ville = v;
 }
 
 
@@ -69,6 +75,13 @@ CaseVille::CaseVille() : TypeCase(){
 
 CaseVille* CaseVille::clone() const {
     return new CaseVille(*this);
+}
+
+
+void CaseVille::action(Unite* h) {
+    if (this->boutonChoix()){
+        ville->ouvreVille(h);
+    }
 }
 
 
@@ -115,7 +128,7 @@ Case::Case(const int x1, const int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
-    occupe = false;
+    pointeurUnite = NULL;
     brillance = false;
     type = tc;
     utileChemin = false;
@@ -130,22 +143,26 @@ Case::Case(const Case &tuile) {
     x = tuile.x;
     y = tuile.y;
     taille = tuile.taille;
-    occupe = tuile.occupe;
+    pointeurUnite = tuile.pointeurUnite;
     brillance = tuile.brillance;
     utileChemin = utileChemin;
     type = tuile.type->clone();
 }
 
 
-void Case::flagHeros() {
-    occupe = !occupe;
+void Case::flagHeros(Unite* u) {
+    pointeurUnite = u;
 }
 
 
 bool Case::getOccupe() const {
-    return occupe;
+    return (pointeurUnite!=NULL);
 }
 
+
+Unite* Case::getUnite() {
+    return pointeurUnite;
+}
 
 //à se débarasser, présent uniquement dans Unite::deplaceVersCase
 int Case::get(const int i) const{
@@ -180,7 +197,7 @@ void Case::affiche() const{
     int taillemax = LargDroite / NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                       taillemax, type->Image());
-    if (occupe) {
+    if (this->getOccupe()) {
         Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
         Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                           taillemax, Imagine::BLACK);
@@ -307,7 +324,24 @@ bool Case::boutonChoix() const{
 }
 
 
-Carte::Carte() {
+void Case::action(Unite* u) {
+    type->action(u);
+    if (this->getOccupe()) {
+        // Engager phase de combat
+    }
+}
+
+
+Carte::Carte(int inutilePourLInstant) {
+    for (int i = 0; i < NbCase * Taille; i += Taille) {
+        for (int j = 0; j < NbCase * Taille; j += Taille) {
+            Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
+            carte[numeroCase(i, j)] = c;
+        }
+    }
+}
+
+Carte::Carte(Ville *v) {
     // Creation de la carte
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
@@ -325,8 +359,19 @@ Carte::Carte() {
             }
         }
     }
-    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA));
+    Case c(0, 0, new CaseVille(descVille, Imagine::MAGENTA, v));
+    Case c2((NbCase - 1) * Taille, (NbCase - 1) * Taille, new CaseVille(descVille, Imagine::MAGENTA, v));
     carte[0] = c;
+    carte[NbCase * NbCase - 1] = c2;
+}
+
+
+void Carte::affiche() {
+    for (int i = 0; i < NbCase; ++i) {
+        for (int j = 0; j < NbCase; ++j) {
+            carte[j * NbCase + i].affiche();
+        }
+    }
 }
 
 
@@ -335,6 +380,9 @@ Case &Carte::operator[](const int i) {
 }
 
 
+Case::~Case(){
+
+}
 
 
 int numeroCase(const int x, const int y) {

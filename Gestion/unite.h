@@ -11,6 +11,9 @@ const int TAILLE_ARMEE = 6;
 const int NB_MAX_ATTAQUES = 10;
 
 
+class Ville;
+
+
 const Imagine::Coords<2> portee10(1, 0);
 const Imagine::Coords<2> portee_10(-1, 0);
 const Imagine::Coords<2> portee20(2, 0);
@@ -62,6 +65,8 @@ class Unite : public Mere {
     float initiative;
     float initiativeTemporaire;
 
+    int IDjoueur;
+
     int numcase;
     float PDep;
     float PDepMax;
@@ -77,7 +82,7 @@ public:
 
     Unite(const Unite &unit);
 
-    Unite(float dep, float depMax, int num, float init);
+    Unite(int IDjoueur, float dep, float depMax, int num, float init);
 
     //Unite(float dep, float depMax, int num);
 
@@ -86,7 +91,7 @@ public:
     bool operator<(Unite u) const;
 
 
-    void deplacement(Carte &carte, int x1, int y1);
+    void deplacement(Carte &carte, int x1, int y1, bool gestion);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
@@ -101,7 +106,7 @@ public:
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
     void tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction);
 
-    void attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites);
+    void attaque(Attaque attq, Carte &carte);
 
     void changeOrientation(int i);
 
@@ -109,6 +114,8 @@ public:
     void changeInitiativeTemporaire();
 
     int getCase() const;
+
+    int getID() const;
 
     float getInit() const;
 
@@ -126,26 +133,37 @@ public:
 
     void setAttaque(Attaque att, int i);
 
+    // Achète le i-ème objet dans la ville
+    virtual void achete(Ville* ville, int i, bool b);
+
+    virtual void ouvreVille(Ville* v);
+
     bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
 
     // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
-    void attaqueDeBase(Unite& u);
+    void attaqueDeBase(Unite* u);
 
     // Cree les boutons pour que l'unite puisse effectuer son action
     // La fonction est a modifier niveau affichage et a organiser
 //    std::vector<Bouton> boutonAction(Carte& carte);
 
+
+    virtual void combat(Unite* u);
+
+    // Retire l'objet numéro i de l'inventaire
+    virtual void retire(int i);
+
     // Fonction vide ici
-    virtual void ramasse(Objet *obj);
+    virtual void ramasse(Mere *obj);
 
     // Fonction vide ici
     virtual void ouvreInventaire();
 
     // Fonction vide ici
-    virtual void equipe(int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite = true);
 
     // Fonction vide ici
     virtual std::string getNomCasque();
@@ -195,14 +213,14 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(float dep, float depMax, int num, float init);
+    Heros(int ID, float dep, float depMax, int num, float init);
 
     Heros(const Heros &h);
 
     Heros(const Unite &u);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
-    virtual void equipe(int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite = true);
 
     Casque equipeCasque(Casque casque);
 
@@ -222,11 +240,24 @@ public:
 
     Anneau equipeAnneauGauche(Anneau anneau);
 
+    // Lance l'unité dans un combat avec une autre unité
+    virtual void combat(Unite* u);
+
+    // Retire l'objet numéro i de l'inventaire
+    virtual void retire(int i);
+
+    // Fontion pour ouvrir la ville
+    virtual void ouvreVille(Ville* v);
+
     //Fonction a modifier
     virtual void ouvreInventaire();
 
     // Fonction pour ajouter un objet a l'inventaire
-    virtual void ramasse(Objet *obj);
+    virtual void ramasse(Mere *obj);
+
+
+    // Achète le i-ème objet dans la ville
+    virtual void achete(Ville* ville, int i, bool b);
 
     // Fonction renvoyant le nom du casque equipe. Utile pour un test
     virtual std::string getNomCasque();

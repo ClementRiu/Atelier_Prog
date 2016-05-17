@@ -6,6 +6,7 @@ void sauvegarde(std::vector<Unite *> unites) {
     if (fichier) {
         fichier << unites.size() << std::endl;
         for (int i = 0; i < unites.size(); i++) {
+            fichier << unites[i]->getID() << std::endl;
             fichier << unites[i]->getCase() << std::endl;
             fichier << unites[i]->getDep() << std::endl;
             fichier << unites[i]->getDepMax() << std::endl;
@@ -29,8 +30,9 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
 
         for (int i = 0; i < T; i++) {
             std::getline(fichier, ligne);
+            int ID = atoi(ligne.c_str());
+            std::getline(fichier, ligne);
             int num = atoi(ligne.c_str());
-            carte[num].flagHeros();
             std::getline(fichier, ligne);
             float dep = atoi(ligne.c_str());
             std::getline(fichier, ligne);
@@ -38,7 +40,8 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
             std::cout << depMax << std::endl;
             std::getline(fichier, ligne);
             float init = atoi(ligne.c_str());
-            unites.push_back(new Unite(dep, depMax, num, init));
+            unites.push_back(new Unite(ID, dep, depMax, num, init));
+            carte[num].flagHeros(unites[unites.size()-1]);
         }
         fichier.close();
     }

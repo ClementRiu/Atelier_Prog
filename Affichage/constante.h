@@ -4,7 +4,7 @@
 #include <Imagine/Images.h>
 #include <iostream>
 
-const float INF = 1.0f / 0.0f;  // Infini en float.
+
 
 
 //Le 'Screen' est l'ensemble de l'affichage.

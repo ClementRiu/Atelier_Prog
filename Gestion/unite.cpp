@@ -1,5 +1,6 @@
 #include "unite.h"
 #include <iostream>
+#include "joueurs.h"
 
 
 //attaque de base
@@ -43,6 +44,8 @@ int Attaque::getPuissance() {
 Unite::Unite() {
     PDep = 8;
     numcase = 0;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -73,13 +76,16 @@ Unite::Unite(const Unite &unit) {
 }
 
 
-Unite::Unite(float dep, float depMax, int num, float init) {
+Unite::Unite(int ID, float dep, float depMax, int num, float init) {
+    IDjoueur = ID;
     PDep = dep;
     PDepMax = depMax;
     numcase = num;
     PDepMax = dep;
     initiative = init;
     initiativeTemporaire = init;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -97,6 +103,8 @@ Unite::Unite(float dep, int num){
     numcase = num;
     initiative = 0;
     initiativeTemporaire = 0;
+    PV = 100;
+    force = 10;
 }
 
 
@@ -109,8 +117,16 @@ void Unite::choixAction() {
 }
 
 
-void Unite::deplacement(Carte &carte, int x1, int y1) {
+void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
     float dep = PDep;
+    if (gestion && (abs(numcase-numeroCase(x1,y1)) == 1 || abs(numcase-numeroCase(x1,y1)) == NbCase) && numeroCase(x1,y1) != -1) {
+        carte[numeroCase(x1, y1)].action(this);
+        carte.affiche();
+        if (carte[numeroCase(x1, y1)].getOccupe()) {
+            this->combat(carte[numeroCase(x1, y1)].getUnite());
+        }
+        return ;
+    }
     if (dep > 0) {
         if (carte[numeroCase(x1, y1)].Brillance()) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
@@ -122,11 +138,11 @@ void Unite::deplacement(Carte &carte, int x1, int y1) {
         int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
         // Cas où l'on a cliqué sur une Unite que l'on veut/peut attaquer.
 
-        if (numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
+        if (!gestion && numeroCase(x1, y1) != numcase && carte[numeroCase(x1, y1)].getOccupe() && caseDep != -1) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
-            this->choixAction();
+            this->attaqueDeBase(carte[numeroCase(x1,y1)].getUnite());
             return;
         }
 
@@ -144,8 +160,8 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 
 void Unite::deplaceVersCase(Case &c2, Case &c1) {
     if (!c2.getOccupe()) {
-        c1.flagHeros();
-        c2.flagHeros();
+        c2.flagHeros(c1.getUnite());
+        c1.flagHeros(NULL);
         c1.affiche();
         c2.affiche();
         numcase = numeroCase(c2.get(0), c2.get(1));
@@ -167,8 +183,17 @@ int Unite::getCase() const {
     return numcase;
 }
 
+int Unite::getID() const {
+    return IDjoueur;
+}
+
 float Unite::getInit() const{
     return initiativeTemporaire;
+}
+
+
+void Unite::ouvreVille(Ville* v) {
+
 }
 
 
@@ -200,6 +225,7 @@ float Unite::getDepMax() const {
 //à implémenter
 void Unite::prendDommage(int attRecue) {
     std::cout << "à implémenter !" << std::endl;
+    PV = PV - 10;
 }
 
 
@@ -248,12 +274,12 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
         if (boutonAction.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             competences[1].zone(carte, true, getCase());
-            attaque(competences[0], carte, unites);
+            attaque(competences[0], carte);
             competences[1].zone(carte, false, getCase());
             tourContinue = false;
         }
         else {
-            deplacement(carte, x, y);
+            deplacement(carte, x, y, false);
         }
         boutonAction.affiche();
 
@@ -271,23 +297,28 @@ void Unite::action(Attaque att, Unite *u) {
 }
 
 
-void Unite::attaqueDeBase(Unite &u) {
-    u.PV -= force;
+void Unite::attaqueDeBase(Unite* u) {
+    u->prendDommage(force);
 }
 
 
-void Unite::attaque(Attaque attq, Carte &carte, std::vector<Unite *> unites) {
-    int x1, y1, u2 = 0;
+void Unite::combat(Unite* u) {
+
+}
+
+void Unite::retire(int i) {
+
+}
+
+
+void Unite::attaque(Attaque attq, Carte &carte) {
+    int x1, y1 = 0;
 
     do {
         clic(x1, y1, carte);
     } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
-    //CETTE PARTIE DU CODE EST ATROCE !!!!!!!!
     if (carte[numeroCase(x1, y1)].getOccupe()) {
-        while (unites[u2]->getCase() != numeroCase(x1, y1)) {
-            u2 += 1;
-        }
-        action(attq, unites[u2]);
+        action(attq, carte[numeroCase(x1, y1)].getUnite());
     }
 }
 
@@ -344,8 +375,11 @@ std::vector<Bouton> Unite::boutonAction(Carte &carte) {
 }
 */
 
-void Unite::ramasse(Objet *obj) {
+void Unite::ramasse(Mere *obj) {
 
+}
+
+void Unite::achete(Ville* ville, int i, bool b) {
 }
 
 
@@ -354,7 +388,7 @@ void Unite::ouvreInventaire() {
 }
 
 
-void Unite::equipe(int i, bool droite) {
+void Unite::equipe(Ville* ville, int i, bool droite) {
 
 }
 
@@ -398,7 +432,7 @@ Armee::Armee(const Armee &a) {
 }
 
 
-Heros::Heros(float dep, float depMax, int num, float init) : Unite(dep, depMax, num, init) {
+Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, dep, depMax, num, init) {
     Casque c("Casque de base");
     Arme a("Arme de base");
     Torse t("Armure de Base");
@@ -420,6 +454,111 @@ Heros::Heros(const Heros &h) : Unite(h) {
     niveau = h.niveau;
     exp = h.exp;
     ArmeeHeros = h.ArmeeHeros;
+}
+
+void Heros::retire(int i) {
+    inventaire.retire(i);
+}
+
+
+void Heros::ouvreVille(Ville* v) {
+    Heros* h2 = new Heros(1,1,1,1,1);
+    if (typeid(this)== typeid(h2)){
+        // Creation des differents boutons pour les differentes categories d'objets
+        std::vector<Bouton> boutonsChoix;
+        std::vector<std::string> nomBoutons;
+        nomBoutons.push_back("Arme");
+        nomBoutons.push_back("Anneau");
+        nomBoutons.push_back("Bottes");
+        nomBoutons.push_back("Gants");
+        nomBoutons.push_back("Jambes");
+        nomBoutons.push_back("Torse");
+        nomBoutons.push_back("Casque");
+        nomBoutons.push_back("Objets divers");
+        for (int i = 0; i < nomBoutons.size(); ++i) {
+            Bouton b(0, Police * i, 140, Police * (i + 1), Imagine::BLACK, nomBoutons[i]);
+            boutonsChoix.push_back(b);
+        }
+
+        // Creation des differentes categories d'objets
+        Inventaire categoriesObjets;
+        categoriesObjets.ajoute(new Arme());
+        categoriesObjets.ajoute(new Anneau());
+        categoriesObjets.ajoute(new Bottes());
+        categoriesObjets.ajoute(new Gants());
+        categoriesObjets.ajoute(new Jambes());
+        categoriesObjets.ajoute(new Torse());
+        categoriesObjets.ajoute(new Casque());
+        categoriesObjets.ajoute(new Objet());
+
+        // Creation du pointeur vers la fonction equipe
+        void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::achete;
+
+        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
+        //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+    }
+    delete h2;
+}
+
+
+void Heros::achete(Ville* ville, int i, bool b) {
+    this->ramasse(ville->getObjet(i)->clone());
+}
+
+
+void Heros::combat(Unite* u) {
+    Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
+    Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
+    Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
+    boutonFinTour.affiche();
+    boutonAction.affiche();
+    boutonInventaire.affiche();
+
+    // Initialisation d'une attaque
+    std::vector<Imagine::Coords<2> > zoneInfl;
+    zoneInfl.push_back(portee10);
+    zoneInfl.push_back(portee_10);
+    zoneInfl.push_back(portee20);
+    zoneInfl.push_back(portee_20);
+    zoneInfl.push_back(portee01);
+    zoneInfl.push_back(portee02);
+    zoneInfl.push_back(portee0_2);
+    zoneInfl.push_back(portee0_1);
+    Attaque coinCoinOuille(zoneInfl, 10);
+
+    Carte carte(0);
+
+    int positionGestion[2] = {this->getCase(), u->getCase()};
+
+    // Initialisation des unites
+    this->setCase(100);
+    u->setCase(200);
+    std::vector<Unite *> unites;
+    unites.push_back(this);
+    unites.push_back(u);
+    carte[100].flagHeros(unites[0]);
+    carte[200].flagHeros(unites[1]);
+
+    carte.affiche();
+
+    FilePriorite<Unite> fileUnites;
+    fileUnites.push(unites[0]);
+    fileUnites.push(unites[1]);
+
+
+    int i = 1; //numéro du tour, à remplacer
+
+    while (true) {
+        //règles d'initiative assez arbitraires, à modifier #Nathanael
+        Unite* unitJouable = fileUnites.pop();
+        unitJouable->tourCombat(carte, unites, boutonFinTour, boutonAction);
+        unitJouable->changeInitiativeTemporaire();
+        fileUnites.push(unitJouable);
+        i += 1;
+    }
+
+    this->setCase(positionGestion[0]);
+    u->setCase(positionGestion[1]);
 }
 
 
@@ -509,14 +648,14 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 }
 
 
-void Heros::equipe(int i, bool droite) {
+void Heros::equipe(Ville* ville, int i, bool droite) {
     if (i < inventaire.taille()) {
         inventaire.get(i)->equiper(this, droite);
     }
 }
 
 
-void Heros::ramasse(Objet *obj) {
+void Heros::ramasse(Mere *obj) {
     inventaire.ajoute(obj);
 }
 
@@ -550,9 +689,9 @@ void Heros::ouvreInventaire() {
     categoriesObjets.ajoute(new Objet());
 
     // Creation du pointeur vers la fonction equipe
-    void (Unite::*pointeurFonction)(int, bool) = &Unite::equipe;
+    void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::equipe;
 
-    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
+    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
 
     //categoriesObjets.~Inventaire();
 }

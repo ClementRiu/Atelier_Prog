@@ -6,7 +6,11 @@
 int main() {
     Imagine::openWindow(width, height);
 
-    Carte carte;
+    Ville* v = new Ville();
+    v->ajoute(new Objet("essai"));
+    v->ajoute(new Objet("poup"));;
+
+    Carte carte(v);
 
     // Initialisation des unites
     // Ecran de menu
@@ -32,16 +36,16 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        carte[304].flagHeros();
-        carte[303].flagHeros();
-        unitesAlliees.push_back(new Heros(5, 5, 304, 100));
-        unitesAlliees.push_back(new Heros(10, 10, 303, 100));
+        unitesAlliees.push_back(new Heros(1, 5, 5, 20, 100));
+        unitesAlliees.push_back(new Heros(1, 10, 10, 303, 100));
+        carte[20].flagHeros(unitesAlliees[0]);
+        carte[303].flagHeros(unitesAlliees[1]);
     }
 
-    carte[308].flagHeros();
-    carte[312].flagHeros();
-    unitesEnnemies.push_back(new Heros(6, 6, 308, 100));
-    unitesEnnemies.push_back(new Heros(7, 7, 312, 100));
+    unitesEnnemies.push_back(new Heros(2, 6, 6, 308, 100));
+    unitesEnnemies.push_back(new Heros(2, 7, 7, 312, 100));
+    carte[308].flagHeros(unitesEnnemies[0]);
+    carte[312].flagHeros(unitesEnnemies[1]);
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unitesAlliees[0]->ramasse(new Objet("merde"));
     unitesAlliees[0]->ramasse(new Casque("casque"));
@@ -69,12 +73,7 @@ int main() {
     Inventaire j(i);
 
 
-    // Affichage des cases
-    for (int i = 0; i < NbCase; i++) {
-        for (int j = 0; j < NbCase; j++) {
-            carte[NbCase * j + i].affiche();
-        }
-    }
+    carte.affiche();
 
     // Creation et affichage des boutons
     Bouton boutonSauvegarde(ZoneBoutonSauvegarde, Imagine::BLUE, "Save & Quit");
@@ -85,18 +84,20 @@ int main() {
     boutonFinTour.affiche();
 
 
-    Joueur allie(unitesAlliees);
-    Joueur ennemi(unitesEnnemies);
+    Joueur allie(1, unitesAlliees);
+    Joueur ennemi(2, unitesEnnemies);
 
     // Deplacement des unites
     bool quit = false;
 
     while (!quit) {
+        std::cout << "Tour joueur 1" << std::endl;
         allie.tourGestion(carte, unitesAlliees, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
         finJournee(unitesAlliees);
         if (quit) {
             break;
         }
+        std::cout << " Tour joueur 2" << std::endl;
         ennemi.tourGestion(carte, unitesEnnemies, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
                            quit);
         finJournee(unitesEnnemies);
