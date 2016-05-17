@@ -1,5 +1,6 @@
 #include "joueurs.h"
 #include <iterator>
+#include <sstream>
 
 Ville::Ville() {
 
@@ -127,7 +128,7 @@ Mere *Ville::getObjet(int i) {
 
 Joueur::Joueur(int num) {
     id = num;
-    for (int i = 0; i < NB_RESSOURCE; i++) {
+    for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] = 0;
     }
     score = 0;
@@ -142,7 +143,7 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite, std::vector<Ville *> villes)
     id = idj;
     herosJoueur.resize(unite.size());
     for (int i = 0; i < unite.size(); i++) {
-        herosJoueur[i] = *unite[i];
+        herosJoueur[i] = unite[i];
     }
 
     villesJoueur.resize(villes.size());
@@ -155,9 +156,9 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite) {
     id = idj;
     herosJoueur.resize(unite.size());
     for (int i = 0; i < unite.size(); i++) {
-        herosJoueur[i] = *unite[i];
+        herosJoueur[i] = unite[i];
     }
-    for (int i = 0; i < NB_RESSOURCE; i++) {
+    for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] = 0;
     }
     score = 0;
@@ -194,7 +195,7 @@ int Joueur::get_nb_heros_max_joueur() {
 }
 
 
-std::vector<Unite> Joueur::get_herosJoueur() {
+std::vector<Unite*> Joueur::get_herosJoueur() {
     return herosJoueur;
 }
 
@@ -217,11 +218,11 @@ void Joueur::update_pop(int valeur) {
     population += valeur;
 }
 
-void Joueur::tue_heros(Heros mort) {
+void Joueur::tue_heros(Unite* mort) {
     //à faire dès que les héros ont une idée
 }
 
-void Joueur::recrute_heros(Heros recrue) {
+void Joueur::recrute_heros(Unite* recrue) {
     herosJoueur.push_back(recrue);
 }
 
@@ -244,10 +245,27 @@ void Joueur::perd_ville(Ville perte) {
 }
 
 
-void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde,
-                         Bouton boutonAction, Bouton boutonInventaire, bool &save) {
+void Joueur::finTourGestion() {
+    for (int i = 0; i < herosJoueur.size(); ++i) {
+        herosJoueur[i]->setDep(herosJoueur[i]->getDepMax());
+    }
+
+    for (int i = 0; i < herosJoueur.size(); ++i) {
+        std::cout <<herosJoueur[i]->getDep()<< std::endl;
+    }
+
+    for (int i =0; i < NB_RESSOURCES; i++){
+        ressources[i]+=revenus[i];
+    }
+}
+
+
+void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde,
+                         Bouton boutonAction, Bouton boutonInventaire, bool &quit) {
     Unite *unite;
 
+    ///////////////////ATTENTION AFFICHAGE CLEMENT/////////////////////////////////////
+    //affiche(ressources)
 
     LOOP: //sorte de "point de repère" : avec un "goto LOOP" on peut retourner au début de la boucle
     while (true) {
@@ -258,13 +276,15 @@ void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton bouto
 
         // Le bouton sauvegarde estil active ?
         if (boutonFinTour.boutonActive(x, y)) {
+            finTourGestion();
             break;
         }
 
         // Le bouton FinTour est-il active ?
         if (boutonSauvegarde.boutonActive(x, y)) {
-            sauvegarde(unites);
-            save = false;
+            sauvegarde(herosJoueur);
+            quit = true;
+            break;
         }
         // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {

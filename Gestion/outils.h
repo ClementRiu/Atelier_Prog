@@ -13,8 +13,8 @@ void clic(int &x, int &y, Carte& carte);
 // Fonction renvoyant en référence dans x et y la position d'un clic
 void clicSimple(int &x, int &y);
 
-//Termine la journée (=tour dans Gestion)
-void finJournee(std::vector<Unite*> unites);
+//Termine le tour dans Gestion
+void finTourGestion(std::vector<Unite*> unites);
 
 //Termine le tour en combat
 void finTourCombat(std::vector<Unite*> unites);

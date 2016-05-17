@@ -6,7 +6,7 @@
 int main() {
     Imagine::openWindow(width, height);
 
-    Ville* v = new Ville();
+    Ville *v = new Ville();
     v->ajoute(new Objet("essai"));
     v->ajoute(new Objet("poup"));;
 
@@ -90,17 +90,21 @@ int main() {
     // Deplacement des unites
     bool quit = false;
 
+    int nbTour = 1;
+
     while (!quit) {
+        //Clement à toi de jouer
+        //affiche(tour)
         std::cout << "Tour joueur 1" << std::endl;
-        allie.tourGestion(carte, unitesAlliees, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
-        finJournee(unitesAlliees);
+        allie.tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
         if (quit) {
             break;
         }
         std::cout << " Tour joueur 2" << std::endl;
-        ennemi.tourGestion(carte, unitesEnnemies, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
+        ennemi.tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
                            quit);
-        finJournee(unitesEnnemies);
+
+        nbTour += 1;
     }
 
 

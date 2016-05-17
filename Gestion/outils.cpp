@@ -1,8 +1,7 @@
 #include "outils.h"
 
 void sauvegarde(std::vector<Unite *> unites) {
-    std::ofstream fichier(srcPath("sauvegarde.txt"), std::ios::out | std::ios::trunc);
-    std::cout << "Bonjour" << std::endl;
+    std::ofstream fichier(srcPath("../Sauvegardes/sauvegarde1.txt"), std::ios::out | std::ios::trunc);
     if (fichier) {
         fichier << unites.size() << std::endl;
         for (int i = 0; i < unites.size(); i++) {
@@ -21,7 +20,7 @@ void sauvegarde(std::vector<Unite *> unites) {
 
 
 void charge(std::vector<Unite *> &unites, Carte &carte) {
-    std::ifstream fichier(srcPath("sauvegarde.txt"), std::ios::in);
+    std::ifstream fichier(srcPath("../Sauvegardes/sauvegarde1.txt"), std::ios::in);
     if (fichier) {
         std::string ligne;
         std::getline(fichier, ligne);
@@ -99,13 +98,6 @@ void clicSimple(int &x, int &y) {
     } while (e.type != Imagine::EVT_BUT_OFF);
 }
 
-
-void finJournee(std::vector<Unite *> unites) {
-    std::cout << "à compléter !! (fonction finJournee)" << std::endl;
-    for (int i = 0; i < unites.size(); ++i) {
-        unites[i]->setDep(unites[i]->getDepMax());
-    }
-}
 
 
 void finTourCombat(std::vector<Unite *> unites) {

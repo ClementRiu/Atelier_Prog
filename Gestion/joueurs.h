@@ -8,7 +8,7 @@
 #include "../Gestion/unite.h"
 
 const int NB_HEROS_MAX=10;
-const int NB_RESSOURCE=3;
+const int NB_RESSOURCES=3;
 const int population_max=75;
 
 const int NB_BATIMENTS = 10;
@@ -33,31 +33,18 @@ public:
     ~Ville();
 
     void construction(int i); //augment le niveau du batiment i
-
     void recrute(int i);    // recrute un soldat
-
     void achat(int i);          //achete un objet
-
     void update_recrutable();    //met a jour la liste des soldats recrutable
-
     void update_ameliorable();   //met a jour la liste des batiments ameliorable
-
     void update_achetable();     //met a jour la liste des objet achetable
-
     void set_heros_present(bool b);
-
     int get_lv_batiment(int i);   //renvoie le niveau du batiment i
-
     Armee get_garnison();
-
     int get_id() const;
-
     int get_nb_recrue(int type);
-
     int get_camp();
-
     bool est_ameliorable(int i); //indique si le batiment i est ameliorable
-
     bool get_heros_present();
 
     Inventaire& getInventaire();
@@ -74,12 +61,13 @@ public:
 class Joueur{
     int id;
     //bool humain;
-    int ressources[NB_RESSOURCE];
+    int ressources[NB_RESSOURCES];
+    int revenus[NB_RESSOURCES];
     int score;
     int couleur;
     int population;
     int nb_heros_max_joueur;
-    std::vector<Unite> herosJoueur; //ATTENTION herosJoueurs EST UN VECTEUR d'UNITES !!
+    std::vector<Unite*> herosJoueur;
     std::vector<Ville> villesJoueur;
 
 public:
@@ -96,20 +84,21 @@ public:
     int get_couleur();
     int get_population();
     int get_nb_heros_max_joueur();
-    std::vector<Unite> get_herosJoueur(); //ATTENTION herosJoueurs EST UN VECTEUR d'UNITES !!
+    std::vector<Unite *> get_herosJoueur();
     std::vector<Ville> get_villesJoueur();
 
     //modifications des valeurs
     void modifie_ressources(int res, int valeur);
     void add_score(int points);
     void update_pop(int valeur);
-    void tue_heros(Heros mort);
-    void recrute_heros(Heros recrue);
+    void tue_heros(Unite* mort);
+    void recrute_heros(Unite* recrue);
     void conquiert_ville(Ville conquete);
     void perd_ville(Ville perte);
 
 
-    void tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &save);
+    void tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction, Bouton boutonInventaire, bool &save);
+    void finTourGestion();
 };
 
 
