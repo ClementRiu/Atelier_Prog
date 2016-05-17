@@ -12,13 +12,13 @@ Bouton_Graph::Bouton_Graph() {
 }
 
 //Méthode qui initialise tous les attributs.
-void Bouton_Graph::set_Bouton_Graph(std::string nom_voulu, int type_voulue, int zonebouton_voulue[]){
+void Bouton_Graph::set_Bouton_Graph(std::string nom_voulu, int type_voulue, int zonebouton_voulue[]) {
     nom = nom_voulu;
     type = type_voulue;
     for (int i = 0; i < 4; i++) {
         zonebouton[i] = zonebouton_voulue[i];
     }
-    if (type == 0){
+    if (type == 0) {
         calcul_image();
     }
 }
@@ -55,34 +55,18 @@ void Bouton_Graph::calcul_image() {
     if (type == 0) {
         image_bouton = pierre_bouton.getSubImage(zonebouton[0], zonebouton[1], get_largeur(), get_hauteur());
     }
-    if (type == 1) {
-        Imagine::Color *window;
-        int w, h;
-        Imagine::captureWindow(window, w, h);
-        w = get_largeur();
-        h = get_hauteur();
-        Imagine::Image<Imagine::Color> window_im(w, h);
-        for (int i = zonebouton[0]; i < zonebouton[0] + w; i++) {
-            for (int j = zonebouton[1]; j < zonebouton[1] + h; j++) {
-                window_im(i, j) = window[i, j];
-            }
-        }
-        delete window;
-        for (int i = 0; i < w; i++){
-            for (int j = 0; j < h; j++){
-                for (int k=0; k<3;k++){
-                    window_im(i,j)[k] = byte(window_im(i,j)[k] * 0.6);
-                }
-            }
-        }
-        image_bouton = window_im;
-    }
 }
 
 //Méthode qui affiche le bouton à sa position.
-void Bouton_Graph::affiche_Bouton_Graph() {
-    Imagine::display(image_bouton,zonebouton[0],zonebouton[1]);
-    Imagine::drawString(zonebouton[0]+100, zonebouton[1]+21, nom, Imagine::BLACK);
+void Bouton_Graph::affiche_Bouton_Graph(){
+    affiche_Bouton_Graph(8);
+}
+
+//Méthode qui affiche le bouton à sa position.
+void Bouton_Graph::affiche_Bouton_Graph(int multiplicateur) {
+    Imagine::display(image_bouton, zonebouton[0], zonebouton[1]);
+    Imagine::drawString(zonebouton[0] + (get_largeur() - nom.length() * multiplicateur) / 2,
+                        zonebouton[1] + (get_hauteur() + 12) / 2, nom, Imagine::BLACK);
 }
 
 
@@ -117,9 +101,13 @@ int Bouton::hauteur() {
     return zoneDeDelimitation[3] - zoneDeDelimitation[1];
 }
 
+//Met à jour l'image du bonton.
+void Bouton::calcul_image(){
+    boutonaff.calcul_image();
+}
 
 // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
-void Bouton::affiche_graph(int decalementVertical){
+void Bouton::affiche_graph(int decalementVertical) {
     boutonaff.affiche_Bouton_Graph();
 }
 

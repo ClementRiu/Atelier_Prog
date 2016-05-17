@@ -3,6 +3,12 @@
 #include "constante.h"
 #include "case_graph.h"
 
+//Fonction qui renvoie true si le point est dans la 'mmap' et false sinon.
+bool dans_mmap(Imagine::Coords<2> point);
+
+//Fonction qui renvoie true si le point est dans la 'mmap' et false sinon.
+bool dans_mmap(int x, int y);
+
 class CarteduMonde {
 private:
     Imagine::Coords<2> pos_centre;    // Position du point centrale du 'world'.

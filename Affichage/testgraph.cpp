@@ -12,22 +12,20 @@ int main() {
     }
 
     Imagine::openWindow(widthscreen, heightscreen);
-
-    if (affiche_menu() == 1) {
-
-        // Overture de l'écran de gestion.
-        affiche_chargement();
-        CarteduMonde carte;
-        interface();
-        carte.affiche();
-
-        // Test du mouvement au clavier.
-        int i = 0;
-        while (i < nombre_test) {
-            mouvement_ecran(carte);
-            std::cout << "Appui cours flèche du clavier ou clique sur la minimap !" << std::endl;
-            Imagine::milliSleep(100);
-            i += 1;
+    while (true) {
+        int choix = affiche_accueil();
+        if (choix == 1) {
+            affiche_chargement();
+            CarteduMonde carte;
+            choix = gestion(carte);
+        }
+        if (choix == 2) {
+            affiche_chargement();
+            Imagine::milliSleep(2000);
+            return 0;
+        }
+        if (choix == 3) {
+            return 0;
         }
     }
     Imagine::endGraphics();

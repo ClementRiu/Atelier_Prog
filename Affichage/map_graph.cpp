@@ -1,5 +1,20 @@
 #include"map_graph.h"
 
+//Fonction qui renvoie true si le point est dans la 'mmap' et false sinon.
+bool dans_mmap(Imagine::Coords<2> point) {
+    return dans_mmap(point[0], point[1]);
+}
+
+//Fonction qui renvoie true si le point est dans la 'mmap' et false sinon.
+bool dans_mmap(int x, int y) {
+    if (x > widthworld + 2 && x < widthworld + widthmmap && y > 2 && y < heightmmap + 2) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 //Constructeur par défaut.
 CarteduMonde::CarteduMonde() : listecase(widthmap, heightmap),
                                image_map(widthmap * taille_case_graph, heightmap * taille_case_graph),

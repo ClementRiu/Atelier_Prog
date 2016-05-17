@@ -6,7 +6,7 @@ class Bouton_Graph {
 private:
     std::string nom;    //Nom du bouton.
     int type;   //Type de bouton. Si type == 0 alors le bouton est en dur, si type == 1 le bouton est transparent.
-    int zonebouton[4];  //Point en haut à gauche et en bas à droite du bouton.
+    int zonebouton[4];  //Point en haut à gauche et en bas à droite du bouton. En pixel.
     Imagine::Image<Imagine::Color> image_bouton;   // Image du bouton.
 public:
     //Constructeur par défaut.
@@ -34,10 +34,13 @@ public:
     int get_hauteur();
 
     //Méthode qui crée l'image image_bouton en fonction de la zone où va s'afficher le bouton.
-    void calcul_image ();
+    void calcul_image();
 
     //Méthode qui affiche le bouton à sa position.
     void affiche_Bouton_Graph();
+
+    //Méthode qui affiche le bouton à sa position.
+    void affiche_Bouton_Graph(int multiplicateur);
 };
 
 class Bouton {
@@ -58,6 +61,9 @@ public:
 
     // renvoie la la hauteur du bouton
     int hauteur();
+
+    //Met à jour l'image du bonton.
+    void calcul_image();
 
     // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
     void affiche_graph(int decalementVertical = 0);

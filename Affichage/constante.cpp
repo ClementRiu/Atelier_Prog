@@ -1,7 +1,9 @@
 #include "constante.h"
 
 Imagine::Image<Imagine::Color> fond_ecran;
-Imagine::Image<Imagine::Color> parchemin;
+Imagine::Image<Imagine::Color> parchemin_acc;
+Imagine::Image<Imagine::Color> parchemin_menu;
+
 
 Imagine::Image<Imagine::Color> pierre_bouton;
 
@@ -17,7 +19,17 @@ bool charge_image() {
     }
     fond_ecran = fond_ecran.getSubImage(0, 0, widthscreen, heightscreen);
 
-    if (!Imagine::load(parchemin, srcPath("/Image/Parchemin/fondetparchemin.jpg"))) {
+    if (!Imagine::load(parchemin_acc, srcPath("/Image/Parchemin/fondetparchemin.jpg"))) {
+        std::cout << "Image \"fondetparchemin.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+
+    if (!Imagine::load(parchemin_menu, srcPath("/Image/Parchemin/parchemin.png"))) {
+        std::cout << "Image \"parchemin.png\" non trouvée." << std::endl;
+        return false;
+    }
+
+    if (!Imagine::load(parchemin_acc, srcPath("/Image/Parchemin/fondetparchemin.jpg"))) {
         std::cout << "Image \"fondetparchemin.jpg\" non trouvée." << std::endl;
         return false;
     }
