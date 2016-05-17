@@ -85,7 +85,6 @@ int Ville::get_nb_recrue(int type) {
 }
 
 
-
 int Ville::get_camp() {
     return camp;
 }
@@ -101,17 +100,17 @@ bool Ville::get_heros_present() {
 }
 
 
-Inventaire& Ville::getInventaire() {
+Inventaire &Ville::getInventaire() {
     return achetable;
 }
 
 
-void Ville::ouvreVille(Unite* h) {
+void Ville::ouvreVille(Unite *h) {
     h->ouvreVille(this);
 }
 
 
-void Ville::ajoute(Mere* obj) {
+void Ville::ajoute(Mere *obj) {
     achetable.ajoute(obj);
 }
 
@@ -121,7 +120,7 @@ void Ville::retire(int i) {
 }
 
 
-Mere* Ville::getObjet(int i) {
+Mere *Ville::getObjet(int i) {
     return achetable.get(i);
 }
 
@@ -247,9 +246,10 @@ void Joueur::perd_ville(Ville perte) {
 
 void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonSauvegarde,
                          Bouton boutonAction, Bouton boutonInventaire, bool &save) {
-    Unite *unite = unites[0];
+    Unite *unite;
 
-    LOOP:
+
+    LOOP: //sorte de "point de repère" : avec un "goto LOOP" on peut retourner au début de la boucle
     while (true) {
         int x = -1, y = -1, x1 = -1, y1 = -1;
         survole(x1, y1);
@@ -270,12 +270,14 @@ void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton bouto
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
             unite = carte[numeroCase(x, y)].getUnite();
 
+            //Si l'unité sur laquelle on vient de cliquer n'est pas au joueur concerné, on retourne au début de la boucle
             if (get_id() != unite->getID()) {
                 goto LOOP;
             }
 
             float dep = unite->getDep();
 
+            //On affiche les cases accessibles en déplacement
             unite->afficheCaseDisponibleOnOff(carte, true, dep, 0);
             boutonAction.affiche();
             boutonInventaire.affiche();
@@ -288,6 +290,7 @@ void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton bouto
                     carte[j * NbCase + i].affiche();
                 }
             }
+
             // Bouton inventaire
             if (boutonInventaire.boutonActive(x, y)) {
                 unite->ouvreInventaire();
@@ -300,13 +303,34 @@ void Joueur::tourGestion(Carte &carte, std::vector<Unite *> unites, Bouton bouto
                     }
                 }
             }
+
+
             else {
+                //On regarde si l'utilisateur a cliqué sur une case adjacente, pour éventuellement déclancher un évènement
+                if ((abs(unite->getCase() - numeroCase(x, y)) == 1 ||
+                     abs(unite->getCase() - numeroCase(x, y)) == NbCase) && numeroCase(x, y) != -1) {
+                    //On déclanche un évènement (ex : ouvrir une ville) si on a affaire à une case spéciale
+                    carte[numeroCase(x, y)].action(unite);
+                    carte.affiche();
+
+                    //S'il y a un héros, on déclanche un combat
+                    if (carte[numeroCase(x, y)].getOccupe()) {
+                        Unite *uniteCliquee = carte[numeroCase(x, y)].getUnite();
+
+                        //Si l'unité n'est pas à nous, on déclanche effectivement le combat
+                        if (unite->getID() != uniteCliquee->getID()) {
+                            unite->declancheCombat(uniteCliquee);
+                        }
+                    }
+                }
+                //Si rien de tout cela n'a été fait, on lance la phase de déplacement
                 unite->deplacement(carte, x, y, true);
             }
 
             boutonSauvegarde.affiche();
             boutonFinTour.affiche();
 
+            //on enlève la surbrillance des cases disponibles au déplacement
             unite->afficheCaseDisponibleOnOff(carte, false, dep, 0);
         }
     }

@@ -42,6 +42,7 @@ int Attaque::getPuissance() {
 
 
 Unite::Unite() {
+    tour = false;
     PDep = 8;
     numcase = 0;
     PV = 100;
@@ -50,6 +51,7 @@ Unite::Unite() {
 
 
 Unite::Unite(const Unite &unit) {
+    tour = false;
     PV = unit.PV;
     PVMax = unit.PVMax;
     mana = unit.mana;
@@ -77,6 +79,7 @@ Unite::Unite(const Unite &unit) {
 
 
 Unite::Unite(int ID, float dep, float depMax, int num, float init) {
+    tour = false;
     IDjoueur = ID;
     PDep = dep;
     PDepMax = depMax;
@@ -119,14 +122,7 @@ void Unite::choixAction() {
 
 void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
     float dep = PDep;
-    if (gestion && (abs(numcase-numeroCase(x1,y1)) == 1 || abs(numcase-numeroCase(x1,y1)) == NbCase) && numeroCase(x1,y1) != -1) {
-        carte[numeroCase(x1, y1)].action(this);
-        carte.affiche();
-        if (carte[numeroCase(x1, y1)].getOccupe()) {
-            this->combat(carte[numeroCase(x1, y1)].getUnite());
-        }
-        return ;
-    }
+
     if (dep > 0) {
         if (carte[numeroCase(x1, y1)].Brillance()) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
@@ -302,7 +298,7 @@ void Unite::attaqueDeBase(Unite* u) {
 }
 
 
-void Unite::combat(Unite* u) {
+void Unite::declancheCombat(Unite* u) {
 
 }
 
@@ -506,7 +502,7 @@ void Heros::achete(Ville* ville, int i, bool b) {
 }
 
 
-void Heros::combat(Unite* u) {
+void Heros::declancheCombat(Unite* u) {
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");

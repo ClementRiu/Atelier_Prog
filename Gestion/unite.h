@@ -64,6 +64,7 @@ class Unite : public Mere {
     float dexterite;
     float initiative;
     float initiativeTemporaire;
+    bool tour;
 
     int IDjoueur;
 
@@ -151,7 +152,7 @@ public:
 //    std::vector<Bouton> boutonAction(Carte& carte);
 
 
-    virtual void combat(Unite* u);
+    virtual void declancheCombat(Unite* u);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
@@ -241,7 +242,7 @@ public:
     Anneau equipeAnneauGauche(Anneau anneau);
 
     // Lance l'unité dans un combat avec une autre unité
-    virtual void combat(Unite* u);
+    virtual void declancheCombat(Unite* u);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
