@@ -8,7 +8,7 @@ int main() {
 
     Ville *v = new Ville();
     v->ajoute(new Objet("essai"));
-    v->ajoute(new Objet("poup"));;
+    v->ajoute(new Objet("poup"));
 
     Carte carte(v);
 
@@ -36,13 +36,13 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        unitesAlliees.push_back(new Heros(1, 5, 5, 20, 100));
+        unitesAlliees.push_back(new Heros(1, 5, 5, 20, 120));
         unitesAlliees.push_back(new Heros(1, 10, 10, 303, 100));
         carte[20].flagHeros(unitesAlliees[0]);
         carte[303].flagHeros(unitesAlliees[1]);
     }
 
-    unitesEnnemies.push_back(new Heros(2, 6, 6, 308, 100));
+    unitesEnnemies.push_back(new Heros(2, 6, 6, 308, 120));
     unitesEnnemies.push_back(new Heros(2, 7, 7, 312, 100));
     carte[308].flagHeros(unitesEnnemies[0]);
     carte[312].flagHeros(unitesEnnemies[1]);

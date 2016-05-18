@@ -170,8 +170,8 @@ void Unite::changeOrientation(int i) {
 }
 
 
-void Unite::changeInitiativeTemporaire() {
-    initiativeTemporaire -= 30;
+void Unite::changeInitiativeTemporaire(int i) {
+    initiativeTemporaire -=i;
 }
 
 
@@ -238,6 +238,11 @@ bool Unite::estVivant() {
     return true;
 }
 
+void Unite::finTourCombat(int ini) {
+    PDep = PDepMax;
+    changeInitiativeTemporaire(ini);
+}
+
 
 void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction) {
     bool tourContinue = true;
@@ -259,6 +264,7 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             }
         }
 
+        //On regarde si le joueur clique sur "fin de tour"
         if (boutonFinTour.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             break;
@@ -278,12 +284,9 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
             deplacement(carte, x, y, false);
         }
         boutonAction.affiche();
-
-        if (PDep==0){
-            tourContinue=false;
-        }
     }
-    finTourCombat(unites);
+    //On remet le déplacement à son maximum et on modifie l'initiative temporaire
+    finTourCombat(40);
 }
 
 
@@ -414,7 +417,7 @@ Armee::Armee() {
 }
 
 
-Armee::Armee(std::vector<Sbire> sbires) {
+Armee::Armee(std::vector<Sbire *> sbires) {
     for (int i = 0; i < TAILLE_ARMEE; i++) {
         sbireArmee[i] = sbires[i];
     }
@@ -425,6 +428,10 @@ Armee::Armee(const Armee &a) {
     for (int i = 0; i < TAILLE_ARMEE; i++) {
         sbireArmee[i] = a.sbireArmee[i];
     }
+}
+
+int Armee::tailleArmee() const{
+    return sbireArmee.size();
 }
 
 
@@ -449,7 +456,7 @@ Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, d
 Heros::Heros(const Heros &h) : Unite(h) {
     niveau = h.niveau;
     exp = h.exp;
-    ArmeeHeros = h.ArmeeHeros;
+    armeeHeros = h.armeeHeros;
 }
 
 void Heros::retire(int i) {
@@ -510,6 +517,19 @@ void Heros::declancheCombat(Unite* u) {
     boutonAction.affiche();
     boutonInventaire.affiche();
 
+    std::vector<Unite *> unitesAlliees;
+    std::vector<Unite *> unitesEnnemies;
+    FilePriorite<Unite> fileUnites;
+
+    unitesAlliees.push_back(this);
+    unitesEnnemies.push_back(u);
+
+    /*
+    for (int i = 0; i< this->getArmee().tailleArmee() ; i++){
+        unitesAlliees.push_back(this->getArmee().pop_back());
+    }
+     */
+
     // Initialisation d'une attaque
     std::vector<Imagine::Coords<2> > zoneInfl;
     zoneInfl.push_back(portee10);
@@ -537,20 +557,20 @@ void Heros::declancheCombat(Unite* u) {
 
     carte.affiche();
 
-    FilePriorite<Unite> fileUnites;
     fileUnites.push(unites[0]);
     fileUnites.push(unites[1]);
 
+    bool finCombat = false;
 
     int i = 1; //numéro du tour, à remplacer
 
-    while (true) {
+    while (!finCombat) {
         //règles d'initiative assez arbitraires, à modifier #Nathanael
         Unite* unitJouable = fileUnites.pop();
         unitJouable->tourCombat(carte, unites, boutonFinTour, boutonAction);
-        unitJouable->changeInitiativeTemporaire();
         fileUnites.push(unitJouable);
         i += 1;
+
     }
 
     this->setCase(positionGestion[0]);
@@ -695,6 +715,10 @@ void Heros::ouvreInventaire() {
 
 std::string Heros::getNomCasque() {
     return equipementCasque.getNom();
+}
+
+Armee Heros::getArmee() const{
+    return armeeHeros;
 }
 
 

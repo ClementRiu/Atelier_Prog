@@ -76,7 +76,7 @@ class Unite : public Mere {
 
     int orientation; //voir manuel, possible de changer
 
-    int typeDegats;
+    int typeDegats; //Non utilisé pour l'instant : nous comptions mettre un système de types de de dégats, comme "tranchant", "contendant" etc.
 
 public:
     Unite();
@@ -84,8 +84,6 @@ public:
     Unite(const Unite &unit);
 
     Unite(int IDjoueur, float dep, float depMax, int num, float init);
-
-    //Unite(float dep, float depMax, int num);
 
     Unite(float dep, int num);
 
@@ -112,7 +110,7 @@ public:
     void changeOrientation(int i);
 
     // FONCTION A MODIFIER ABSOLUMENT
-    void changeInitiativeTemporaire();
+    void changeInitiativeTemporaire(int i);
 
     int getCase() const;
 
@@ -154,6 +152,9 @@ public:
 
     virtual void declancheCombat(Unite* u);
 
+    //Termine le tour en combat
+    virtual void finTourCombat(int ini);
+
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
 
@@ -185,19 +186,19 @@ public:
 
 
 class Armee {
-    Sbire sbireArmee[TAILLE_ARMEE];
+    std::vector<Sbire*> sbireArmee;
 
 public :
     Armee();
-
-    Armee(std::vector<Sbire> sbires);
-
+    Armee(std::vector<Sbire *> sbires);
     Armee(const Armee &a);
+
+    int tailleArmee() const;
 };
 
 
 class Heros : public Unite {
-    Armee ArmeeHeros;
+    Armee armeeHeros;
 
     int niveau;
     int exp;
@@ -215,31 +216,23 @@ class Heros : public Unite {
 
 public:
     Heros(int ID, float dep, float depMax, int num, float init);
-
     Heros(const Heros &h);
-
     Heros(const Unite &u);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
     virtual void equipe(Ville* ville, int i, bool droite = true);
 
     Casque equipeCasque(Casque casque);
-
     Arme equipeArmeDroite(Arme arme);
-
     Arme equipeArmeGauche(Arme arme);
-
     Torse equipeTorse(Torse torse);
-
     Gants equipeGants(Gants gants);
-
     Jambes equipeJambes(Jambes jambes);
-
     Bottes equipeBottes(Bottes bottes);
-
     Anneau equipeAnneauDroite(Anneau anneau);
-
     Anneau equipeAnneauGauche(Anneau anneau);
+
+    Armee getArmee() const;
 
     // Lance l'unité dans un combat avec une autre unité
     virtual void declancheCombat(Unite* u);

@@ -1,7 +1,7 @@
 #include "outils.h"
 
 void sauvegarde(std::vector<Unite *> unites) {
-    std::ofstream fichier(srcPath("../Sauvegardes/sauvegarde1.txt"), std::ios::out | std::ios::trunc);
+    std::ofstream fichier(srcPath("../Sauvegardes/Sauvegarde1/sauvegarde1.txt"), std::ios::out | std::ios::trunc);
     if (fichier) {
         fichier << unites.size() << std::endl;
         for (int i = 0; i < unites.size(); i++) {
@@ -20,7 +20,7 @@ void sauvegarde(std::vector<Unite *> unites) {
 
 
 void charge(std::vector<Unite *> &unites, Carte &carte) {
-    std::ifstream fichier(srcPath("../Sauvegardes/sauvegarde1.txt"), std::ios::in);
+    std::ifstream fichier(srcPath("../Sauvegardes/Sauvegarde1/sauvegarde1.txt"), std::ios::in);
     if (fichier) {
         std::string ligne;
         std::getline(fichier, ligne);
@@ -73,7 +73,7 @@ void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > different
             x = e.pix[0];
             y = e.pix[1];
             // On affiche la case que l'on survole
-            afficheSurvole(x, y, carte);
+            afficheCaseSurvole(x, y, carte);
             afficheChemins(x, y, carte, differentsChemins, numcase);
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
@@ -96,15 +96,6 @@ void clicSimple(int &x, int &y) {
             y = e.pix[1];
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
-}
-
-
-
-void finTourCombat(std::vector<Unite *> unites) {
-    std::cout << "à modifier !! (fonction finTourCombat)" << std::endl;
-    for (int i = 0; i < unites.size(); ++i) {
-        unites[i]->setDep(unites[i]->getDepMax());
-    }
 }
 
 
@@ -145,7 +136,7 @@ void survole(int &x, int &y) {
 }
 
 
-void afficheSurvole(int x, int y, Carte &carte) {
+void afficheCaseSurvole(int x, int y, Carte &carte) {
     // A MODIFIER
     Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
                       Imagine::WHITE);
