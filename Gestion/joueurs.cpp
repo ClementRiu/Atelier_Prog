@@ -205,7 +205,8 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
                         //Si l'unité n'est pas à nous, on déclanche effectivement le combat
                         if (unite->getID() != uniteCliquee->getID()) {
-                            unite->declancheCombat(uniteCliquee);
+                            unite->declencheCombat(uniteCliquee);
+                            carte.affiche();
                         }
                     }
                 }

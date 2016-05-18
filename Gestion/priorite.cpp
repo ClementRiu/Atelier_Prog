@@ -79,7 +79,7 @@ void FilePriorite<T>::echange(int i, int j) {
 
 template <typename T>
 T* FilePriorite< T >::pop() {
-    assert(v.size() > 1 && "file vide");
+    assert(v.size() >= 1 && "file vide");
     if (!v.empty()) {
         int i = 1;
         this->echange(i, v.size() - 1);

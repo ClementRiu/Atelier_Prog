@@ -17,7 +17,7 @@ const int nb_type_unite = 10;
 class Ville {
     int id;
     int batiments[NB_BATIMENTS]; //Chaque élément du tableau représente un batiment, si batiment[i]=0 il n'est pas construit,
-    Armee garnison;
+    std::vector<Sbire *> garnison;
     bool heros_present;
     int recrutables[nb_type_unite]; //recrutable[i] contient le nombre d'unite de type i que l'on peut recruter
     bool amelioration[NB_BATIMENTS]; //indiqe si le bâtiment est améliorable
