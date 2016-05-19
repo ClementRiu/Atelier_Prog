@@ -101,7 +101,7 @@ Unite::Unite(float dep, float depMax, int num) {
 */
 
 
-Unite::Unite(float dep, int num){
+Unite::Unite(float dep, int num) {
     PDep = dep;
     numcase = num;
     initiative = 0;
@@ -111,7 +111,7 @@ Unite::Unite(float dep, int num){
 }
 
 
-bool Unite::operator<(Unite u) const{
+bool Unite::operator<(Unite u) const {
     return (initiativeTemporaire < u.initiativeTemporaire);
 }
 
@@ -119,8 +119,12 @@ void Unite::choixAction() {
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
 }
 
-void Unite::ajouteSbire(Sbire* s){
+void Unite::ajouteSbire(Sbire *s) {
 
+}
+
+void Unite::tueUnite() {
+    PV = 0;
 }
 
 
@@ -142,7 +146,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
-            this->attaqueDeBase(carte[numeroCase(x1,y1)].getUnite());
+            this->attaqueDeBase(carte[numeroCase(x1, y1)].getUnite());
             return;
         }
 
@@ -175,7 +179,7 @@ void Unite::changeOrientation(int i) {
 
 
 void Unite::changeInitiativeTemporaire(int i) {
-    initiativeTemporaire -=i;
+    initiativeTemporaire -= i;
 }
 
 
@@ -187,13 +191,17 @@ int Unite::getID() const {
     return IDjoueur;
 }
 
-float Unite::getInit() const{
+float Unite::getInit() const {
     return initiativeTemporaire;
 }
 
 
-void Unite::ouvreVille(Ville* v) {
+void Unite::ouvreVille(Ville *v) {
 
+}
+
+bool Unite::estHeros() {
+    return false;
 }
 
 
@@ -212,27 +220,26 @@ void Unite::setDep(float dep) {
 }
 
 
-void Unite::setDepMax(float depMax) {
-    PDepMax = depMax;
-}
-
-
 float Unite::getDepMax() const {
     return PDepMax;
 }
 
+//Pour tester uniquement
+float Unite::getPV() const {
+    return PV;
+}
+
 
 //à implémenter
-void Unite::prendDommage(int attRecue) {
+void Unite::prendDommage(int valeurDegats) {
     std::cout << "à implémenter !" << std::endl;
-    PV = PV - 50;
+    PV = PV - valeurDegats;
 }
 
 
 void Unite::setAttaque(Attaque att, int i) {
     competences[i] = att;
 }
-
 
 
 bool Unite::estVivant() {
@@ -244,18 +251,19 @@ bool Unite::estVivant() {
     }
 }
 
+
 void Unite::finTourCombat(int ini) {
     PDep = PDepMax;
     changeInitiativeTemporaire(ini);
 }
 
 
-void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction) {
+void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) {
     bool tourContinue = true;
     int x = 0, y = 0;
 
     while (tourContinue) {
-        // On stocke les différents chemins si on veut pouvoir les afficher. Cela dépend si on est en Gestion ou en Combat
+        // On stocke les différents chemins qu'on va vouloir afficher lors du survol d'une case
         std::vector<std::vector<int> > differentsChemins;
 
         differentsChemins = afficheCaseDisponibleOnOff(carte, true, PDep, 0);
@@ -263,12 +271,7 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
 
         clic(x, y, carte, differentsChemins, numcase);
 
-        // A modifier
-        for (int i = 0; i < NbCase; ++i) {
-            for (int j = 0; j < NbCase; ++j) {
-                carte[j * NbCase + i].affiche();
-            }
-        }
+        carte.affiche();
 
         //On regarde si le joueur clique sur "fin de tour"
         if (boutonFinTour.boutonActive(x, y)) {
@@ -298,16 +301,19 @@ void Unite::tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonF
 
 void Unite::action(Attaque att, Unite *u) {
     // A MODIFIER
-    u->prendDommage(att.getPuissance());
+    //u->prendDommage(att.getPuissance());
+
+    //on prend uniquement 50 pour l'instant, A MODIFIER
+    u->prendDommage(50);
 }
 
 
-void Unite::attaqueDeBase(Unite* u) {
+void Unite::attaqueDeBase(Unite *u) {
     u->prendDommage(force);
 }
 
 
-void Unite::declencheCombat(Unite* u) {
+void Unite::declencheCombat(Unite *u) {
 
 }
 
@@ -380,15 +386,7 @@ std::vector<Bouton> Unite::boutonAction(Carte &carte) {
 }
 */
 
-std::vector<Sbire *> Unite::getArmee(){
-}
-
-int Unite::getIDunite(){
-    return IDunite;
-}
-
-void Unite::setIDunite(int i){
-    IDunite=i;
+std::vector<Sbire *> Unite::getArmee() {
 }
 
 
@@ -396,7 +394,7 @@ void Unite::ramasse(Mere *obj) {
 
 }
 
-void Unite::achete(Ville* ville, int i, bool b) {
+void Unite::achete(Ville *ville, int i, bool b) {
 }
 
 
@@ -405,7 +403,7 @@ void Unite::ouvreInventaire() {
 }
 
 
-void Unite::equipe(Ville* ville, int i, bool droite) {
+void Unite::equipe(Ville *ville, int i, bool droite) {
 
 }
 
@@ -420,11 +418,11 @@ Unite::~Unite() {
 }
 
 
-Sbire::Sbire(){
+Sbire::Sbire() {
 
 }
 
-Sbire::Sbire(int IDj, float dep, float depMax, int num, float init, int nb) : Unite(IDj, dep, depMax, num, init){
+Sbire::Sbire(int IDj, float dep, float depMax, int num, float init, int nb) : Unite(IDj, dep, depMax, num, init) {
     nombre = nb;
 }
 
@@ -433,16 +431,32 @@ Sbire::Sbire(const Sbire &s) {
 
 }
 
-bool Sbire::estVivant(){
-    if (nombre<=0){
-        return true;
-    }
-    else{
+bool Sbire::estVivant() {
+    if (PV <= 0 && nombre == 0) {
         return false;
+    }
+    return true;
+}
+
+
+void Sbire::prendDommage(int degatRecu) {
+    while (degatRecu > 0) {
+        degatRecu -= PV;
+
+        if (degatRecu > 0) {
+            PV = PVMax;
+            nombre -= 1;
+        }
     }
 }
 
-Sbire::~Sbire(){
+
+void Sbire::tueUnite() {
+    PV = 0;
+    nombre = 0;
+}
+
+Sbire::~Sbire() {
 
 }
 
@@ -476,7 +490,7 @@ Heros::Heros(const Heros &h) : Unite(h) {
     armeeHeros = h.armeeHeros;
 }
 
-void Heros::ajouteSbire(Sbire* s){
+void Heros::ajouteSbire(Sbire *s) {
     armeeHeros.push_back(s);
 }
 
@@ -484,14 +498,14 @@ void Heros::retire(int i) {
     inventaire.retire(i);
 }
 
-std::vector<Sbire *> Heros::getArmee(){
+std::vector<Sbire *> Heros::getArmee() {
     return armeeHeros;
 }
 
 
-void Heros::ouvreVille(Ville* v) {
-    Heros* h2 = new Heros(1,1,1,1,1);
-    if (typeid(this)== typeid(h2)){
+void Heros::ouvreVille(Ville *v) {
+    Heros *h2 = new Heros(1, 1, 1, 1, 1);
+    if (typeid(this) == typeid(h2)) {
         // Creation des differents boutons pour les differentes categories d'objets
         std::vector<Bouton> boutonsChoix;
         std::vector<std::string> nomBoutons;
@@ -520,7 +534,7 @@ void Heros::ouvreVille(Ville* v) {
         categoriesObjets.ajoute(new Objet());
 
         // Creation du pointeur vers la fonction equipe
-        void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::achete;
+        void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::achete;
 
         (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
         //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
@@ -529,21 +543,17 @@ void Heros::ouvreVille(Ville* v) {
 }
 
 
-void Heros::achete(Ville* ville, int i, bool b) {
+void Heros::achete(Ville *ville, int i, bool b) {
     this->ramasse(ville->getObjet(i)->clone());
 }
 
-bool Heros::estVivant(){
-    if (PV<=0){
-        return false;
-    }
-    else{
-        return true;
-    }
+
+bool Heros::estHeros() {
+    return true;
 }
 
 
-void Heros::declencheCombat(Unite* u) {
+void Heros::declencheCombat(Unite *u) {
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
@@ -557,93 +567,87 @@ void Heros::declencheCombat(Unite* u) {
 
     unitesAlliees.push_back(this);
     unitesEnnemies.push_back(u);
-    this->setIDunite(0);
-    u->setIDunite(1);
 
-    int compteurID=2;
+    Carte carte(0);
 
     //on prend toutes les unités présentes dans le héros qui a déclanché le combat et on les place dans la file d'unité et d'unités alliées
-    for (int i = 0; i< this->getArmee().size() ; i++){
-        Sbire* uniteCourante = this->getArmee()[i];
-        setIDunite(compteurID);
+    for (int i = 0; i < this->getArmee().size(); i++) {
+        Sbire *uniteCourante = this->getArmee()[i];
         unitesAlliees.push_back(uniteCourante);
         fileUnites.push(uniteCourante);
+        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
         this->getArmee().pop_back();
-        compteurID+=1;
     }
 
     //idem pour le héros attaqué
-    for (int i = 0; i< u->getArmee().size() ; i++){
-        Sbire* uniteCourante = u->getArmee()[i];
-        setIDunite(compteurID);
+    for (int i = 0; i < u->getArmee().size(); i++) {
+        Sbire *uniteCourante = u->getArmee()[i];
         unitesEnnemies.push_back(uniteCourante);
         fileUnites.push(uniteCourante);
+        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
         u->getArmee().pop_back();
-        compteurID+=1;
     }
 
-
-    // Initialisation d'une attaque
-    std::vector<Imagine::Coords<2> > zoneInfl;
-    zoneInfl.push_back(portee10);
-    zoneInfl.push_back(portee_10);
-    zoneInfl.push_back(portee20);
-    zoneInfl.push_back(portee_20);
-    zoneInfl.push_back(portee01);
-    zoneInfl.push_back(portee02);
-    zoneInfl.push_back(portee0_2);
-    zoneInfl.push_back(portee0_1);
-    Attaque coinCoinOuille(zoneInfl, 10);
-
-    Carte carte(0);
 
     int positionGestion[2] = {this->getCase(), u->getCase()};
 
     // Initialisation des unites
     this->setCase(100);
     u->setCase(200);
-    std::vector<Unite *> unites;
-    unites.push_back(this);
-    unites.push_back(u);
-    carte[100].flagHeros(unites[0]);
-    carte[200].flagHeros(unites[1]);
+    carte[100].flagHeros(this);
+    carte[200].flagHeros(u);
 
     carte.affiche();
 
-    fileUnites.push(unites[0]);
-    fileUnites.push(unites[1]);
+    fileUnites.push(this);
+    fileUnites.push(u);
 
     bool finCombat = false;
 
     int tourCombat = 1; //numéro du tour, à remplacer
 
     while (!finCombat) {
-        //règles d'initiative assez arbitraires, à modifier #Nathanael
-        Unite* unitJouable = fileUnites.pop();
+        //règles d'initiative assez arbitraires, à modifier !
+        Unite *unitJouable = fileUnites.pop();
+        std::cout << fileUnites.size() << std::endl;
+
+        //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
-            unitJouable->tourCombat(carte, unites, boutonFinTour, boutonAction);
+            unitJouable->tourCombat(carte, boutonFinTour, boutonAction);
             fileUnites.push(unitJouable);
         }
 
-        for (int i=0 ; i<unitesAlliees.size() ; i++){
-            if(!unitesAlliees[i]->estVivant()){
-                unitesAlliees.erase(unitesAlliees.begin()+i);
+        //On regarde si les unités contenue dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
+        for (int i = 0; i < unitesAlliees.size(); i++) {
+            if (!unitesAlliees[i]->estVivant()) {
+                if (unitesAlliees[i]->estHeros()) {
+                    getArmee()[i]->tueUnite();
+                }
+                else {
+                    carte[unitesAlliees[i]->getCase()].retireUnite();
+                    unitesAlliees.erase(unitesAlliees.begin() + i);
+                    //delete unitesAlliees[i];
+                    carte.affiche(); //à modifier #clement
+                }
             }
         }
-        for (int i=0 ; i<unitesEnnemies.size() ; i++){
-            if(!unitesEnnemies[i]->estVivant()){
-                unitesEnnemies.erase(unitesEnnemies.begin()+i);
+        //idem pour le vecteur d'ennemis
+        for (int i = 0; i < unitesEnnemies.size(); i++) {
+            if (!unitesEnnemies[i]->estVivant()) {
+                if (unitesEnnemies[i]->estHeros()) {
+
+                }
+                carte[unitesEnnemies[i]->getCase()].retireUnite();
+                unitesEnnemies.erase(unitesEnnemies.begin() + i);
+                carte.affiche(); //à modifier #clement
             }
         }
 
-        if (unitesAlliees.size()==0 || unitesEnnemies.size()==0){
-            finCombat=true;
+        //Si un des deux vecteurs est vide, une armée a été vaincue ; c'est la fin du combat
+        if (unitesAlliees.size() == 0 || unitesEnnemies.size() == 0) {
+            finCombat = true;
         }
         tourCombat += 1;
-
-        if(finCombat){
-            std::cout<<"C'est la fiiiin"<<std::endl;
-        }
     }
 
     this->setCase(positionGestion[0]);
@@ -737,7 +741,7 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 }
 
 
-void Heros::equipe(Ville* ville, int i, bool droite) {
+void Heros::equipe(Ville *ville, int i, bool droite) {
     if (i < inventaire.taille()) {
         inventaire.get(i)->equiper(this, droite);
     }
@@ -778,7 +782,7 @@ void Heros::ouvreInventaire() {
     categoriesObjets.ajoute(new Objet());
 
     // Creation du pointeur vers la fonction equipe
-    void (Unite::*pointeurFonction)(Ville*, int, bool) = &Unite::equipe;
+    void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::equipe;
 
     inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
 
@@ -789,7 +793,6 @@ void Heros::ouvreInventaire() {
 std::string Heros::getNomCasque() {
     return equipementCasque.getNom();
 }
-
 
 
 Heros::~Heros() {

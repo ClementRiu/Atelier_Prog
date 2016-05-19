@@ -35,15 +35,15 @@ std::vector<int> CaseDist::getChemin() {
 }
 
 
-template <typename T>
+template<typename T>
 FilePriorite<T>::FilePriorite() {
-    v.push_back(new T(0,0));
+    v.push_back(new T(0, 0));
 }
 
-template <typename T>
+template<typename T>
 bool FilePriorite<T>::empty() {
     if (!v.empty()) {
-        T* a = v.back();
+        T *a = v.back();
         v.pop_back();
         if (v.empty()) {
             v.push_back(a);
@@ -53,13 +53,13 @@ bool FilePriorite<T>::empty() {
         return false;
     }
     else {
-        v.push_back(new T(0,0));
+        v.push_back(new T(0, 0));
         return true;
     }
 }
 
-template <typename T>
-void FilePriorite<T>::push(T* d) {
+template<typename T>
+void FilePriorite<T>::push(T *d) {
     v.push_back(d);
     int i = v.size() - 1;
     while (!((*v[i]) < (*v[i / 2])) && i > 1) {
@@ -69,16 +69,16 @@ void FilePriorite<T>::push(T* d) {
 }
 
 
-template <typename T>
+template<typename T>
 void FilePriorite<T>::echange(int i, int j) {
-    T* a = v[i];
+    T *a = v[i];
     v[i] = v[j];
     v[j] = a;
 }
 
 
-template <typename T>
-T* FilePriorite< T >::pop() {
+template<typename T>
+T *FilePriorite<T>::pop() {
     assert(v.size() >= 1 && "file vide");
     if (!v.empty()) {
         int i = 1;
@@ -95,12 +95,20 @@ T* FilePriorite< T >::pop() {
             }
         }
     }
-    T* a = v.back();
+    T *a = v.back();
     v.pop_back();
     v.empty();
     return a;
 }
 
-template class FilePriorite<CaseDist>;
-template class FilePriorite<Unite>;
+template<typename T>
+int FilePriorite<T>::size() {
+    return v.size();
+}
+
+template
+class FilePriorite<CaseDist>;
+
+template
+class FilePriorite<Unite>;
 

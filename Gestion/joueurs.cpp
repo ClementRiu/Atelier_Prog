@@ -18,29 +18,17 @@ Ville::Ville(int faction, int num) {
     camp = faction;
     heros_present = false;
     achetable = Inventaire();
+
+#if 0
     update_ameliorable();
     update_recrutable();
     update_achetable();
+#endif
 }
 
 
 Ville::~Ville() {
     achetable.~Inventaire();
-}
-
-
-void Ville::update_recrutable() {
-    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
-}
-
-
-void Ville::update_ameliorable() {
-    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
-}
-
-
-void Ville::update_achetable() {
-    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
 }
 
 
@@ -170,12 +158,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
             clic(x, y, carte);
 
-            // A modifier
-            for (int i = 0; i < NbCase; ++i) {
-                for (int j = 0; j < NbCase; ++j) {
-                    carte[j * NbCase + i].affiche();
-                }
-            }
+            carte.affiche();
 
             // Bouton inventaire
             if (boutonInventaire.boutonActive(x, y)) {
@@ -183,11 +166,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
                 // unites[u]->equipe(1);
                 // unites[u]->ouvreInventaire();
                 // Reaffichage de la carte
-                for (int i = 0; i < NbCase; i++) {
-                    for (int j = 0; j < NbCase; j++) {
-                        carte[NbCase * j + i].affiche();
-                    }
-                }
+                carte.affiche();
             }
 
 
@@ -203,10 +182,13 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
                     if (carte[numeroCase(x, y)].getOccupe()) {
                         Unite *uniteCliquee = carte[numeroCase(x, y)].getUnite();
 
-                        //Si l'unité n'est pas à nous, on déclanche effectivement le combat
+                        //Si l'unité n'est pas à nous, on déclenche effectivement le combat
                         if (unite->getID() != uniteCliquee->getID()) {
+                            float PDepGestion = unite->getDep();
+                            unite->setDep(unite->getDepMax());
                             unite->declencheCombat(uniteCliquee);
                             carte.affiche();
+                            unite->setDep(PDepGestion);
                         }
                     }
                 }
@@ -224,18 +206,28 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 }
 
 #if 0
+void Ville::update_recrutable() {
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
+void Ville::update_ameliorable() {
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
+void Ville::update_achetable() {
+    // VA DEPENDRE DU CAMP ET DES BATIMENTS, A VOIR PLUS TARD AVEC LE GAMEPLAY
+}
+
 void Ville::ameliore(int i) {
     batiments[i] += 1;
     update_ameliorable();
 }
-
 
 void Ville::recrute(int i) {     //on suppose que la fonction ne se lance pas si recrutable[i] = 0
     //ICI RAJOUTER FONCTION POUR RAJOUTER DES SOLDATS DANS L'ARMEE
     //ICI RAJOUTER FONCTION POUR DIMINUER LES RESSOURCES
     recrutables[i] -= 1;
 }
-
 
 void Ville::achat(int i) {
     //a faire
@@ -245,11 +237,9 @@ void Ville::set_heros_present(bool b) {
     heros_present = b;
 }
 
-
 int Ville::get_lv_batiment(int i) {
     return batiments[i];
 }
-
 
 Armee Ville::get_garnison() {
     return garnison;
@@ -259,23 +249,17 @@ int Ville::get_nb_recrue(int type) {
     return recrutables[type];
 }
 
-
 int Ville::get_camp() {
     return camp;
 }
-
 
 bool Ville::est_ameliorable(int i) {
     return amelioration[i];
 }
 
-
 bool Ville::get_heros_present() {
     return heros_present;
 }
-
-
-
 
 int Joueur::get_ressources(int i) {
     return ressources[i];
@@ -299,7 +283,6 @@ std::vector<Ville> Joueur::get_villesJoueur() {
     return villesJoueur;
 }
 
-
 //modifications des valeurs
 void Joueur::modifie_ressources(int res, int valeur) {
     ressources[res] += valeur;
@@ -317,7 +300,6 @@ void Joueur::recrute_heros(Unite* recrue) {
     herosJoueur.push_back(recrue);
 }
 
-
 void Joueur::conquiert_ville(Ville conquete) {
     villesJoueur.push_back(conquete);
 }
@@ -334,8 +316,6 @@ void Joueur::perd_ville(Ville perte) {
 
     villesJoueur.erase(villesJoueur.begin() + k);
 }
-}
-
 
 void Ville::retire(int i) {
     achetable.retire(i);

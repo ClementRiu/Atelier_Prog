@@ -68,7 +68,6 @@ protected:
     float initiativeTemporaire;
     bool tour;
 
-    int IDunite;
     int IDjoueur;
 
     int numcase;
@@ -102,8 +101,7 @@ public:
     virtual std::vector<Sbire *> getArmee();
     virtual void ajouteSbire(Sbire* s);
 
-    int getIDunite();
-    void setIDunite(int i);
+    virtual void tueUnite();
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
     std::vector<std::vector<int> > afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
@@ -112,7 +110,7 @@ public:
     void deplaceVersCase(Case &c2, Case &c1);
 
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
-    void tourCombat(Carte &carte, std::vector<Unite *> unites, Bouton boutonFinTour, Bouton boutonAction);
+    void tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction);
 
     void attaque(Attaque attq, Carte &carte);
 
@@ -122,6 +120,8 @@ public:
     void changeInitiativeTemporaire(int i);
 
     int getCase() const;
+
+    float getPV() const; //pour tester uniquement
 
     int getID() const;
 
@@ -135,9 +135,7 @@ public:
 
     float getDepMax() const;
 
-    void setDepMax(float dep);
-
-    void prendDommage(int att); //à implémenter avec formule adaptée
+    virtual void prendDommage(int att); //à implémenter avec formule adaptée
 
     void setAttaque(Attaque att, int i);
 
@@ -146,6 +144,10 @@ public:
 
     virtual void ouvreVille(Ville* v);
 
+    //Fonction qui renvoie false quand appelé sur une Unité ou un Sbire, et true sur un Heros
+    virtual bool estHeros();
+
+    //renvoie vrai si l'unité a des PV supérieurs à 0
     virtual bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
@@ -193,6 +195,8 @@ public:
     Sbire(const Sbire &s);
 
     virtual bool estVivant();
+    virtual void prendDommage(int valeurDegats);
+    virtual void tueUnite();
 
     virtual ~Sbire();
 };
@@ -227,10 +231,10 @@ public:
 
     virtual std::vector<Sbire *> getArmee();
 
-    virtual bool estVivant();
-
     // Lance l'unité dans un combat avec une autre unité
     virtual void declencheCombat(Unite* u);
+
+    virtual bool estHeros();
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);

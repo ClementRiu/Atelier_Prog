@@ -30,23 +30,19 @@ public:
     Ville(int faction, int num);
     ~Ville();
 
-    void update_recrutable();    //met a jour la liste des soldats recrutable
-    void update_ameliorable();   //met a jour la liste des batiments ameliorable
-    void update_achetable();     //met a jour la liste des objet achetable
-
-
     void ouvreVille(Unite *h);
-
     void ajoute(Mere *obj);
-
     Mere *getObjet(int i);
-
     int get_id() const;
 
     Inventaire &getInventaire();
 
     //Fonctions inutilisées ou non implémentées pour l'instant
 #if 0
+    void update_recrutable();    //met a jour la liste des soldats recrutable
+    void update_ameliorable();   //met a jour la liste des batiments ameliorable
+    void update_achetable();     //met a jour la liste des objet achetable
+
     void ameliore(int i); //augment le niveau du batiment i
     void recrute(int i);    // recrute un soldat
     void achat(int i);          //achete un objet
@@ -88,7 +84,6 @@ public:
 
     void tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction,
                      Bouton boutonInventaire, bool &save);
-
     void finTourGestion();
 
 

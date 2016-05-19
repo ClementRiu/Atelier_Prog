@@ -154,6 +154,10 @@ void Case::flagHeros(Unite* u) {
     pointeurUnite = u;
 }
 
+void Case::retireUnite() {
+    pointeurUnite = NULL;
+}
+
 
 bool Case::getOccupe() const {
     return (pointeurUnite!=NULL);

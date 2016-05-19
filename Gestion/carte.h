@@ -120,6 +120,8 @@ public:
     // Place le heros sur cette case s'il n'y etait pas et l'enleve s'il y etait
     void flagHeros(Unite* u);
 
+    void retireUnite();
+
     bool getOccupe() const;
 
     // renvoie le pointeur de l'unité sur la case

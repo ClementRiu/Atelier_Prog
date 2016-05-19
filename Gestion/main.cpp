@@ -10,7 +10,7 @@ int main() {
     v->ajoute(new Objet("essai"));
     v->ajoute(new Objet("poup"));
 
-    Carte carte(v);
+    Carte carte(1);
 
     // Initialisation des unites
     // Ecran de menu
@@ -43,10 +43,13 @@ int main() {
         carte[20].flagHeros(unitesAlliees[0]);
         carte[303].flagHeros(unitesAlliees[1]);
     }
-    Sbire* sbire1 = new Sbire(1, 5, 5, 35, 105, 10);
-    Sbire* sbire2 = new Sbire(1, 5, 5, 20, 110, 10);
+    Sbire* sbire1 = new Sbire(1, 5, 5, 35, 105, 2);
+    Sbire* sbire2 = new Sbire(1, 5, 5, 20, 117, 2);
+    Sbire* sbire3 = new Sbire(1, 5, 5, 35, 115, 2);
+    Sbire* sbire4 = new Sbire(1, 5, 5, 20, 110, 2);
 
     unitesAlliees[0]->ajouteSbire(sbire1);
+    unitesAlliees[1]->ajouteSbire(sbire2);
 
     Heros* heros3 = new Heros(2, 6, 6, 308, 120);
     Heros* heros4 = new Heros(2, 7, 7, 312, 100);
@@ -55,6 +58,10 @@ int main() {
     unitesEnnemies.push_back(heros4);
     carte[308].flagHeros(unitesEnnemies[0]);
     carte[312].flagHeros(unitesEnnemies[1]);
+
+    unitesEnnemies[0]->ajouteSbire(sbire3);
+    unitesEnnemies[1]->ajouteSbire(sbire4);
+
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unitesAlliees[0]->ramasse(new Objet("merde"));
     unitesAlliees[0]->ramasse(new Casque("casque"));
@@ -81,6 +88,18 @@ int main() {
     i.ajoute(new Casque("casque"));
     Inventaire j(i);
 
+    // Initialisation d'une attaque
+    std::vector<Imagine::Coords<2> > zoneInfl;
+    zoneInfl.push_back(portee10);
+    zoneInfl.push_back(portee_10);
+    zoneInfl.push_back(portee20);
+    zoneInfl.push_back(portee_20);
+    zoneInfl.push_back(portee01);
+    zoneInfl.push_back(portee02);
+    zoneInfl.push_back(portee0_2);
+    zoneInfl.push_back(portee0_1);
+    Attaque coinCoinOuille(zoneInfl, 10);
+
 
     carte.affiche();
 
@@ -105,9 +124,6 @@ int main() {
         //Clement à toi de jouer
         //affiche(tour)
         std::cout << "Tour joueur 1" << std::endl;
-        if (!unitesAlliees[0]->estVivant()){
-            std::cout<<"Je suis vivaaaaaant"<<std::endl;
-        }
         allie.tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
         if (quit) {
             break;

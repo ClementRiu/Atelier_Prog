@@ -49,5 +49,8 @@ public:
 
     // Methode pour determiner si la file est vide
     bool empty();
+
+    //renvoie la taille de la file
+    int size();
 };
 
