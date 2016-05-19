@@ -158,7 +158,9 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
 std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
                                                                  int case_a_atteindre) {
-    return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
+    // CE VECTEUR DOIT ETRE VIDE
+    std::vector< Imagine::Coords<2> > vecCaseBrillante;
+    return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre, vecCaseBrillante);
 }
 
 

@@ -157,7 +157,7 @@ public:
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
     std::vector<std::vector<int> > fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
-                                                const int case_a_atteindre);
+                                                const int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
     Imagine::Color getImage() const;

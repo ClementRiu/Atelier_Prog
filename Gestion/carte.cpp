@@ -279,7 +279,7 @@ std::vector<int> Case::casesVoisines(const int x1, const int y1) const{
 
 
 std::vector<std::vector<int> > Case::fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
-                                                  const int case_a_atteindre) {
+                                                  const int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante) {
     // Algorithme de FastMarching, cf cours d'Algo
     int num_case = numeroCase(x, y);
     FilePriorite<CaseDist> F;
@@ -297,6 +297,7 @@ std::vector<std::vector<int> > Case::fastMarching(const float dep, Carte &carte,
                     carte[c->getNum() + i * j].Brillance() != brillance &&
                     !carte[c->getNum() + i * j].getOccupe()) {
                     carte[c->getNum() + i * j].brillanceOnOff(brillance);
+                    vecCaseBrillante.push_back(Imagine::Coords<2>((c->getNum() + i * j) % NbCase, int((c->getNum() + i * j) / NbCase)));
                     chemin = c->getChemin();
                     chemin.push_back(c->getNum() + i * j);
                     differentsChemins.push_back(chemin);
