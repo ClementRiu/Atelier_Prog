@@ -8,7 +8,8 @@
 #include <bits/stl_deque.h>
 #include <iostream>
 #include <fstream>
-
+#include <time.h>
+#include <stdio.h>
 
 const float INF = 1.0f / 0.0f; // Infini en float
 const int Taille = 30;
