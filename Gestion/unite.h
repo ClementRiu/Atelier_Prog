@@ -12,6 +12,7 @@ const int NB_MAX_ATTAQUES = 10;
 
 
 class Ville;
+class Sbire;
 
 
 const Imagine::Coords<2> portee10(1, 0);
@@ -53,6 +54,7 @@ public:
 
 // Unite herite d'objet pour pouvoir etre achetee, vendue et inventorisee aussi
 class Unite : public Mere {
+protected:
     //caractéristiques de l'unité
     float PV;
     float PVMax;
@@ -64,7 +66,9 @@ class Unite : public Mere {
     float dexterite;
     float initiative;
     float initiativeTemporaire;
+    bool tour;
 
+    int IDunite;
     int IDjoueur;
 
     int numcase;
@@ -75,7 +79,7 @@ class Unite : public Mere {
 
     int orientation; //voir manuel, possible de changer
 
-    int typeDegats;
+    int typeDegats; //Non utilisé pour l'instant : nous comptions mettre un système de types de de dégats, comme "tranchant", "contendant" etc.
 
 public:
     Unite();
@@ -83,8 +87,6 @@ public:
     Unite(const Unite &unit);
 
     Unite(int IDjoueur, float dep, float depMax, int num, float init);
-
-    //Unite(float dep, float depMax, int num);
 
     Unite(float dep, int num);
 
@@ -96,6 +98,12 @@ public:
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
     void choixAction();
+
+    virtual std::vector<Sbire *> getArmee();
+    virtual void ajouteSbire(Sbire* s);
+
+    int getIDunite();
+    void setIDunite(int i);
 
     // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
     std::vector<std::vector<int> > afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
@@ -111,7 +119,7 @@ public:
     void changeOrientation(int i);
 
     // FONCTION A MODIFIER ABSOLUMENT
-    void changeInitiativeTemporaire();
+    void changeInitiativeTemporaire(int i);
 
     int getCase() const;
 
@@ -138,7 +146,7 @@ public:
 
     virtual void ouvreVille(Ville* v);
 
-    bool estVivant();
+    virtual bool estVivant();
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
@@ -151,7 +159,10 @@ public:
 //    std::vector<Bouton> boutonAction(Carte& carte);
 
 
-    virtual void combat(Unite* u);
+    virtual void declencheCombat(Unite* u);
+
+    //Termine le tour en combat
+    virtual void finTourCombat(int ini);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
@@ -178,25 +189,17 @@ class Sbire : public Unite {
 
 public:
     Sbire();
-
+    Sbire(int IDj, float dep, float depMax, int num, float init, int nb);
     Sbire(const Sbire &s);
-};
 
+    virtual bool estVivant();
 
-class Armee {
-    Sbire sbireArmee[TAILLE_ARMEE];
-
-public :
-    Armee();
-
-    Armee(std::vector<Sbire> sbires);
-
-    Armee(const Armee &a);
+    virtual ~Sbire();
 };
 
 
 class Heros : public Unite {
-    Armee ArmeeHeros;
+    std::vector<Sbire *> armeeHeros;
 
     int niveau;
     int exp;
@@ -214,34 +217,20 @@ class Heros : public Unite {
 
 public:
     Heros(int ID, float dep, float depMax, int num, float init);
-
     Heros(const Heros &h);
-
     Heros(const Unite &u);
+
+    virtual void ajouteSbire(Sbire* s);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
     virtual void equipe(Ville* ville, int i, bool droite = true);
 
-    Casque equipeCasque(Casque casque);
+    virtual std::vector<Sbire *> getArmee();
 
-    Arme equipeArmeDroite(Arme arme);
-
-    Arme equipeArmeGauche(Arme arme);
-
-    Torse equipeTorse(Torse torse);
-
-    Gants equipeGants(Gants gants);
-
-    Jambes equipeJambes(Jambes jambes);
-
-    Bottes equipeBottes(Bottes bottes);
-
-    Anneau equipeAnneauDroite(Anneau anneau);
-
-    Anneau equipeAnneauGauche(Anneau anneau);
+    virtual bool estVivant();
 
     // Lance l'unité dans un combat avec une autre unité
-    virtual void combat(Unite* u);
+    virtual void declencheCombat(Unite* u);
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);
@@ -255,9 +244,18 @@ public:
     // Fonction pour ajouter un objet a l'inventaire
     virtual void ramasse(Mere *obj);
 
-
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b);
+
+    Casque equipeCasque(Casque casque);
+    Arme equipeArmeDroite(Arme arme);
+    Arme equipeArmeGauche(Arme arme);
+    Torse equipeTorse(Torse torse);
+    Gants equipeGants(Gants gants);
+    Jambes equipeJambes(Jambes jambes);
+    Bottes equipeBottes(Bottes bottes);
+    Anneau equipeAnneauDroite(Anneau anneau);
+    Anneau equipeAnneauGauche(Anneau anneau);
 
     // Fonction renvoyant le nom du casque equipe. Utile pour un test
     virtual std::string getNomCasque();

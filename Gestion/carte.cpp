@@ -1,7 +1,7 @@
 #include "carte.h"
 #include "unite.h"
 #include "joueurs.h"
-
+#include <math.h>
 
 TypeCase::TypeCase(const float dep, const std::string desc, const Imagine::Color img) {
     PDep = dep;
@@ -332,14 +332,95 @@ void Case::action(Unite* u) {
 }
 
 
+int energie(Imagine::Image<int> mat){
+    int param=5;
+    int E=0;
+    int W= mat.size(0);
+    int H=mat.size(1);
+    int nb_case[3]= {0,0,0};
+    for (int i = 0 ; i<W; i++){
+        for (int j =0; j<H; j++){
+            if (i>0 && mat(i-1,j)!=mat(i,j)){
+                E+=param;
+            }
+            if (j>0 && mat(i,j-1)!=mat(i,j)){
+                E+=param;
+            }
+            if (i<W-1 && mat(i+1,j)!=mat(i,j)){
+                E+=param;
+            }
+            if (j<H-1 && mat(i,j+1)!=mat(i,j)){
+                E+=param;
+            }
+            nb_case[mat(i,j)]+=1;
+        }
+    }
+    E+= pow(nb_case[0], 2)+ pow(nb_case[1], 2)+ 8*pow(nb_case[2], 2);
+    return E;
+}
+
+
+Imagine::Image<int> recuit_simule(int W, int H){
+    srand(time(NULL));
+    Imagine::Image<int> matrice(W,H);
+    for (int i=0;i<W;i++){
+        for (int j=0; j<H; j++ ){
+            matrice(i,j)=rand() % 3;
+        }
+    }
+    int E=energie(matrice);
+    double k=1.;
+    while (k<100){
+        for (int n=0; n< W*H; n++){
+            int new_case,i,j;
+            do{
+                i=rand() % W;
+                j=rand() % H;
+                new_case=rand() % 3;
+            } while (new_case == matrice(i,j));
+            Imagine::Image<int> matrice2=matrice.clone();
+            matrice2(i,j)=new_case;
+            int E2=energie(matrice2);
+            double p =double(rand())/double(RAND_MAX);
+            if (E2<E || (p< exp((E-E2)*k))){
+                matrice=matrice2.clone();
+                E=E2;
+            }
+        }
+        k+=2.;
+    }
+    return matrice;
+}
+
+
+
 Carte::Carte(int inutilePourLInstant) {
+    Imagine::Image<int> I=recuit_simule(NbCase,NbCase);
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
-            Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
-            carte[numeroCase(i, j)] = c;
+            int k = i/Taille;
+            int l = j/Taille;
+            if (I(k,l)==0){
+                Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
+                carte[numeroCase(i, j)] = c;
+            }
+            if(I(k,l)==1){
+                Case c(i, j,  new CaseNormale(1, "Une case a moindre cout de deplacement", Imagine::YELLOW));
+                carte[numeroCase(i, j)] = c;
+            }
+            if (I(k,l)==2){
+                Case c(i, j, new CaseNormale(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE));
+                carte[numeroCase(i, j)] = c;
+            }
+
         }
     }
 }
+
+
+
+
+
 
 Carte::Carte(Ville *v) {
     // Creation de la carte
