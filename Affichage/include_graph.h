@@ -7,3 +7,4 @@
 #include "case_graph.h"
 #include "ecran.h"
 #include "bouton_graph.h"
+#include "icone_graph.h"

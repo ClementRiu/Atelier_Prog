@@ -91,8 +91,8 @@ void CarteduMonde::cree_map_mmap() {
 
 
 //Assesseur en lecture de la position du centre.
-void CarteduMonde::get_pos_centre(Imagine::Coords<2> &pos) {
-    pos = pos_centre;
+Imagine::Coords<2> CarteduMonde::get_pos_centre() {
+    return pos_centre;
 }
 
 //Méthode qui affiche la carte dans le 'world' et la minimap sur la 'mmap'.

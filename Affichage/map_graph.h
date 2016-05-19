@@ -26,7 +26,7 @@ public:
     void cree_map_mmap();
 
     //Assesseur en lecture de l'attribut pos_centre.
-    void get_pos_centre(Imagine::Coords<2> &pos);
+    Imagine::Coords<2> get_pos_centre();
 
     //Méthode qui affiche la carte dans le 'world' et la minimap sur la 'mmap'.
     void affiche();

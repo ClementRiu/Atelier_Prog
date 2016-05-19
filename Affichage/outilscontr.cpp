@@ -1,13 +1,14 @@
 #include "outilscontr.h"
 
-
 //Fonction qui affiche l'écran de gestion et gère le jeu.
-int gestion(CarteduMonde &carte){
+int gestion(CarteduMonde &carte, Heros_Graph heros1, Heros_Graph heros2){
     Bouton fin_tour(widthworld + 2, heightworld + 2 - taille_case_graph, widthscreen - 2, heightscreen - 2, std::string("Fin de Tour"), 0);
     Bouton menu(2, heightworld + 2, 70, heightscreen - 2, std::string("Menu"), 0);
     interface(fin_tour, menu);
     carte.affiche();
-
+    heros1.affiche_heros(carte);
+    heros2.affiche_heros(carte);
+    heros1.affiche_interface_heros();
     return evenement(carte, fin_tour, menu);
 }
 
@@ -46,8 +47,7 @@ int evenement(CarteduMonde &carte, Bouton bouton_fin_tour, Bouton bouton_menu) {
             }
 
             if (dans_mmap(x, y)) {
-                Imagine::Coords<2> pos_centrelu;
-                carte.get_pos_centre(pos_centrelu);
+                Imagine::Coords<2> pos_centrelu = carte.get_pos_centre();
                 Imagine::Coords<2> pos_clique = translate(e.pix, pos_centrelu);
                 Imagine::flushEvents();
                 carte.deplace_souris(pos_clique);

@@ -23,8 +23,15 @@ void Bouton_Graph::set_Bouton_Graph(std::string nom_voulu, int type_voulue, int 
     }
 }
 
+//Assesseur en lecture de l'attribut zonebouton.
+void Bouton_Graph::get_zonebouton(int zonebout[]) const {
+    for (int i = 0; i < 4; i++) {
+        zonebout[i] = zonebouton[i];
+    }
+}
+
 //Assesseur en lecture de l'attribut type.
-int Bouton_Graph::get_type() {
+int Bouton_Graph::get_type() const {
     return type;
 }
 
@@ -41,12 +48,12 @@ void Bouton_Graph::set_type(int type_voulue) {
 }
 
 //Méthode qui renvoie la largeur du bouton.
-int Bouton_Graph::get_largeur() {
+int Bouton_Graph::get_largeur() const {
     return zonebouton[2] - zonebouton[0];
 }
 
 //Méthode qui renvoie la largeur du bouton.
-int Bouton_Graph::get_hauteur() {
+int Bouton_Graph::get_hauteur() const {
     return zonebouton[3] - zonebouton[1];
 }
 
@@ -58,12 +65,12 @@ void Bouton_Graph::calcul_image() {
 }
 
 //Méthode qui affiche le bouton à sa position.
-void Bouton_Graph::affiche_Bouton_Graph(){
+void Bouton_Graph::affiche_Bouton_Graph() const {
     affiche_Bouton_Graph(8);
 }
 
 //Méthode qui affiche le bouton à sa position.
-void Bouton_Graph::affiche_Bouton_Graph(int multiplicateur) {
+void Bouton_Graph::affiche_Bouton_Graph(int multiplicateur) const {
     Imagine::display(image_bouton, zonebouton[0], zonebouton[1]);
     Imagine::drawString(zonebouton[0] + (get_largeur() - nom.length() * multiplicateur) / 2,
                         zonebouton[1] + (get_hauteur() + 12) / 2, nom, Imagine::BLACK);
@@ -92,26 +99,26 @@ Bouton::Bouton(const int zone[4], std::string nom, int type) {
 }
 
 
-int Bouton::largeur() {
+int Bouton::largeur() const {
     return zoneDeDelimitation[2] - zoneDeDelimitation[0];
 }
 
 
-int Bouton::hauteur() {
+int Bouton::hauteur() const {
     return zoneDeDelimitation[3] - zoneDeDelimitation[1];
 }
 
 //Met à jour l'image du bonton.
-void Bouton::calcul_image(){
+void Bouton::calcul_image() {
     boutonaff.calcul_image();
 }
 
 // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
-void Bouton::affiche_graph(int decalementVertical) {
+void Bouton::affiche_graph(int decalementVertical) const {
     boutonaff.affiche_Bouton_Graph();
 }
 
-bool Bouton::boutonActive(int x, int y, int decalementVertical) {
+bool Bouton::boutonActive(int x, int y, int decalementVertical) const {
     if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] + decalementVertical &&
         x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3] + decalementVertical) {
         return true;

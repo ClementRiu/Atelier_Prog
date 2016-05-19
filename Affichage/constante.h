@@ -52,6 +52,9 @@ extern Imagine::Image<Imagine::Color> parchemin_menu;    //Frame du parchemin du
 
 extern Imagine::Image<Imagine::Color> pierre_bouton;    //Frame pour les boutons de type 1; non transparent.
 
+extern Imagine::Image<Imagine::Color> heros1;   //Icone pour les Héros en bleu.
+extern Imagine::Image<Imagine::Color> heros2;   //Icone pour les Héros en rouge.
+
 extern Imagine::Image<Imagine::Color> foret1;   //Première frame de forêt.
 extern Imagine::Image<Imagine::Color> eau1; //Première frame d'eau.
 extern Imagine::Image<Imagine::Color> lande1;   //Première frame de lande.

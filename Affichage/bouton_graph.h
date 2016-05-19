@@ -16,10 +16,10 @@ public:
     void set_Bouton_Graph(std::string nom_voulu, int type_voulue, int zonebouton_voulue[]);
 
     //Assesseur en lecture de l'attribut zonebouton.
-    void get_zonebouton(int zonebout[]);
+    void get_zonebouton(int zonebout[]) const ;
 
     //Assesseur en lecture de l'attribut type.
-    int get_type();
+    int get_type() const ;
 
     //Assesseur en écriture de l'attribut zonebouton.
     void set_zonebouton(int zonebout_voulue[]);
@@ -28,19 +28,19 @@ public:
     void set_type(int type_voulue);
 
     //Méthode qui renvoie la largeur du bouton.
-    int get_largeur();
+    int get_largeur() const ;
 
     //Méthode qui renvoie la largeur du bouton.
-    int get_hauteur();
+    int get_hauteur() const ;
 
     //Méthode qui crée l'image image_bouton en fonction de la zone où va s'afficher le bouton.
     void calcul_image();
 
     //Méthode qui affiche le bouton à sa position.
-    void affiche_Bouton_Graph();
+    void affiche_Bouton_Graph() const ;
 
     //Méthode qui affiche le bouton à sa position.
-    void affiche_Bouton_Graph(int multiplicateur);
+    void affiche_Bouton_Graph(int multiplicateur) const ;
 };
 
 class Bouton {
@@ -57,19 +57,19 @@ public:
     Bouton(const int zone[4], std::string nom, int type);
 
     // Renvoie la largeur du bouton
-    int largeur();
+    int largeur() const ;
 
     // renvoie la la hauteur du bouton
-    int hauteur();
+    int hauteur() const ;
 
     //Met à jour l'image du bonton.
     void calcul_image();
 
     // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
-    void affiche_graph(int decalementVertical = 0);
+    void affiche_graph(int decalementVertical = 0) const ;
 
-    // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
-    bool boutonActive(int x, int y, int decalementVertical = 0);
+    // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon.
+    bool boutonActive(int x, int y, int decalementVertical = 0) const ;
 
     // Regarde si le bouton est vide
     bool boutonVide();

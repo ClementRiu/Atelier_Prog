@@ -7,6 +7,9 @@ Imagine::Image<Imagine::Color> parchemin_menu;
 
 Imagine::Image<Imagine::Color> pierre_bouton;
 
+Imagine::Image<Imagine::Color> heros1;
+Imagine::Image<Imagine::Color> heros2;
+
 Imagine::Image<Imagine::Color> foret1;
 Imagine::Image<Imagine::Color> eau1;
 Imagine::Image<Imagine::Color> lande1;
@@ -36,10 +39,20 @@ bool charge_image() {
 
 
     //ATTENTION : CHARGE L'IMAGE À TAILLE MAXIMALE, NÉCESSITE UN REDIMENSIONNEMENT !
+    if (!Imagine::load(heros1, srcPath("/Image/Icone/heros1.jpg"))) {
+        std::cout << "Image \"heros1.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+    if (!Imagine::load(heros2, srcPath("/Image/Icone/heros2.jpg"))) {
+        std::cout << "Image \"heros2.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+
     if (!Imagine::load(pierre_bouton, srcPath("/Image/Pierre_bouton/pierre1.jpg"))) {
         std::cout << "Image \"pierre1.jpg\" non trouvée." << std::endl;
         return false;
     }
+
 
 
     if (!Imagine::load(foret1, srcPath("Image/Foret/forest_texture.jpg"))) {

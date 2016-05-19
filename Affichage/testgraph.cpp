@@ -17,7 +17,11 @@ int main() {
         if (choix == 1) {
             affiche_chargement();
             CarteduMonde carte;
-            choix = gestion(carte);
+            Heros_Graph heros1;
+            Heros_Graph heros2;
+            heros1.set_Heros_Graph("Héros gentil", "Heros_bleu", widthmap / 2, heightmap / 2, 1);
+            heros2.set_Heros_Graph("Héros méchant", "Heros_rouge", widthmap / 2 + 10, heightmap / 2 + 10, 2);
+            choix = gestion(carte, heros1, heros2);
         }
         if (choix == 2) {
             affiche_chargement();
