@@ -6,10 +6,11 @@
 #include "case_graph.h"
 #include "bouton_graph.h"
 #include "ecran.h"
+#include "icone_graph.h"
 
 
 //Fonction qui affiche l'écran de gestion et gère le jeu.
-int gestion(CarteduMonde &carte);
+int gestion(CarteduMonde &carte, Heros_Graph heros1, Heros_Graph heros2);
 
 //Fonction qui attend un évènement.
 int evenement(CarteduMonde &carte, Bouton bouton_fin_tour, Bouton bouton_menu);
