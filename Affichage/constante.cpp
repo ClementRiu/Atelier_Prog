@@ -13,6 +13,8 @@ Imagine::Image<Imagine::Color> heros2;
 Imagine::Image<Imagine::Color> foret1;
 Imagine::Image<Imagine::Color> eau1;
 Imagine::Image<Imagine::Color> lande1;
+Imagine::Image<Imagine::Color> villebleue;
+Imagine::Image<Imagine::Color> villerouge;
 
 //Fonction qui charge toutes les frames dans leur variables et vérifie qu'il n'y a pas d'erreur. Adapte également l'image à taille_case_graph.
 bool charge_image() {
@@ -73,6 +75,19 @@ bool charge_image() {
     }
     lande1 = lande1.getSubImage(0, 0, taille_case_graph, taille_case_graph);
 
+    if (!Imagine::load(villebleue, srcPath("Image/Ville/ville1.jpg"))) {
+        std::cout << "Image \"ville1.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+    double dimb = double(taille_case_graph) / double(std::min(villebleue.height(), villebleue.width()));
+    villebleue = Imagine::reduce(villebleue, 1 / dimb);
+
+    if (!Imagine::load(villerouge, srcPath("Image/Ville/ville2.jpg"))) {
+        std::cout << "Image \"ville2.jpg\" non trouvée." << std::endl;
+        return false;
+    }
+    double dimr = double(taille_case_graph) / double(std::min(villerouge.height(), villerouge.width()));
+    villerouge = Imagine::reduce(villerouge, 1 / dimr);
 
     std::cout << "Toutes les images sont chargées" << std::endl;
     return true;
@@ -89,6 +104,12 @@ Imagine::Image<Imagine::Color> entre_image_case(std::string nom_image_voulue) {
     if (std::string(nom_image_voulue) == std::string("lande1")) {
         return lande1;
     }
+    if (std::string(nom_image_voulue) == std::string("villebleue")) {
+        return villebleue;
+    }
+    if (std::string(nom_image_voulue) == std::string("villerouge")) {
+        return villerouge;
+    }
 }
 
 //Fonction qui renvoie la couleur assossiée au nom, pour les cases de 'mmap'.
@@ -101,5 +122,11 @@ Imagine::Color entre_couleur_case(std::string nom_image_voulue){
     }
     if (std::string(nom_image_voulue) == std::string("Lande")) {
         return Imagine::YELLOW;
+    }
+    if (std::string(nom_image_voulue) == std::string("villebleue")) {
+        return bleusombre;
+    }
+    if (std::string(nom_image_voulue) == std::string("villerouge")) {
+        return rougesombre;
     }
 }

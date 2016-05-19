@@ -34,23 +34,23 @@ void CarteduMonde::generation() {
         for (int j = 0; j < heightmap; j++) {
             if (i == j) {
                 listecase(i, j).set_Case_Graph("Etendue d'Eau", "De l'eau, sans vie, sans poisson, rien que de l'eau",
-                                               "eau1", false);
+                                               "eau1");
             }
             else {
                 if (i < 20) {
                     listecase(i, j).set_Case_Graph("Foret", "C'est vert, les souris s'y cachent, c'est UNE FORET",
-                                                   "foret1", false);
+                                                   "foret1");
                 }
                 else {
-                    listecase(i, j).set_Case_Graph("Lande", "Les choses les plus chiantes du monde...", "lande1",
-                                                   false);
+                    listecase(i, j).set_Case_Graph("Lande", "Les choses les plus chiantes du monde...", "lande1");
                 }
             }
         }
     }
-    listecase(widthmap / 2, heightmap / 2).set_Case_Graph("Foret",
-                                                          "C'est vert, les souris s'y cachent, c'est UNE FORET",
-                                                          "foret1", false);
+    listecase(widthmap / 2, heightmap / 2).set_Case_Graph("Ville Bleue", "Le doux foyer des gentils bleus",
+                                                          "villebleue");
+    listecase(widthmap / 4, heightmap / 5).set_Case_Graph("Ville Rouge", "Le doux foyer des méchants rouges",
+                                                          "villerouge");
 }
 
 //Rempli image_map et image mmap en fonction de la listecase.
