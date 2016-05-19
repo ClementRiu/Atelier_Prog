@@ -5,6 +5,7 @@
 #include <Imagine/Graphics.h>
 #include <stdlib.h>
 #include "priorite.h"
+#include <Imagine/Images.h>
 #include <bits/stl_deque.h>
 #include <iostream>
 #include <fstream>

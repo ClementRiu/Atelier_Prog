@@ -2,7 +2,6 @@
 #define BOUTONS_H
 
 #include "carte.h"
-#include "../Affichage/include_graph.h"
 
 const int ZoneBoutonFinTour[4] = {NbCase * Taille + Separation, Taille * (NbCase - 5),
                                   NbCase * Taille + Separation + LargDroite, NbCase * Taille};
