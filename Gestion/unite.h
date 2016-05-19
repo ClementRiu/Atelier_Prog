@@ -13,6 +13,7 @@ const int NB_MAX_ATTAQUES = 10;
 
 class Ville;
 class Sbire;
+class Joueur;
 
 
 const Imagine::Coords<2> portee10(1, 0);
@@ -69,6 +70,7 @@ protected:
     bool tour;
 
     int IDjoueur;
+    Joueur* joueur;
 
     int numcase;
     float PDep;
@@ -140,7 +142,7 @@ public:
     void setAttaque(Attaque att, int i);
 
     // Achète le i-ème objet dans la ville
-    virtual void achete(Ville* ville, int i, bool b);
+    virtual void achete(Ville* ville, int i, bool b, int &ressources);
 
     virtual void ouvreVille(Ville* v);
 
@@ -176,13 +178,15 @@ public:
     virtual void ouvreInventaire();
 
     // Fonction vide ici
-    virtual void equipe(Ville* ville, int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite, int& ressources);
 
     // Fonction vide ici
     virtual std::string getNomCasque();
 
     // Destructeur de la classe Unite (sert a creer celui de la classe Heros)
     virtual ~Unite();
+
+    virtual void plop();
 };
 
 
@@ -197,6 +201,7 @@ public:
     virtual bool estVivant();
     virtual void prendDommage(int valeurDegats);
     virtual void tueUnite();
+
 
     virtual ~Sbire();
 };
@@ -227,7 +232,7 @@ public:
     virtual void ajouteSbire(Sbire* s);
 
     //equipe appelle la méthode adéquate en fonction du type d'équipement
-    virtual void equipe(Ville* ville, int i, bool droite = true);
+    virtual void equipe(Ville* ville, int i, bool droite, int& ressources);
 
     virtual std::vector<Sbire *> getArmee();
 
@@ -248,8 +253,11 @@ public:
     // Fonction pour ajouter un objet a l'inventaire
     virtual void ramasse(Mere *obj);
 
+
+    virtual void plop();
+
     // Achète le i-ème objet dans la ville
-    virtual void achete(Ville* ville, int i, bool b);
+    virtual void achete(Ville* ville, int i, bool b, int &ressources);
 
     Casque equipeCasque(Casque casque);
     Arme equipeArmeDroite(Arme arme);

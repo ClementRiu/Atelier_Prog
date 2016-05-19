@@ -103,10 +103,12 @@ Mere *Inventaire::get(int i) {
 // Fonction a modifier
 // faire vien plutot de Unite
 void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
-                                 Unite *unite, void (Unite::*faire)(Ville*, int, bool)) {
+                                 Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&)) {
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
     std::vector<Bouton> boutonUtile;
     std::vector<int> objetPresent;
+    // A MODIFIER
+    int ressources = 1;
 
     // Affichage des boutons pour scroller et pour fermer
     Bouton boutonStop(ZoneBoutonFerme, Imagine::BLACK, "Fermer");
@@ -168,7 +170,7 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         for (int i = 0; i < boutonUtile.size(); ++i) {
             if (boutonUtile[i].boutonActive(x, y, decalementVertical)) {
                 // Applique une methode de Unite a travers le pointeur faire
-                (*unite.*faire)(ville, objetPresent[i], true);
+                (*unite.*faire)(ville, objetPresent[i], true, ressources);
                 // On change le nom du bouton et on le reaffiche
                 boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom());
                 boutonUtile[i].affiche(decalementVertical);

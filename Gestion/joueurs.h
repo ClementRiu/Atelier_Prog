@@ -8,7 +8,7 @@
 #include "../Gestion/unite.h"
 
 const int NB_HEROS_MAX = 10;
-const int NB_RESSOURCES = 3;
+const int NB_RESSOURCES = 1;
 
 const int NB_BATIMENTS = 10;
 const int NB_AMELIORATIONS = 3;
@@ -64,7 +64,7 @@ public:
 class Joueur {
     int id;
     int ressources[NB_RESSOURCES]; //tableau de ressources du joueur, comme de l'or, du bois...
-    int revenus[NB_RESSOURCES]; //tableau de revenus par tour des ressources
+    float revenus[NB_RESSOURCES]; //tableau de revenus par tour des ressources
     int score; //non utilisé pour l'instant, avoir un score reste une tradition vidéoludique
     int nb_heros_max_joueur;
     std::vector<Unite *> herosJoueur;

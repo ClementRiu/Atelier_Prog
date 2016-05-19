@@ -78,6 +78,16 @@ Unite::Unite(const Unite &unit) {
 }
 
 
+void Unite::plop() {
+
+}
+
+void Heros::plop() {
+    std::cout << "ploup";
+}
+
+
+
 Unite::Unite(int ID, float dep, float depMax, int num, float init) {
     tour = false;
     IDjoueur = ID;
@@ -396,7 +406,7 @@ void Unite::ramasse(Mere *obj) {
 
 }
 
-void Unite::achete(Ville *ville, int i, bool b) {
+void Unite::achete(Ville *ville, int i, bool b, int &ressources) {
 }
 
 
@@ -405,7 +415,7 @@ void Unite::ouvreInventaire() {
 }
 
 
-void Unite::equipe(Ville *ville, int i, bool droite) {
+void Unite::equipe(Ville *ville, int i, bool droite, int &ressources) {
 
 }
 
@@ -536,7 +546,7 @@ void Heros::ouvreVille(Ville *v) {
         categoriesObjets.ajoute(new Objet());
 
         // Creation du pointeur vers la fonction equipe
-        void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::achete;
+        void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::achete;
 
         (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
         //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
@@ -545,7 +555,7 @@ void Heros::ouvreVille(Ville *v) {
 }
 
 
-void Heros::achete(Ville *ville, int i, bool b) {
+void Heros::achete(Ville *ville, int i, bool b, int &ressources) {
     this->ramasse(ville->getObjet(i)->clone());
 }
 
@@ -556,6 +566,12 @@ bool Heros::estHeros() {
 
 
 void Heros::declencheCombat(Unite *u) {
+    /*
+    carte[308].getUnite()->plop();
+    Unite *unite;
+    unite = carte[308].getUnite();
+    unite->plop();
+    */
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
@@ -604,6 +620,7 @@ void Heros::declencheCombat(Unite *u) {
     fileUnites.push(this);
     fileUnites.push(u);
 
+
     bool finCombat = false;
 
     int tourCombat = 1; //numéro du tour, à remplacer
@@ -619,11 +636,18 @@ void Heros::declencheCombat(Unite *u) {
             fileUnites.push(unitJouable);
         }
 
+        std::cout << unitesAlliees[0]->getPV() << std::endl;
+        std::cout << unitesAlliees[1]->getPV() << std::endl;
+        std::cout << unitesEnnemies[0]->getPV() << std::endl;
+        std::cout << unitesEnnemies[1]->getPV() << std::endl;
         //On regarde si les unités contenue dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
         for (int i = 0; i < unitesAlliees.size(); i++) {
             if (!unitesAlliees[i]->estVivant()) {
                 if (unitesAlliees[i]->estHeros()) {
-                    getArmee()[i]->tueUnite();
+                    for (int j = 0; j < getArmee().size(); ++j) {
+                        unitesAlliees[i]->getArmee()[j]->tueUnite();
+                    }
+                    finCombat = true;
                 }
                 else {
                     carte[unitesAlliees[i]->getCase()].retireUnite();
@@ -637,7 +661,10 @@ void Heros::declencheCombat(Unite *u) {
         for (int i = 0; i < unitesEnnemies.size(); i++) {
             if (!unitesEnnemies[i]->estVivant()) {
                 if (unitesEnnemies[i]->estHeros()) {
-
+                    for (int j = 0; j < unitesEnnemies[i]->getArmee().size(); ++j) {
+                        unitesEnnemies[i]->getArmee()[j]->tueUnite();
+                    }
+                    finCombat = true;
                 }
                 carte[unitesEnnemies[i]->getCase()].retireUnite();
                 unitesEnnemies.erase(unitesEnnemies.begin() + i);
@@ -743,7 +770,7 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 }
 
 
-void Heros::equipe(Ville *ville, int i, bool droite) {
+void Heros::equipe(Ville *ville, int i, bool droite, int &ressources) {
     if (i < inventaire.taille()) {
         inventaire.get(i)->equiper(this, droite);
     }
@@ -784,7 +811,7 @@ void Heros::ouvreInventaire() {
     categoriesObjets.ajoute(new Objet());
 
     // Creation du pointeur vers la fonction equipe
-    void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::equipe;
+    void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::equipe;
 
     inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
 

@@ -62,6 +62,7 @@ int main() {
     unitesEnnemies[0]->ajouteSbire(sbire3);
     unitesEnnemies[1]->ajouteSbire(sbire4);
 
+
     // Remplissage de l'inventaire de la première unité qui est bien un héros
     unitesAlliees[0]->ramasse(new Objet("merde"));
     unitesAlliees[0]->ramasse(new Casque("casque"));
