@@ -12,6 +12,11 @@ int main() {
 
     Carte carte(1);
 
+    // Définition des joueurs
+    Joueur allie(1);
+    Joueur ennemi(2);
+
+
     // Initialisation des unites
     // Ecran de menu
     std::vector<Unite *> unitesAlliees;
@@ -113,8 +118,8 @@ int main() {
     boutonFinTour.affiche();
 
 
-    Joueur allie(1, unitesAlliees);
-    Joueur ennemi(2, unitesEnnemies);
+    allie.ajouteUnite(unitesAlliees);
+    ennemi.ajouteUnite(unitesEnnemies);
 
     // Deplacement des unites
     bool quit = false;

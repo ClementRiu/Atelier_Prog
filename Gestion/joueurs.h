@@ -79,6 +79,11 @@ public:
 
     Joueur(int id, std::vector<Unite *> unites); //uniquement pour tester
 
+    int& getRessources();
+
+    void ajouteUnite(std::vector<Unite *> unite);
+
+    void ajouteVille(std::vector<Ville *> ville);
 
     int get_id() const;
 

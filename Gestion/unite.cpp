@@ -2,7 +2,6 @@
 #include <iostream>
 #include "joueurs.h"
 
-
 //attaque de base
 Attaque::Attaque() {
     zoneInfluence.push_back(portee10);
@@ -410,7 +409,7 @@ void Unite::achete(Ville *ville, int i, bool b, int &ressources) {
 }
 
 
-void Unite::ouvreInventaire() {
+void Unite::ouvreInventaire(int &ressources) {
 
 }
 
@@ -548,7 +547,7 @@ void Heros::ouvreVille(Ville *v) {
         // Creation du pointeur vers la fonction equipe
         void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::achete;
 
-        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
+        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction, joueur->getRessources());
         //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
     }
     delete h2;
@@ -782,7 +781,7 @@ void Heros::ramasse(Mere *obj) {
 }
 
 
-void Heros::ouvreInventaire() {
+void Heros::ouvreInventaire(int &ressources) {
     // Creation des differents boutons pour les differentes categories d'objets
     std::vector<Bouton> boutonsChoix;
     std::vector<std::string> nomBoutons;
@@ -813,7 +812,7 @@ void Heros::ouvreInventaire() {
     // Creation du pointeur vers la fonction equipe
     void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::equipe;
 
-    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
+    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction, ressources);
 
     //categoriesObjets.~Inventaire();
 }

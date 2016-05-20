@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <typeinfo>
 #include "../Gestion/carte.h"
 #include "../Gestion/boutons.h"
@@ -19,6 +20,7 @@ const int ZoneBoutonUp[4] = {NbCase * Taille + Separation, 0, NbCase * Taille + 
                              LargDroite}; // Zone du bouton Up
 const int ZoneBoutonDown[4] = {NbCase * Taille + Separation, LargDroite + 10,
                                NbCase * Taille + Separation + LargDroite, 2 * LargDroite + 10}; // Zone du bouton Down
+const int ZoneBoutonArgent[4] = {0, (NbCase - 2) * Taille, 50, NbCase * Taille};
 const int BoutonMilieu[2] = {180, width - 100};
 
 
@@ -85,7 +87,7 @@ public:
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple
     void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
-                         Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&));
+                         Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources);
 
     // Retire le i-ème objet de l'nventaire
     void retire(int i);

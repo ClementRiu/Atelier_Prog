@@ -60,6 +60,9 @@ Joueur::Joueur(int num) {
     for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] = 0;
     }
+    for (int i = 0; i<NB_RESSOURCES; ++i) {
+        revenus[i] = 100;
+    }
     score = 0;
     nb_heros_max_joueur = 1;
 
@@ -79,6 +82,7 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite, std::vector<Ville *> villes)
     }
 }
 
+
 Joueur::Joueur(int idj, std::vector<Unite *> unite) {
     id = idj;
     herosJoueur.resize(unite.size());
@@ -90,6 +94,19 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite) {
     }
     score = 0;
     nb_heros_max_joueur = 1;
+}
+
+
+void Joueur::ajouteUnite(std::vector<Unite *> unite) {
+    for (int i = 0; i < unite.size(); i++) {
+        herosJoueur.push_back(unite[i]);
+    }
+}
+
+void Joueur::ajouteVille(std::vector<Ville *> ville) {
+    for (int i = 0; i < ville.size(); i++) {
+        villesJoueur.push_back(*ville[i]);
+    }
 }
 
 
@@ -162,7 +179,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
             // Bouton inventaire
             if (boutonInventaire.boutonActive(x, y)) {
-                unite->ouvreInventaire();
+                unite->ouvreInventaire(ressources[0]);
                 // unites[u]->equipe(1);
                 // unites[u]->ouvreInventaire();
                 // Reaffichage de la carte
@@ -203,6 +220,10 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
             unite->afficheCaseDisponibleOnOff(carte, false, dep, 0);
         }
     }
+}
+
+int& Joueur::getRessources() {
+    return ressources[0];
 }
 
 #if 0
@@ -261,10 +282,6 @@ bool Ville::get_heros_present() {
     return heros_present;
 }
 
-int Joueur::get_ressources(int i) {
-    return ressources[i];
-}
-
 int Joueur::get_score() {
     return score;
 }
@@ -295,6 +312,11 @@ void Joueur::add_score(int points) {
 void Joueur::tue_heros(Unite* mort) {
     //à faire dès que les héros ont une idée
 }
+
+int& Joueur::getRessources() {
+    return ressources[0];
+}
+
 
 void Joueur::recrute_heros(Unite* recrue) {
     herosJoueur.push_back(recrue);

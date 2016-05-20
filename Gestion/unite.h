@@ -175,7 +175,7 @@ public:
     virtual void ramasse(Mere *obj);
 
     // Fonction vide ici
-    virtual void ouvreInventaire();
+    virtual void ouvreInventaire(int &ressources);
 
     // Fonction vide ici
     virtual void equipe(Ville* ville, int i, bool droite, int& ressources);
@@ -248,7 +248,7 @@ public:
     virtual void ouvreVille(Ville* v);
 
     //Fonction a modifier
-    virtual void ouvreInventaire();
+    virtual void ouvreInventaire(int &ressources);
 
     // Fonction pour ajouter un objet a l'inventaire
     virtual void ramasse(Mere *obj);

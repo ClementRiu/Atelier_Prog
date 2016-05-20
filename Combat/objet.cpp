@@ -103,20 +103,24 @@ Mere *Inventaire::get(int i) {
 // Fonction a modifier
 // faire vien plutot de Unite
 void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
-                                 Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&)) {
+                                 Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources) {
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
     std::vector<Bouton> boutonUtile;
     std::vector<int> objetPresent;
-    // A MODIFIER
-    int ressources = 1;
 
     // Affichage des boutons pour scroller et pour fermer
     Bouton boutonStop(ZoneBoutonFerme, Imagine::BLACK, "Fermer");
     Bouton boutonUp(ZoneBoutonUp, Imagine::BLACK, "Up");
     Bouton boutonDown(ZoneBoutonDown, Imagine::BLACK, "Down");
+    std::ostringstream oss;
+    int d = 3;
+    oss << ressources;
+    Bouton boutonRessources(ZoneBoutonArgent, Imagine::YELLOW, oss.str());
     boutonStop.affiche();
     boutonUp.affiche();
     boutonDown.affiche();
+    boutonRessources.affiche();
+
 
     // Affichage des boutons des differentes categories
     for (int i = 0; i < boutonsCategories.size(); ++i) {
