@@ -149,6 +149,8 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
                 goto LOOP;
             }
 
+            unite->affichePVNombre();
+
             float dep = unite->getDep();
 
             //On affiche les cases accessibles en déplacement

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "outils.h"
 
 void sauvegarde(std::vector<Unite *> unites) {
@@ -138,13 +139,28 @@ void survole(int &x, int &y) {
 
 void afficheCaseSurvole(int x, int y, Carte &carte) {
     // A MODIFIER
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite +70,
                       Imagine::WHITE);
     if (numeroCase(x, y) != -1) {
         Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille,
                           carte[numeroCase(x, y)].getImage());
         Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
-                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
+                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 7);
+        if (carte[numeroCase(x, y)].getOccupe()) {
+            int test = int(carte[numeroCase(x, y)].getUnite()->getPV());
+            std::string result;
+            std::ostringstream convert;
+            convert << test;
+            result = convert.str();
+
+            std::cout<<result<<std::endl;
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 50 + Taille,
+                                "Unité", Imagine::BLACK, 9);
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 60 + Taille,
+                                "survolée :", Imagine::BLACK, 9);
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 75 + Taille,
+                                "PV = "+ result, Imagine::BLACK, 10);
+        }
     }
 }
 
