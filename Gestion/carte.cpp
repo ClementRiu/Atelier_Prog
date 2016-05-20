@@ -150,7 +150,7 @@ Case::Case(const Case &tuile) {
 }
 
 
-void Case::flagHeros(Unite* u) {
+void Case::placeUnite(Unite* u) {
     pointeurUnite = u;
 }
 

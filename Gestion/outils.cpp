@@ -40,7 +40,7 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
             std::getline(fichier, ligne);
             float init = atoi(ligne.c_str());
             unites.push_back(new Unite(ID, dep, depMax, num, init));
-            carte[num].flagHeros(unites[unites.size()-1]);
+            carte[num].placeUnite(unites[unites.size()-1]);
         }
         fichier.close();
     }
