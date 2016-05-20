@@ -187,6 +187,10 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
                 oss2 << contenu[objetPresent[i]]->getPrix();
                 boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom() + " " + oss2.str());
                 boutonUtile[i].affiche(decalementVertical);
+                std::ostringstream oss3;
+                oss3 << ressources;
+                boutonRessources.setNom(oss3.str());
+                boutonRessources.affiche();
             }
         }
 

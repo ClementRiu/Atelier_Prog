@@ -604,7 +604,10 @@ void Heros::ouvreVille(Ville *v) {
 
 
 void Heros::achete(Ville *ville, int i, bool b, int &ressources) {
-    this->ramasse(ville->getObjet(i)->clone());
+    if (ressources >= ville->getObjet(i)->getPrix()) {
+        this->ramasse(ville->getObjet(i)->clone());
+        ressources -= ville->getObjet(i)->getPrix();
+    }
 }
 
 
