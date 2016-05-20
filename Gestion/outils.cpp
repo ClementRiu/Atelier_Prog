@@ -153,7 +153,6 @@ void afficheCaseSurvole(int x, int y, Carte &carte) {
             convert << test;
             result = convert.str();
 
-            std::cout<<result<<std::endl;
             Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 50 + Taille,
                                 "Unité", Imagine::BLACK, 9);
             Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 60 + Taille,
