@@ -225,7 +225,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(int ID, float dep, float depMax, int num, float init);
+    Heros(int ID, float dep, float depMax, int num, float init, Joueur* jou);
     Heros(const Heros &h);
     Heros(const Unite &u);
 

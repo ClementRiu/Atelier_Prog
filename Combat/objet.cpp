@@ -6,11 +6,17 @@ std::string Mere::getNom() {
     return nom;
 }
 
+int Mere::getPrix() {
+    return prix;
+}
+
 
 Bouton Mere::creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax) {
     // On teste l'égalité des types 2 Meres, pour ensuite dans une autre fonction voir si on veut afficher l'objet dans la catégorie ou pas
     if (typeid(*this) == typeid(*obj)) {
-        Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom());
+        std::ostringstream oss;
+        oss << this-> prix;
+        Bouton b(xmin, ymin, xmax, ymax, Imagine::BLACK, this->getNom() + " " + oss.str());
         ymin += EcartementLignesInventaire;
         ymax += EcartementLignesInventaire;
         return b;
@@ -33,13 +39,15 @@ Mere::Mere() {
 }
 
 
-Mere::Mere(std::string nom_) {
+Mere::Mere(std::string nom_, int price) {
+    prix = price;
     nom = nom_;
 }
 
 
 Mere::Mere(const Mere &m) {
     nom = m.nom;
+    prix = m.prix;
 }
 
 
@@ -53,7 +61,7 @@ Objet::Objet() : Mere() {
 }
 
 
-Objet::Objet(std::string nom_) : Mere(nom_) {
+Objet::Objet(std::string nom_, int price) : Mere(nom_, price) {
 
 }
 
@@ -105,6 +113,7 @@ Mere *Inventaire::get(int i) {
 void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
                                  Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources) {
     Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+
     std::vector<Bouton> boutonUtile;
     std::vector<int> objetPresent;
 
@@ -113,14 +122,12 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
     Bouton boutonUp(ZoneBoutonUp, Imagine::BLACK, "Up");
     Bouton boutonDown(ZoneBoutonDown, Imagine::BLACK, "Down");
     std::ostringstream oss;
-    int d = 3;
     oss << ressources;
     Bouton boutonRessources(ZoneBoutonArgent, Imagine::YELLOW, oss.str());
     boutonStop.affiche();
     boutonUp.affiche();
     boutonDown.affiche();
     boutonRessources.affiche();
-
 
     // Affichage des boutons des differentes categories
     for (int i = 0; i < boutonsCategories.size(); ++i) {
@@ -176,7 +183,9 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
                 // Applique une methode de Unite a travers le pointeur faire
                 (*unite.*faire)(ville, objetPresent[i], true, ressources);
                 // On change le nom du bouton et on le reaffiche
-                boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom());
+                std::ostringstream oss2;
+                oss2 << contenu[objetPresent[i]]->getPrix();
+                boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom() + " " + oss2.str());
                 boutonUtile[i].affiche(decalementVertical);
             }
         }
@@ -220,7 +229,7 @@ Equipement::Equipement(const Equipement &eq) : Objet(eq) {
 }
 
 
-Equipement::Equipement(std::string nom_) : Objet(nom_) {
+Equipement::Equipement(std::string nom_, int price) : Objet(nom_, price) {
 
 }
 
@@ -235,7 +244,7 @@ Casque::Casque() {
 }
 
 
-Casque::Casque(std::string nom_) : Equipement(nom_) {
+Casque::Casque(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -260,7 +269,7 @@ Anneau::Anneau() {
 }
 
 
-Anneau::Anneau(std::string nom_) : Equipement(nom_) {
+Anneau::Anneau(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -280,7 +289,7 @@ Gants::Gants() {
 }
 
 
-Gants::Gants(std::string nom_) : Equipement(nom_) {
+Gants::Gants(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -300,7 +309,7 @@ Jambes::Jambes() {
 }
 
 
-Jambes::Jambes(std::string nom_) : Equipement(nom_) {
+Jambes::Jambes(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -320,7 +329,7 @@ Bottes::Bottes() {
 }
 
 
-Bottes::Bottes(std::string nom_) : Equipement(nom_) {
+Bottes::Bottes(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -345,7 +354,7 @@ Arme::Arme() {
 }
 
 
-Arme::Arme(std::string nom_) : Equipement(nom_) {
+Arme::Arme(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 
@@ -365,7 +374,7 @@ Torse::Torse() {
 }
 
 
-Torse::Torse(std::string nom_) : Equipement(nom_) {
+Torse::Torse(std::string nom_, int price) : Equipement(nom_, price) {
 
 }
 

@@ -36,11 +36,13 @@ public:
 
     Mere();
 
-    Mere(std::string nom_);
+    Mere(std::string nom_, int price);
 
     Mere(const Mere &m);
 
     std::string getNom();
+
+    int getPrix();
 
     // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
     // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
@@ -59,7 +61,7 @@ class Objet : public Mere {
 public:
     Objet();
 
-    Objet(std::string nom_);
+    Objet(std::string nom_, int price);
 
     bool operator==(const Objet &B) const;
 
@@ -96,7 +98,6 @@ public:
 };
 
 
-const Objet nul("NUL");
 
 
 class Equipement : public Objet {
@@ -114,7 +115,7 @@ public:
 
     Equipement(const Equipement &eq);
 
-    Equipement(std::string nom_);
+    Equipement(std::string nom_, int price);
 };
 
 
@@ -122,7 +123,7 @@ class Casque : public Equipement {
 public:
     Casque();
 
-    Casque(std::string nom_);
+    Casque(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -134,7 +135,7 @@ class Anneau : public Equipement {
 public:
     Anneau();
 
-    Anneau(std::string nom_);
+    Anneau(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -146,7 +147,7 @@ class Gants : public Equipement {
 public:
     Gants();
 
-    Gants(std::string nom_);
+    Gants(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -158,7 +159,7 @@ class Jambes : public Equipement {
 public:
     Jambes();
 
-    Jambes(std::string nom_);
+    Jambes(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -170,7 +171,7 @@ class Bottes : public Equipement {
 public:
     Bottes();
 
-    Bottes(std::string nom_);
+    Bottes(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -182,7 +183,7 @@ class Arme : public Equipement {
 public:
     Arme();
 
-    Arme(std::string nom_);
+    Arme(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -194,7 +195,7 @@ class Torse : public Equipement {
 public:
     Torse();
 
-    Torse(std::string nom_);
+    Torse(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 

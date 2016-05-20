@@ -482,14 +482,14 @@ Sbire::~Sbire() {
 //*********************************************************************************************************************
 
 
-Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, dep, depMax, num, init) {
-    Casque c("Casque de base");
-    Arme a("Arme de base");
-    Torse t("Armure de Base");
-    Gants g("Gants de base");
-    Anneau an("Anneau de base");
-    Bottes b("Bottes de base");
-    Jambes j("Genouilleres de base");
+Heros::Heros(int ID, float dep, float depMax, int num, float init, Joueur* jou) : Unite(ID, dep, depMax, num, init) {
+    Casque c("Casque de base", 0);
+    Arme a("Arme de base", 0);
+    Torse t("Armure de Base", 0);
+    Gants g("Gants de base", 0);
+    Anneau an("Anneau de base", 0);
+    Bottes b("Bottes de base", 0);
+    Jambes j("Genouilleres de base", 0);
     equipementCasque = c;
     equipementArmeDroite = a;
     equipementTorse = t;
@@ -497,6 +497,7 @@ Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, d
     equipementAnneauDroite = an;
     equipementBottes = b;
     equipementJambes = j;
+    joueur = jou;
 }
 
 
@@ -520,7 +521,7 @@ std::vector<Sbire *> Heros::getArmee() {
 
 
 void Heros::ouvreVille(Ville *v) {
-    Heros *h2 = new Heros(1, 1, 1, 1, 1);
+    Heros *h2 = new Heros(1, 1, 1, 1, 1, joueur);
     if (typeid(this) == typeid(h2)) {
         // Creation des differents boutons pour les differentes categories d'objets
         std::vector<Bouton> boutonsChoix;
@@ -551,6 +552,8 @@ void Heros::ouvreVille(Ville *v) {
 
         // Creation du pointeur vers la fonction equipe
         void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::achete;
+
+        std::cerr << (joueur==NULL);
 
         (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction, joueur->getRessources());
         //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
