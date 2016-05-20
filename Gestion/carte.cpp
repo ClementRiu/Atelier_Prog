@@ -416,15 +416,15 @@ Carte::Carte(int inutilePourLInstant) {
             int k = i/Taille;
             int l = j/Taille;
             if (I(k,l)==0){
-                Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
+                Case c(i, j, new CaseNormale(2, "Champs", Imagine::GREEN));
                 carte[numeroCase(i, j)] = c;
             }
             if(I(k,l)==1){
-                Case c(i, j,  new CaseNormale(1, "Une case a moindre cout de deplacement", Imagine::YELLOW));
+                Case c(i, j,  new CaseNormale(1, "Route", Imagine::YELLOW));
                 carte[numeroCase(i, j)] = c;
             }
             if (I(k,l)==2){
-                Case c(i, j, new CaseNormale(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE));
+                Case c(i, j, new CaseNormale(INF, "Eau", Imagine::BLUE));
                 carte[numeroCase(i, j)] = c;
             }
 
@@ -442,15 +442,15 @@ Carte::Carte(Ville *v) {
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
             if ((i + 1) % (j + 1) == 0) {
-                Case c(i, j, new CaseNormale(INF, "De l'eau, sans vie, sans poisson, rien que de l'eau", Imagine::BLUE));
+                Case c(i, j, new CaseNormale(INF, "Eau", Imagine::BLUE));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) == 1) {
-                Case c(i, j, new CaseNormale(2, "C'est vert, les souris s'y cachent, c'est de l'herbe", Imagine::GREEN));
+                Case c(i, j, new CaseNormale(2, "Champs", Imagine::GREEN));
                 carte[numeroCase(i, j)] = c;
             }
             if ((i + 1) % (j + 1) > 1) {
-                Case c(i, j,  new CaseNormale(1, "Une case a moindre cout de deplacement", Imagine::YELLOW));
+                Case c(i, j,  new CaseNormale(1, "Route", Imagine::YELLOW));
                 carte[numeroCase(i, j)] = c;
             }
         }

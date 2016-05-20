@@ -145,6 +145,8 @@ public:
     virtual void achete(Ville* ville, int i, bool b, int &ressources);
 
     virtual void ouvreVille(Ville* v);
+    
+    virtual void affichePVNombre();
 
     //Fonction qui renvoie false quand appelé sur une Unité ou un Sbire, et true sur un Heros
     virtual bool estHeros();
@@ -185,8 +187,6 @@ public:
 
     // Destructeur de la classe Unite (sert a creer celui de la classe Heros)
     virtual ~Unite();
-
-    virtual void plop();
 };
 
 
@@ -202,6 +202,7 @@ public:
     virtual void prendDommage(int valeurDegats);
     virtual void tueUnite();
 
+    virtual void affichePVNombre();
 
     virtual ~Sbire();
 };
@@ -253,8 +254,7 @@ public:
     // Fonction pour ajouter un objet a l'inventaire
     virtual void ramasse(Mere *obj);
 
-
-    virtual void plop();
+    virtual void affichePVNombre();
 
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b, int &ressources);

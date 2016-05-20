@@ -1,5 +1,6 @@
 #include "unite.h"
 #include <iostream>
+#include <sstream>
 #include "joueurs.h"
 
 //attaque de base
@@ -74,15 +75,6 @@ Unite::Unite(const Unite &unit) {
     for (int i = 0; i++; i < NB_MAX_ATTAQUES) {
         competences[i] = unit.competences[i];
     }
-}
-
-
-void Unite::plop() {
-
-}
-
-void Heros::plop() {
-    std::cout << "ploup";
 }
 
 
@@ -209,6 +201,10 @@ float Unite::getInit() const {
 
 void Unite::ouvreVille(Ville *v) {
 
+}
+
+void Unite::affichePVNombre(){
+    
 }
 
 bool Unite::estHeros() {
@@ -454,16 +450,44 @@ bool Sbire::estVivant() {
     return true;
 }
 
-
+//A MODIFIER !! (ON NE PREND PAS EN COMPTE LE NOMBRE DE SBIRES
 void Sbire::prendDommage(int degatRecu) {
-    while (degatRecu > 0) {
-        degatRecu -= PV;
-
-        if (degatRecu > 0) {
+    /* while (degatRecu > 0) {
+        if (PV - degatRecu <= 0) {
+            degatRecu-=PV;
             PV = PVMax;
             nombre -= 1;
         }
     }
+     */
+    PV-=degatRecu;
+}
+
+//A MODIFIER !!
+void Sbire::affichePVNombre(){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite +170,
+                      Imagine::WHITE);
+
+    int intPV = int(PV);
+    std::string result;
+    std::ostringstream convert;
+    convert << intPV;
+    result = convert.str();
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
+                        "Sbire", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
+                        "courant :", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
+                        "PV = "+result, Imagine::BLACK, 10);
+
+    int intNb = nombre;
+    std::string result2;
+    std::ostringstream convert2;
+    convert2 << intNb;
+    result2 = convert.str();
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 150 + Taille,
+                        "Nb = "+result2, Imagine::BLACK, 10);
 }
 
 
@@ -513,6 +537,23 @@ void Heros::ajouteSbire(Sbire *s) {
 
 void Heros::retire(int i) {
     inventaire.retire(i);
+}
+
+void Heros::affichePVNombre(){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite +170,
+                      Imagine::WHITE);
+
+    int test = int(PV);
+    std::string result;
+    std::ostringstream convert;
+    convert << test;
+    result = convert.str();
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
+                        "Heros", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
+                        "courant :", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
+                        "PV = "+result, Imagine::BLACK, 10);
 }
 
 std::vector<Sbire *> Heros::getArmee() {
@@ -637,6 +678,7 @@ int Heros::declencheCombat(Unite *u) {
     while (!finCombat) {
         //règles d'initiative assez arbitraires, à modifier !
         Unite *unitJouable = fileUnites.pop();
+        unitJouable->affichePVNombre();
 
         //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
@@ -652,7 +694,7 @@ int Heros::declencheCombat(Unite *u) {
                         unitesAlliees[i]->getArmee()[j]->tueUnite();
                     }
                     return this->getID();
-                    finCombat = true;
+                    //finCombat = true;
                 }
                 else {
                     carte[unitesAlliees[i]->getCase()].retireUnite();
