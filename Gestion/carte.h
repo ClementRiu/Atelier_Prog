@@ -135,7 +135,7 @@ public:
     void brillanceOnOff(const bool flag);
 
     // Affiche la case
-    void affiche() const;
+    void affiche();
 
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;

@@ -45,8 +45,8 @@ int main() {
     }
     Sbire* sbire1 = new Sbire(1, 5, 5, 35, 105, 2);
     Sbire* sbire2 = new Sbire(1, 5, 5, 20, 117, 2);
-    Sbire* sbire3 = new Sbire(1, 5, 5, 35, 115, 2);
-    Sbire* sbire4 = new Sbire(1, 5, 5, 20, 110, 2);
+    Sbire* sbire3 = new Sbire(2, 5, 5, 35, 115, 2);
+    Sbire* sbire4 = new Sbire(2, 5, 5, 20, 110, 2);
 
     unitesAlliees[0]->ajouteSbire(sbire1);
     unitesAlliees[1]->ajouteSbire(sbire2);
