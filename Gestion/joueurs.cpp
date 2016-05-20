@@ -202,8 +202,26 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
                         //Si l'unité n'est pas à nous, on déclenche effectivement le combat
                         if (unite->getID() != uniteCliquee->getID()) {
                             float PDepGestion = unite->getDep();
+                            int positionGestion[2] = {unite->getCase(), uniteCliquee->getCase()};
+                            carte[positionGestion[0]].retireUnite();
+                            carte[positionGestion[1]].retireUnite();
+
+                            unite->afficheCaseDisponibleOnOff(carte, false, PDepGestion, 0);
+
                             unite->setDep(unite->getDepMax());
-                            unite->declencheCombat(uniteCliquee);
+
+                            int unitePerdante = unite->declencheCombat(uniteCliquee);
+
+
+                            if (unitePerdante==unite->getID()){
+                                uniteCliquee->setCase(positionGestion[1], carte);
+                                carte[positionGestion[1]].placeUnite(uniteCliquee);
+                            }
+                            else{
+                                unite->setCase(positionGestion[0], carte);
+                                carte[positionGestion[0]].placeUnite(unite);
+                            }
+
                             carte.affiche();
                             unite->setDep(PDepGestion);
                         }

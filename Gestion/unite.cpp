@@ -175,8 +175,8 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 
 void Unite::deplaceVersCase(Case &c2, Case &c1) {
     if (!c2.getOccupe()) {
-        c2.flagHeros(c1.getUnite());
-        c1.flagHeros(NULL);
+        c2.placeUnite(c1.getUnite());
+        c1.placeUnite(NULL);
         c1.affiche();
         c2.affiche();
         numcase = numeroCase(c2.get(0), c2.get(1));
@@ -216,7 +216,12 @@ bool Unite::estHeros() {
 }
 
 
-void Unite::setCase(int num) {
+void Unite::setCase(int & num, Carte carte) {
+    while(carte[num].NbDep()==INF){
+        num+=1;
+        std::cout<<"Modification"<<std::endl;
+    }
+
     numcase = num;
 }
 
@@ -324,7 +329,7 @@ void Unite::attaqueDeBase(Unite *u) {
 }
 
 
-void Unite::declencheCombat(Unite *u) {
+int Unite::declencheCombat(Unite *u) {
 
 }
 
@@ -564,13 +569,7 @@ bool Heros::estHeros() {
 }
 
 
-void Heros::declencheCombat(Unite *u) {
-    /*
-    carte[308].getUnite()->plop();
-    Unite *unite;
-    unite = carte[308].getUnite();
-    unite->plop();
-    */
+int Heros::declencheCombat(Unite *u) {
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
@@ -587,12 +586,17 @@ void Heros::declencheCombat(Unite *u) {
 
     Carte carte(0);
 
+    int position = 0;
+
     //on prend toutes les unités présentes dans le héros qui a déclanché le combat et on les place dans la file d'unité et d'unités alliées
     for (int i = 0; i < this->getArmee().size(); i++) {
         Sbire *uniteCourante = this->getArmee()[i];
         unitesAlliees.push_back(uniteCourante);
+        position = this->getArmee()[i]->getCase();
+        this->getArmee()[i]->setCase(position, carte);
+
         fileUnites.push(uniteCourante);
-        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
+        carte[position].placeUnite(uniteCourante);
         this->getArmee().pop_back();
     }
 
@@ -600,19 +604,22 @@ void Heros::declencheCombat(Unite *u) {
     for (int i = 0; i < u->getArmee().size(); i++) {
         Sbire *uniteCourante = u->getArmee()[i];
         unitesEnnemies.push_back(uniteCourante);
+        position = u->getArmee()[i]->getCase();
+        u->getArmee()[i]->setCase(position, carte);
+
         fileUnites.push(uniteCourante);
-        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
+        carte[position].placeUnite(uniteCourante);
         u->getArmee().pop_back();
     }
 
-
-    int positionGestion[2] = {this->getCase(), u->getCase()};
-
     // Initialisation des unites
-    this->setCase(100);
-    u->setCase(200);
-    carte[100].flagHeros(this);
-    carte[200].flagHeros(u);
+    int positionHerosAllie=100;
+    int positionHerosEnnemi=200;
+    this->setCase(positionHerosAllie, carte);
+    u->setCase(positionHerosEnnemi, carte);
+    carte[positionHerosEnnemi].placeUnite(this);
+    carte[positionHerosAllie].placeUnite(u);
+
 
     carte.affiche();
 
@@ -627,7 +634,6 @@ void Heros::declencheCombat(Unite *u) {
     while (!finCombat) {
         //règles d'initiative assez arbitraires, à modifier !
         Unite *unitJouable = fileUnites.pop();
-        std::cout << fileUnites.size() << std::endl;
 
         //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
@@ -635,10 +641,6 @@ void Heros::declencheCombat(Unite *u) {
             fileUnites.push(unitJouable);
         }
 
-        std::cout << unitesAlliees[0]->getPV() << std::endl;
-        std::cout << unitesAlliees[1]->getPV() << std::endl;
-        std::cout << unitesEnnemies[0]->getPV() << std::endl;
-        std::cout << unitesEnnemies[1]->getPV() << std::endl;
         //On regarde si les unités contenue dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
         for (int i = 0; i < unitesAlliees.size(); i++) {
             if (!unitesAlliees[i]->estVivant()) {
@@ -646,6 +648,7 @@ void Heros::declencheCombat(Unite *u) {
                     for (int j = 0; j < getArmee().size(); ++j) {
                         unitesAlliees[i]->getArmee()[j]->tueUnite();
                     }
+                    return this->getID();
                     finCombat = true;
                 }
                 else {
@@ -664,6 +667,7 @@ void Heros::declencheCombat(Unite *u) {
                         unitesEnnemies[i]->getArmee()[j]->tueUnite();
                     }
                     finCombat = true;
+                    return u->getID();
                 }
                 carte[unitesEnnemies[i]->getCase()].retireUnite();
                 unitesEnnemies.erase(unitesEnnemies.begin() + i);
@@ -674,12 +678,18 @@ void Heros::declencheCombat(Unite *u) {
         //Si un des deux vecteurs est vide, une armée a été vaincue ; c'est la fin du combat
         if (unitesAlliees.size() == 0 || unitesEnnemies.size() == 0) {
             finCombat = true;
+
+
+            if (unitesAlliees.size()==0){
+                return this->getID();
+            }
+            if(unitesEnnemies.size()==0){
+                return u->getID();
+            }
+
         }
         tourCombat += 1;
     }
-
-    this->setCase(positionGestion[0]);
-    u->setCase(positionGestion[1]);
 }
 
 

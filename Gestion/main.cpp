@@ -10,7 +10,7 @@ int main() {
     v->ajoute(new Objet("essai"));
     v->ajoute(new Objet("poup"));
 
-    Carte carte(1);
+    Carte carte(v);
 
     // Définition des joueurs
     Joueur allie(1);
@@ -45,13 +45,13 @@ int main() {
         Heros* heros2 = new Heros(1, 10, 10, 303, 100);
         unitesAlliees.push_back(heros1);
         unitesAlliees.push_back(heros2);
-        carte[20].flagHeros(unitesAlliees[0]);
-        carte[303].flagHeros(unitesAlliees[1]);
+        carte[20].placeUnite(unitesAlliees[0]);
+        carte[303].placeUnite(unitesAlliees[1]);
     }
     Sbire* sbire1 = new Sbire(1, 5, 5, 35, 105, 2);
     Sbire* sbire2 = new Sbire(1, 5, 5, 20, 117, 2);
-    Sbire* sbire3 = new Sbire(1, 5, 5, 35, 115, 2);
-    Sbire* sbire4 = new Sbire(1, 5, 5, 20, 110, 2);
+    Sbire* sbire3 = new Sbire(2, 5, 5, 35, 115, 2);
+    Sbire* sbire4 = new Sbire(2, 5, 5, 20, 110, 2);
 
     unitesAlliees[0]->ajouteSbire(sbire1);
     unitesAlliees[1]->ajouteSbire(sbire2);
@@ -61,8 +61,8 @@ int main() {
 
     unitesEnnemies.push_back(heros3);
     unitesEnnemies.push_back(heros4);
-    carte[308].flagHeros(unitesEnnemies[0]);
-    carte[312].flagHeros(unitesEnnemies[1]);
+    carte[308].placeUnite(unitesEnnemies[0]);
+    carte[312].placeUnite(unitesEnnemies[1]);
 
     unitesEnnemies[0]->ajouteSbire(sbire3);
     unitesEnnemies[1]->ajouteSbire(sbire4);
@@ -149,7 +149,7 @@ int main() {
         //delete unitesAlliees[i];
         unitesAlliees[i] = 0;
     }
-    Imagine::endGraphics();
+    //Imagine::endGraphics();
     return 0;
 }
 

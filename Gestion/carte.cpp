@@ -150,7 +150,7 @@ Case::Case(const Case &tuile) {
 }
 
 
-void Case::flagHeros(Unite* u) {
+void Case::placeUnite(Unite* u) {
     pointeurUnite = u;
 }
 
@@ -188,7 +188,7 @@ void Case::brillanceOnOff(const bool flag) {
 }
 
 
-void Case::affiche() const{
+void Case::affiche() {
     Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type->Image());
     if (brillance) {
@@ -201,11 +201,21 @@ void Case::affiche() const{
     int taillemax = LargDroite / NbCase;
     Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                       taillemax, type->Image());
+
+    //AFFICHAGE DU JOUEUR 1 EN BLEU, JOUEUR 2 EN ROUGE, A MODIFIER EN FONCTION DU NOMBRE DE JOUEURS
     if (this->getOccupe()) {
-        Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLACK);
-        Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
-                          taillemax, Imagine::BLACK);
+        if (this->getUnite()->getID() == 1) {
+            Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLUE);
+            Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
+                              taillemax, Imagine::BLUE);
+        }
+        if (this->getUnite()->getID() == 2) {
+            Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::RED);
+            Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
+                              taillemax, Imagine::RED);
+        }
     }
+
 }
 
 

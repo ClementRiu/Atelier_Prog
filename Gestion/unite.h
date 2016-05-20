@@ -129,7 +129,7 @@ public:
 
     float getInit() const;
 
-    void setCase(int num);
+    void setCase(int & num, Carte carte);
 
     float getDep() const;
 
@@ -163,7 +163,7 @@ public:
 //    std::vector<Bouton> boutonAction(Carte& carte);
 
 
-    virtual void declencheCombat(Unite* u);
+    virtual int declencheCombat(Unite* u);
 
     //Termine le tour en combat
     virtual void finTourCombat(int ini);
@@ -237,7 +237,7 @@ public:
     virtual std::vector<Sbire *> getArmee();
 
     // Lance l'unité dans un combat avec une autre unité
-    virtual void declencheCombat(Unite* u);
+    virtual int declencheCombat(Unite* u);
 
     virtual bool estHeros();
 
