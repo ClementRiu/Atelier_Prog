@@ -22,18 +22,18 @@ Bouton::Bouton(const int zone[4], Imagine::Color c, std::string nom) {
 }
 
 
-int Bouton::largeur() {
+int Bouton::largeur() const {
     return zoneDeDelimitation[2] - zoneDeDelimitation[0];
 }
 
 
-int Bouton::hauteur() {
+int Bouton::hauteur() const {
     return zoneDeDelimitation[3] - zoneDeDelimitation[1];
 }
 
 
 // A changer
-void Bouton::affiche(int decalementVertical) {
+void Bouton::affiche(int decalementVertical) const {
     int taille = std::min(int(1.2 * this->largeur() / nomBouton.size()), this->hauteur());
     Imagine::fillRect(zoneDeDelimitation[0], zoneDeDelimitation[1] + decalementVertical, this->largeur(),
                       this->hauteur(), image);
@@ -42,7 +42,7 @@ void Bouton::affiche(int decalementVertical) {
 }
 
 
-bool Bouton::boutonActive(int x, int y, int decalementVertical) {
+bool Bouton::boutonActive(int x, int y, int decalementVertical) const{
     if (x > zoneDeDelimitation[0] && y > zoneDeDelimitation[1] + decalementVertical &&
         x < zoneDeDelimitation[2] && y < zoneDeDelimitation[3] + decalementVertical) {
         return true;
@@ -51,7 +51,7 @@ bool Bouton::boutonActive(int x, int y, int decalementVertical) {
 }
 
 
-bool Bouton::boutonVide() {
+bool Bouton::boutonVide() const {
     return (this->largeur() == 0 || this->hauteur() == 0);
 }
 

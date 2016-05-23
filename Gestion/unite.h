@@ -24,6 +24,8 @@ const Imagine::Coords<2> portee01(0, 1);
 const Imagine::Coords<2> portee02(0, 2);
 const Imagine::Coords<2> portee0_2(0, -2);
 const Imagine::Coords<2> portee0_1(0, -1);
+const Imagine::Coords<2> portee30(3, 0);
+const Imagine::Coords<2> portee_30(-3, 0);
 
 
 /*
@@ -40,6 +42,7 @@ class Attaque {
     std::vector<Imagine::Coords<2> > zoneInfluence;
     int puissance;
 public:
+    // Attaque par défaut
     Attaque();
 
     Attaque(const Attaque &att);
@@ -49,7 +52,7 @@ public:
     // Affiche la zone d'influence de l'attaque
     void zone(Carte &carte, bool b, int caseUnite);
 
-    int getPuissance();
+    int getPuissance() const;
 };
 
 
@@ -76,7 +79,7 @@ protected:
     float PDep;
     float PDepMax;
 
-    Attaque competences[NB_MAX_ATTAQUES];
+    Attaque competences;
 
     int orientation; //voir manuel, possible de changer
 
@@ -139,7 +142,7 @@ public:
 
     virtual void prendDommage(int att); //à implémenter avec formule adaptée
 
-    void setAttaque(Attaque att, int i);
+    void setAttaque(Attaque att);
 
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b, int &ressources);
@@ -149,10 +152,10 @@ public:
     virtual void affichePVNombre();
 
     //Fonction qui renvoie false quand appelé sur une Unité ou un Sbire, et true sur un Heros
-    virtual bool estHeros();
+    virtual bool estHeros() const;
 
     //renvoie vrai si l'unité a des PV supérieurs à 0
-    virtual bool estVivant();
+    virtual bool estVivant() const;
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
     void action(Attaque a, Unite *u);
@@ -198,7 +201,7 @@ public:
     Sbire(int IDj, float dep, float depMax, int num, float init, int nb);
     Sbire(const Sbire &s);
 
-    virtual bool estVivant();
+    virtual bool estVivant() const;
     virtual void prendDommage(int valeurDegats);
     virtual void tueUnite();
 
@@ -240,7 +243,7 @@ public:
     // Lance l'unité dans un combat avec une autre unité
     virtual int declencheCombat(Unite* u);
 
-    virtual bool estHeros();
+    virtual bool estHeros() const;
 
     // Retire l'objet numéro i de l'inventaire
     virtual void retire(int i);

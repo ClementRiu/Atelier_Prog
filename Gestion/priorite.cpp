@@ -15,7 +15,7 @@ CaseDist::CaseDist(int num, float dep, std::vector<int> way) {
 }
 
 
-int CaseDist::getNum() {
+int CaseDist::getNum() const {
     return num_case;
 }
 
@@ -25,12 +25,12 @@ bool CaseDist::operator<(CaseDist c) const {
 }
 
 
-float CaseDist::getDep() {
+float CaseDist::getDep() const {
     return PDep;
 }
 
 
-std::vector<int> CaseDist::getChemin() {
+std::vector<int> CaseDist::getChemin() const{
     return chemin;
 }
 
@@ -102,7 +102,7 @@ T *FilePriorite<T>::pop() {
 }
 
 template<typename T>
-int FilePriorite<T>::size() {
+int FilePriorite<T>::size() const {
     return v.size();
 }
 

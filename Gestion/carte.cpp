@@ -3,7 +3,7 @@
 #include "joueurs.h"
 #include <math.h>
 
-TypeCase::TypeCase(const float dep, const std::string desc, const Imagine::Color img) {
+TypeCase::TypeCase(float dep, std::string desc, Imagine::Color img) {
     PDep = dep;
     description = desc;
     image = img;
@@ -29,7 +29,7 @@ std::string TypeCase::Description() const{
 }
 
 
-bool TypeCase::popUp(const std::string question) const{
+bool TypeCase::popUp(std::string question) const{
     Bouton oui(ZoneBoutonOui, Imagine::BLUE, "OUI");
     Bouton non(ZoneBoutonNon, Imagine::BLUE, "NON");
     Bouton quest(ZoneBoutonQuestion, Imagine::BLACK, question);
@@ -63,7 +63,7 @@ bool TypeCase::boutonChoix(){
 }
 
 
-CaseVille::CaseVille(const std::string desc, const Imagine::Color img, Ville* v) : TypeCase(INF, desc, img){
+CaseVille::CaseVille(std::string desc, Imagine::Color img, Ville* v) : TypeCase(INF, desc, img){
     ville = v;
 }
 
@@ -90,7 +90,7 @@ bool CaseVille::boutonChoix(){
 }
 
 
-CaseCombat::CaseCombat(const std::string desc, const Imagine::Color img) : TypeCase(INF, desc, img){
+CaseCombat::CaseCombat(std::string desc, Imagine::Color img) : TypeCase(INF, desc, img){
 
 }
 
@@ -110,7 +110,7 @@ bool CaseCombat::boutonChoix(){
 }
 
 
-CaseNormale::CaseNormale(const float dep, const std::string desc, const Imagine::Color img) : TypeCase(dep, desc, img){
+CaseNormale::CaseNormale(float dep, std::string desc, Imagine::Color img) : TypeCase(dep, desc, img){
 
 }
 
@@ -124,7 +124,7 @@ CaseNormale* CaseNormale::clone() const {
 }
 
 
-Case::Case(const int x1, const int y1, TypeCase* tc) {
+Case::Case(int x1, int y1, TypeCase* tc) {
     x = x1;
     y = y1;
     taille = Taille;
@@ -164,12 +164,13 @@ bool Case::getOccupe() const {
 }
 
 
-Unite* Case::getUnite() {
+Unite* Case::getPointeurUnite() {
     return pointeurUnite;
 }
 
+
 //à se débarasser, présent uniquement dans Unite::deplaceVersCase
-int Case::get(const int i) const{
+int Case::get(int i) const{
     if (i == 0) {
         return x;
     }
@@ -179,7 +180,7 @@ int Case::get(const int i) const{
 }
 
 
-void Case::brillanceOnOff(const bool flag) {
+void Case::brillanceOnOff(bool flag) {
     brillance = flag;
     if (!flag) {
         utileChemin = flag;
@@ -188,7 +189,7 @@ void Case::brillanceOnOff(const bool flag) {
 }
 
 
-void Case::affiche() {
+void Case::affiche() const{
     Imagine::drawRect(x - 1, y - 1, Taille, Taille, Imagine::WHITE);
     Imagine::fillRect(x, y, Taille - 1, Taille - 1, type->Image());
     if (brillance) {
@@ -204,12 +205,12 @@ void Case::affiche() {
 
     //AFFICHAGE DU JOUEUR 1 EN BLEU, JOUEUR 2 EN ROUGE, A MODIFIER EN FONCTION DU NOMBRE DE JOUEURS
     if (this->getOccupe()) {
-        if (this->getUnite()->getID() == 1) {
+        if (pointeurUnite->getID() == 1) {
             Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLUE);
             Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                               taillemax, Imagine::BLUE);
         }
-        if (this->getUnite()->getID() == 2) {
+        if (pointeurUnite->getID() == 2) {
             Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::RED);
             Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                               taillemax, Imagine::RED);
@@ -239,7 +240,7 @@ bool Case::getChemin() const{
 }
 
 
-int Case::plusProcheVoisineBrillante(const int x1, const int y1, Carte &carte, const int numcase) const{
+int Case::plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase) const{
     // Renvoie la case voisine la plus proche du point (x1, y1) qui est en brillance
     std::vector<int> numCase = casesVoisines(x1, y1);
     for (int i = 0; i < numCase.size(); ++i) {
@@ -251,7 +252,7 @@ int Case::plusProcheVoisineBrillante(const int x1, const int y1, Carte &carte, c
 }
 
 
-std::vector<int> Case::casesVoisines(const int x1, const int y1) const{
+std::vector<int> Case::casesVoisines(int x1, int y1) const{
     std::vector<int> numCase;
     std::vector<int> priorite;
     // On cherche autour de notre case les cases qui sont accessibles
@@ -288,8 +289,8 @@ std::vector<int> Case::casesVoisines(const int x1, const int y1) const{
 }
 
 
-std::vector<std::vector<int> > Case::fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
-                                                  const int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante) {
+std::vector<std::vector<int> > Case::fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
+                                                  int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante) {
     // Algorithme de FastMarching, cf cours d'Algo
     int num_case = numeroCase(x, y);
     FilePriorite<CaseDist> F;
@@ -462,7 +463,7 @@ Carte::Carte(Ville *v) {
 }
 
 
-void Carte::affiche() {
+void Carte::affiche() const{
     for (int i = 0; i < NbCase; ++i) {
         for (int j = 0; j < NbCase; ++j) {
             carte[j * NbCase + i].affiche();
@@ -471,9 +472,10 @@ void Carte::affiche() {
 }
 
 
-Case &Carte::operator[](const int i) {
+Case &Carte::operator[](int i) {
     return carte[i];
 }
+
 
 
 Case::~Case(){
@@ -481,7 +483,7 @@ Case::~Case(){
 }
 
 
-int numeroCase(const int x, const int y) {
+int numeroCase(int x, int y) {
     if (x >= LargGauche && x < LargGauche + NbCase * Taille && y < NbCase * Taille) {
         return ((y / Taille) * NbCase + x / Taille);
     }

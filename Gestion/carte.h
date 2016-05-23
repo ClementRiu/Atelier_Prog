@@ -36,7 +36,7 @@ class TypeCase {
     Imagine::Color image; // Sera remplace par une image ulterieurement
 public:
     // Constructeur de la classe TypeCase
-    TypeCase(const float dep, const std::string desc, const Imagine::Color img);
+    TypeCase(float dep, std::string desc, Imagine::Color img);
 
     // Constructeur vide de la classe TypeCase
     TypeCase();
@@ -52,7 +52,7 @@ public:
 
     // affichage à modifier
     // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
-    bool popUp(const std::string question) const;
+    bool popUp(std::string question) const;
 
     virtual void action(Unite* h);
 
@@ -66,7 +66,7 @@ public:
 class CaseVille : public TypeCase {
     Ville* ville;
 public:
-    CaseVille(const std::string desc, const Imagine::Color img, Ville* v);
+    CaseVille(std::string desc, Imagine::Color img, Ville* v);
 
     CaseVille();
 
@@ -80,7 +80,7 @@ public:
 
 class CaseCombat : public TypeCase {
 public:
-    CaseCombat(const std::string desc, const Imagine::Color img);
+    CaseCombat(std::string desc, Imagine::Color img);
 
     CaseCombat();
 
@@ -92,7 +92,7 @@ public:
 
 class CaseNormale : public TypeCase {
 public:
-    CaseNormale(const float dep, const std::string desc, const Imagine::Color img);
+    CaseNormale(float dep, std::string desc, Imagine::Color img);
 
     CaseNormale();
 
@@ -111,7 +111,7 @@ class Case {
 
 public:
     // Constructeur de la classe Case
-    Case(const int x1, const int y1, TypeCase* tc);
+    Case(int x1, int y1, TypeCase* tc);
 
     // Constructeur vide de la classe Case
     Case();
@@ -126,16 +126,16 @@ public:
     bool getOccupe() const;
 
     // renvoie le pointeur de l'unité sur la case
-    Unite* getUnite();
+    Unite* getPointeurUnite();
 
     //get temporaire à se débarasser !!
-    int get(const int i) const;
+    int get(int i) const;
 
     // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
-    void brillanceOnOff(const bool flag);
+    void brillanceOnOff(bool flag);
 
     // Affiche la case
-    void affiche();
+    void affiche() const;
 
     // Accesseur au nombre de déplacement que coûte la case
     float NbDep() const;
@@ -149,15 +149,15 @@ public:
     bool getChemin() const;
 
     // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
-    int plusProcheVoisineBrillante(const int x1, const int y1, Carte &carte, const int numcase) const;
+    int plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase) const;
 
     // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
     // du point (x, y) au plus éloigné
-    std::vector<int> casesVoisines(const int x1, const int y1) const;
+    std::vector<int> casesVoisines(int x1, int y1) const;
 
     // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
-    std::vector<std::vector<int> > fastMarching(const float dep, Carte &carte, const bool brillance, float &dep_restant,
-                                                const int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante);
+    std::vector<std::vector<int> > fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
+                                                int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante);
 
     // Renvoie l'image correspondant a la case (type a changer pour l'affichage)
     Imagine::Color getImage() const;
@@ -185,15 +185,15 @@ public:
     Carte(Ville* v);
 
     // affiche la carte
-    void affiche();
+    void affiche() const;
 
     // Permer d'accéder à carte[i]
-    Case &operator[](const int i);
+    Case &operator[](int i);
 };
 
 
 // Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
-int numeroCase(const int x, const int y);
+int numeroCase(int x, int y);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase);

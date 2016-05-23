@@ -45,6 +45,7 @@ int main() {
         Heros* heros2 = new Heros(1, 10, 10, 303, 100, allie);
         unitesAlliees.push_back(heros1);
         unitesAlliees.push_back(heros2);
+
         carte[20].placeUnite(unitesAlliees[0]);
         carte[303].placeUnite(unitesAlliees[1]);
     }
@@ -93,13 +94,33 @@ int main() {
     std::vector<Imagine::Coords<2> > zoneInfl;
     zoneInfl.push_back(portee10);
     zoneInfl.push_back(portee_10);
-    zoneInfl.push_back(portee20);
-    zoneInfl.push_back(portee_20);
     zoneInfl.push_back(portee01);
-    zoneInfl.push_back(portee02);
-    zoneInfl.push_back(portee0_2);
     zoneInfl.push_back(portee0_1);
-    Attaque coinCoinOuille(zoneInfl, 10);
+
+    std::vector<Imagine::Coords<2> > zoneInfl2;
+    zoneInfl2.push_back(portee20);
+    zoneInfl2.push_back(portee_20);
+    zoneInfl2.push_back(portee02);
+    zoneInfl2.push_back(portee0_2);
+
+    std::vector<Imagine::Coords<2> > zoneInfl3;
+    zoneInfl3.push_back(portee10);
+    zoneInfl3.push_back(portee_10);
+    zoneInfl3.push_back(portee20);
+    zoneInfl3.push_back(portee_20);
+    zoneInfl3.push_back(portee30);
+    zoneInfl3.push_back(portee_30);
+
+
+    Attaque attq1(zoneInfl, 30);
+    Attaque attq2(zoneInfl2, 40);
+    Attaque attq3(zoneInfl3, 50);
+    unitesAlliees[0]->setAttaque(attq1);
+    unitesAlliees[1]->setAttaque(attq2);
+
+
+    unitesEnnemies[0]->setAttaque(attq3);
+    unitesEnnemies[1]->setAttaque(attq3);
 
 
     carte.affiche();

@@ -121,9 +121,6 @@ void Joueur::finTourGestion() {
         herosJoueur[i]->setDep(herosJoueur[i]->getDepMax());
     }
 
-    for (int i = 0; i < herosJoueur.size(); ++i) {
-        std::cout << herosJoueur[i]->getDep() << std::endl;
-    }
 
     for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] += revenus[i];
@@ -159,7 +156,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
         }
         // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
-            unite = carte[numeroCase(x, y)].getUnite();
+            unite = carte[numeroCase(x, y)].getPointeurUnite();
 
             //Si l'unité sur laquelle on vient de cliquer n'est pas au joueur concerné, on retourne au début de la boucle
             if (get_id() != unite->getID()) {
@@ -199,7 +196,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
                     //S'il y a un héros, on déclanche un combat
                     if (carte[numeroCase(x, y)].getOccupe()) {
-                        Unite *uniteCliquee = carte[numeroCase(x, y)].getUnite();
+                        Unite *uniteCliquee = carte[numeroCase(x, y)].getPointeurUnite();
 
                         //Si l'unité n'est pas à nous, on déclenche effectivement le combat
                         if (unite->getID() != uniteCliquee->getID()) {

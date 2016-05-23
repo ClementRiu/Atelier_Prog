@@ -147,13 +147,12 @@ void afficheCaseSurvole(int x, int y, Carte &carte) {
         Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
                             carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 7);
         if (carte[numeroCase(x, y)].getOccupe()) {
-            int test = int(carte[numeroCase(x, y)].getUnite()->getPV());
+            int test = int(carte[numeroCase(x, y)].getPointeurUnite()->getPV());
             std::string result;
             std::ostringstream convert;
             convert << test;
             result = convert.str();
 
-            std::cout<<result<<std::endl;
             Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 50 + Taille,
                                 "Unité", Imagine::BLACK, 9);
             Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 60 + Taille,

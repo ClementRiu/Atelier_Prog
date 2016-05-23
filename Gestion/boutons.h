@@ -29,20 +29,20 @@ public:
     Bouton(const int zone[4], Imagine::Color c, std::string nom);
 
     // Renvoie la largeur du bouton
-    int largeur();
+    int largeur() const;
 
     // renvoie la la hauteur du bouton
-    int hauteur();
+    int hauteur() const;
 
     // A changer
     // Permet d'afficher le bouton avec la largeur maximale possible pour l'écriture
-    void affiche(int decalementVertical = 0);
+    void affiche(int decalementVertical = 0) const;
 
     // Renvoie un true si le point (x, y) est dans la zone de delimitation du bouton et false sinon
-    bool boutonActive(int x, int y, int decalementVertical = 0);
+    bool boutonActive(int x, int y, int decalementVertical = 0) const;
 
     // Regarde si le bouton est vide
-    bool boutonVide();
+    bool boutonVide() const;
 
     void setNom(std::string nom);
 };

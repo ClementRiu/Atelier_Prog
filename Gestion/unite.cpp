@@ -3,6 +3,7 @@
 #include <sstream>
 #include "joueurs.h"
 
+
 //attaque de base
 Attaque::Attaque() {
     zoneInfluence.push_back(portee10);
@@ -28,15 +29,15 @@ Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
 
 void Attaque::zone(Carte &carte, bool b, int caseUnite) {
     for (int i = 0; i < zoneInfluence.size(); ++i) {
-        if (caseUnite + zoneInfluence[i].y() * NbCase > 0 && caseUnite + zoneInfluence[i].y() * NbCase &&
-            (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase)) {
+        if (caseUnite + zoneInfluence[i].y() * NbCase >= 0 && caseUnite + zoneInfluence[i].y() * NbCase < NbCase * NbCase - 1 &&
+            (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase) && caseUnite + zoneInfluence[i].x() >= 0) {
             carte[caseUnite + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
         }
     }
 }
 
 
-int Attaque::getPuissance() {
+int Attaque::getPuissance() const {
     return puissance;
 }
 
@@ -72,9 +73,7 @@ Unite::Unite(const Unite &unit) {
         defenseMag[i] = unit.defenseMag[i];
     }
 
-    for (int i = 0; i++; i < NB_MAX_ATTAQUES) {
-        competences[i] = unit.competences[i];
-    }
+        competences = unit.competences;
 }
 
 
@@ -147,7 +146,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
-            this->attaqueDeBase(carte[numeroCase(x1, y1)].getUnite());
+            this->attaqueDeBase(carte[numeroCase(x1, y1)].getPointeurUnite());
             return;
         }
 
@@ -167,7 +166,7 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 
 void Unite::deplaceVersCase(Case &c2, Case &c1) {
     if (!c2.getOccupe()) {
-        c2.placeUnite(c1.getUnite());
+        c2.placeUnite(c1.getPointeurUnite());
         c1.placeUnite(NULL);
         c1.affiche();
         c2.affiche();
@@ -207,7 +206,7 @@ void Unite::affichePVNombre(){
     
 }
 
-bool Unite::estHeros() {
+bool Unite::estHeros() const{
     return false;
 }
 
@@ -249,12 +248,12 @@ void Unite::prendDommage(int valeurDegats) {
 }
 
 
-void Unite::setAttaque(Attaque att, int i) {
-    competences[i] = att;
+void Unite::setAttaque(Attaque att) {
+    competences = Attaque(att);
 }
 
 
-bool Unite::estVivant() {
+bool Unite::estVivant() const{
     if (PV <= 0) {
         return false;
     }
@@ -296,9 +295,9 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
 
         if (boutonAction.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
-            competences[0].zone(carte, true, getCase());
-            attaque(competences[0], carte);
-            competences[0].zone(carte, false, getCase());
+            competences.zone(carte, true, getCase());
+            attaque(competences, carte);
+            competences.zone(carte, false, getCase());
             tourContinue = false;
         }
         else {
@@ -341,7 +340,7 @@ void Unite::attaque(Attaque attq, Carte &carte) {
         clic(x1, y1, carte);
     } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
     if (carte[numeroCase(x1, y1)].getOccupe()) {
-        action(attq, carte[numeroCase(x1, y1)].getUnite());
+        action(attq, carte[numeroCase(x1, y1)].getPointeurUnite());
     }
 }
 
@@ -436,6 +435,7 @@ Sbire::Sbire() {
 
 Sbire::Sbire(int IDj, float dep, float depMax, int num, float init, int nb) : Unite(IDj, dep, depMax, num, init) {
     nombre = nb;
+    competences = Attaque();
 }
 
 
@@ -443,7 +443,7 @@ Sbire::Sbire(const Sbire &s) {
 
 }
 
-bool Sbire::estVivant() {
+bool Sbire::estVivant() const{
     if (PV <= 0 && nombre == 0) {
         return false;
     }
@@ -611,7 +611,7 @@ void Heros::achete(Ville *ville, int i, bool b, int &ressources) {
 }
 
 
-bool Heros::estHeros() {
+bool Heros::estHeros() const{
     return true;
 }
 
@@ -660,8 +660,8 @@ int Heros::declencheCombat(Unite *u) {
     }
 
     // Initialisation des unites
-    int positionHerosAllie=100;
-    int positionHerosEnnemi=200;
+    int positionHerosAllie = 100;
+    int positionHerosEnnemi = 200;
     this->setCase(positionHerosAllie, carte);
     u->setCase(positionHerosEnnemi, carte);
     carte[positionHerosEnnemi].placeUnite(this);

@@ -18,16 +18,16 @@ public:
     CaseDist(int num, float dep, std::vector<int> way);
 
     // Accesseur au numero de la case
-    int getNum();
+    int getNum() const;
 
     // Accesseur au nombre de deplacements restants
-    float getDep();
+    float getDep() const;
 
     // Operateur inferieur ou egal sur la classe
     bool operator<(CaseDist c) const;
 
     // Pour récupérer le chemin de la case
-    std::vector<int> getChemin();
+    std::vector<int> getChemin() const;
 };
 
 
@@ -51,6 +51,6 @@ public:
     bool empty();
 
     //renvoie la taille de la file
-    int size();
+    int size() const;
 };
 
