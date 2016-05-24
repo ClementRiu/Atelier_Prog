@@ -472,7 +472,12 @@ void Carte::affiche() const{
 }
 
 
-Case &Carte::operator[](int i) {
+Case& Carte::operator[](int i) {
+    return carte[i];
+}
+
+
+Case Carte::get(int i) const {
     return carte[i];
 }
 

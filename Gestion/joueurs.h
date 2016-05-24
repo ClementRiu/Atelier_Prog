@@ -30,12 +30,20 @@ public:
     Ville(int faction, int num);
     ~Ville();
 
+    // Ouvre la réserve de la Ville
     void ouvreVille(Unite *h);
+
+    // Ajoute un objet dans la réserve
     void ajoute(Mere *obj);
-    Mere *getObjet(int i);
+
+    // Renvoie un pointeur pointant vers l'objet à la position i dans la réserve
+    Mere *getPointeurMere(int i);
+
+    // Renvoir l'id su joueur à qui appartient la ville
     int get_id() const;
 
-    Inventaire &getInventaire();
+    // Retourne l'inventaire du joueur en référence
+    Inventaire& getInventaire();
 
     //Fonctions inutilisées ou non implémentées pour l'instant
 #if 0
@@ -79,16 +87,21 @@ public:
 
     Joueur(int id, std::vector<Unite *> unites); //uniquement pour tester
 
+    // Renvoie les ressources du joueur en référence
     int& getRessources();
 
+    // Ajoute les unités passées en argument aux unités du joueur
     void ajouteUnite(std::vector<Unite *> unite);
 
+    // Ajoute les villes passées en argument aux villes du joueur
     void ajouteVille(std::vector<Ville *> ville);
 
     int get_id() const;
 
     void tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction,
                      Bouton boutonInventaire, bool &save);
+
+    // Fini le tour de Gestion du joueur en remettant les bons nombres de déplacement dans les unités
     void finTourGestion();
 
 

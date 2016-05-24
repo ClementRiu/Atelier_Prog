@@ -115,9 +115,14 @@ bool Unite::operator<(Unite u) const {
     return (initiativeTemporaire < u.initiativeTemporaire);
 }
 
-void Unite::choixAction() {
+void Unite::choixAction() const{
     std::cout << "Implementer le choix d'action méthode choixAction de Unite";
 }
+
+
+std::vector<Sbire *> Unite::getArmee() {
+}
+
 
 void Unite::ajouteSbire(Sbire *s) {
 
@@ -211,8 +216,8 @@ bool Unite::estHeros() const{
 }
 
 
-void Unite::setCase(int & num, Carte carte) {
-    while(carte[num].NbDep()==INF){
+void Unite::setCase(int & num, const Carte& carte) {
+    while(carte.get(num).NbDep()==INF){
         num+=1;
         std::cout<<"Modification"<<std::endl;
     }
@@ -248,7 +253,7 @@ void Unite::prendDommage(int valeurDegats) {
 }
 
 
-void Unite::setAttaque(Attaque att) {
+void Unite::setAttaque(const Attaque& att) {
     competences = Attaque(att);
 }
 
@@ -310,7 +315,7 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
 }
 
 
-void Unite::action(Attaque att, Unite *u) {
+void Unite::action(const Attaque& att, Unite *u) {
     // A MODIFIER
     //u->prendDommage(att.getPuissance());
 
@@ -333,7 +338,7 @@ void Unite::retire(int i) {
 }
 
 
-void Unite::attaque(Attaque attq, Carte &carte) {
+void Unite::attaque(const Attaque& attq, Carte &carte) {
     int x1, y1 = 0;
 
     do {
@@ -396,9 +401,6 @@ std::vector<Bouton> Unite::boutonAction(Carte &carte) {
     return B;
 }
 */
-
-std::vector<Sbire *> Unite::getArmee() {
-}
 
 
 void Unite::ramasse(Mere *obj) {
@@ -604,9 +606,9 @@ void Heros::ouvreVille(Ville *v) {
 
 
 void Heros::achete(Ville *ville, int i, bool b, int &ressources) {
-    if (ressources >= ville->getObjet(i)->getPrix()) {
-        this->ramasse(ville->getObjet(i)->clone());
-        ressources -= ville->getObjet(i)->getPrix();
+    if (ressources >= ville->getPointeurMere(i)->getPrix()) {
+        this->ramasse(ville->getPointeurMere(i)->clone());
+        ressources -= ville->getPointeurMere(i)->getPrix();
     }
 }
 
@@ -748,7 +750,7 @@ Heros::Heros(const Unite &h) : Unite(h) {
 //*********************************EQUIPEMENT********************************************
 
 
-Casque Heros::equipeCasque(Casque casque) {
+Casque Heros::equipeCasque(const Casque& casque) {
     Casque desequipe = equipementCasque;
 
     equipementCasque = casque;
@@ -757,7 +759,7 @@ Casque Heros::equipeCasque(Casque casque) {
 }
 
 
-Arme Heros::equipeArmeDroite(Arme arme) {
+Arme Heros::equipeArmeDroite(const Arme& arme) {
     Arme desequipe = equipementArmeDroite;
 
     equipementArmeDroite = arme;
@@ -766,7 +768,7 @@ Arme Heros::equipeArmeDroite(Arme arme) {
 }
 
 
-Arme Heros::equipeArmeGauche(Arme arme) {
+Arme Heros::equipeArmeGauche(const Arme& arme) {
     Arme desequipe = equipementArmeGauche;
 
     equipementArmeGauche = arme;
@@ -775,7 +777,7 @@ Arme Heros::equipeArmeGauche(Arme arme) {
 }
 
 
-Torse Heros::equipeTorse(Torse torse) {
+Torse Heros::equipeTorse(const Torse& torse) {
     Torse desequipe = equipementTorse;
 
     equipementTorse = torse;
@@ -784,7 +786,7 @@ Torse Heros::equipeTorse(Torse torse) {
 
 }
 
-Gants Heros::equipeGants(Gants gants) {
+Gants Heros::equipeGants(const Gants& gants) {
     Gants desequipe = equipementGants;
 
     equipementGants = gants;
@@ -792,7 +794,7 @@ Gants Heros::equipeGants(Gants gants) {
     return desequipe;
 }
 
-Jambes Heros::equipeJambes(Jambes jambes) {
+Jambes Heros::equipeJambes(const Jambes& jambes) {
     Jambes desequipe = equipementJambes;
 
     equipementJambes = jambes;
@@ -800,7 +802,7 @@ Jambes Heros::equipeJambes(Jambes jambes) {
     return desequipe;
 }
 
-Bottes Heros::equipeBottes(Bottes bottes) {
+Bottes Heros::equipeBottes(const Bottes& bottes) {
     Bottes desequipe = equipementBottes;
 
     equipementBottes = bottes;
@@ -809,7 +811,7 @@ Bottes Heros::equipeBottes(Bottes bottes) {
 }
 
 
-Anneau Heros::equipeAnneauDroite(Anneau anneau) {
+Anneau Heros::equipeAnneauDroite(const Anneau& anneau) {
     Anneau desequipe = equipementAnneauDroite;
 
     equipementAnneauDroite = anneau;
@@ -818,7 +820,7 @@ Anneau Heros::equipeAnneauDroite(Anneau anneau) {
 }
 
 
-Anneau Heros::equipeAnneauGauche(Anneau anneau) {
+Anneau Heros::equipeAnneauGauche(const Anneau& anneau) {
     Anneau desequipe = equipementAnneauGauche;
 
     equipementAnneauGauche = anneau;

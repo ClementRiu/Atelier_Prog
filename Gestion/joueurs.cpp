@@ -47,7 +47,7 @@ void Ville::ajoute(Mere *obj) {
 }
 
 
-Mere *Ville::getObjet(int i) {
+Mere *Ville::getPointeurMere(int i) {
     return achetable.get(i);
 }
 

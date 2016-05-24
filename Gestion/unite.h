@@ -101,9 +101,10 @@ public:
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER
-    void choixAction();
+    void choixAction() const;
 
     virtual std::vector<Sbire *> getArmee();
+
     virtual void ajouteSbire(Sbire* s);
 
     virtual void tueUnite();
@@ -117,7 +118,7 @@ public:
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
     void tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction);
 
-    void attaque(Attaque attq, Carte &carte);
+    void attaque(const Attaque& attq, Carte &carte);
 
     void changeOrientation(int i);
 
@@ -132,7 +133,7 @@ public:
 
     float getInit() const;
 
-    void setCase(int & num, Carte carte);
+    void setCase(int & num, const Carte& carte);
 
     float getDep() const;
 
@@ -142,7 +143,7 @@ public:
 
     virtual void prendDommage(int att); //à implémenter avec formule adaptée
 
-    void setAttaque(Attaque att);
+    void setAttaque(const Attaque& att);
 
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b, int &ressources);
@@ -158,7 +159,7 @@ public:
     virtual bool estVivant() const;
 
     // Action que fait l'attaque, A COMPLETER (enlève des points de vie, pousse des ennemis pour des sous classes d'attaques...)
-    void action(Attaque a, Unite *u);
+    void action(const Attaque& a, Unite *u);
 
     // Attaque de base au corps à corps que toutes les unites posèdent A CHANGER
     void attaqueDeBase(Unite* u);
@@ -262,15 +263,16 @@ public:
     // Achète le i-ème objet dans la ville
     virtual void achete(Ville* ville, int i, bool b, int &ressources);
 
-    Casque equipeCasque(Casque casque);
-    Arme equipeArmeDroite(Arme arme);
-    Arme equipeArmeGauche(Arme arme);
-    Torse equipeTorse(Torse torse);
-    Gants equipeGants(Gants gants);
-    Jambes equipeJambes(Jambes jambes);
-    Bottes equipeBottes(Bottes bottes);
-    Anneau equipeAnneauDroite(Anneau anneau);
-    Anneau equipeAnneauGauche(Anneau anneau);
+    // Equipe l'objet passé en argument à chaque fois et renvoie l'objet déséquipé
+    Casque equipeCasque(const Casque& casque);
+    Arme equipeArmeDroite(const Arme& arme);
+    Arme equipeArmeGauche(const Arme& arme);
+    Torse equipeTorse(const Torse& torse);
+    Gants equipeGants(const Gants& gants);
+    Jambes equipeJambes(const Jambes& jambes);
+    Bottes equipeBottes(const Bottes& bottes);
+    Anneau equipeAnneauDroite(const Anneau& anneau);
+    Anneau equipeAnneauGauche(const Anneau& anneau);
 
     // Fonction renvoyant le nom du casque equipe. Utile pour un test
     virtual std::string getNomCasque();

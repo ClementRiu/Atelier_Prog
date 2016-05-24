@@ -189,6 +189,9 @@ public:
 
     // Permer d'accéder à carte[i]
     Case &operator[](int i);
+
+    // Permet d'accéder à carte[i] en const
+    Case get(int i) const;
 };
 
 

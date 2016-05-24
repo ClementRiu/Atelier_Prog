@@ -40,9 +40,9 @@ public:
 
     Mere(const Mere &m);
 
-    std::string getNom();
+    std::string getNom() const;
 
-    int getPrix();
+    int getPrix() const;
 
     // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
     // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
@@ -74,7 +74,8 @@ public:
 class Inventaire {
     std::vector<Mere *> contenu;
 public:
-    int taille();
+    // Renvoie la taille de l'inventaire
+    int taille() const;
 
     Inventaire();
 

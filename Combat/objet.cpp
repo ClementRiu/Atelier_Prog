@@ -2,11 +2,11 @@
 #include "../Gestion/unite.h"
 
 
-std::string Mere::getNom() {
+std::string Mere::getNom() const {
     return nom;
 }
 
-int Mere::getPrix() {
+int Mere::getPrix() const {
     return prix;
 }
 
@@ -92,7 +92,7 @@ Inventaire::Inventaire(const Inventaire &inventaireACopier) {
 }
 
 
-int Inventaire::taille() {
+int Inventaire::taille() const {
     return contenu.size();
 }
 
@@ -134,7 +134,7 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         boutonsCategories[i].affiche();
     }
 
-    // Acrions possibles dans l'inventaire
+    // Acrtions possibles dans l'inventaire
     int x, y;
     int decalementVertical = 0; // Cette variable va servir a scroller
     clicSimple(x, y);
