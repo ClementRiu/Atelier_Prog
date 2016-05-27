@@ -1,3 +1,0 @@
-/home/nathanael/Atelier_Prog/Gestion-build/CMakeFiles/edit_cache.dir
-/home/nathanael/Atelier_Prog/Gestion-build/CMakeFiles/rebuild_cache.dir
-/home/nathanael/Atelier_Prog/Gestion-build/CMakeFiles/Carte.dir
