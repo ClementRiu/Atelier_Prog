@@ -181,9 +181,9 @@ int main() {
 
     while (!quit) {
         //Clement à toi de jouer
-        //affiche(tour)
+
         std::cout << "Tour joueur 1" << std::endl;
-        allie->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit);
+        allie->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit, nbTour);
         if (quit) {
             break;
         }
@@ -192,7 +192,7 @@ int main() {
         }
         std::cout << " Tour joueur 2" << std::endl;
         ennemi->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
-                            quit);
+                            quit, nbTour);
         if (ennemi->aPerdu()) {
             break;
         }

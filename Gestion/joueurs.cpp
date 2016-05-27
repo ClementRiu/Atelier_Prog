@@ -1,6 +1,5 @@
 #include "joueurs.h"
 #include <iterator>
-#include <sstream>
 
 Ville::Ville() {
 
@@ -136,8 +135,11 @@ void Joueur::finTourGestion() {
 
 
 void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde,
-                         Bouton boutonAction, Bouton boutonInventaire, bool &quit) {
+                         Bouton boutonAction, Bouton boutonInventaire, bool &quit, int nbTour) {
     Unite *unite;
+
+    afficheNombreTours(nbTour);
+    afficheTourJoueur(id);
 
     ///////////////////ATTENTION AFFICHAGE CLEMENT/////////////////////////////////////
     //affiche(ressources)
@@ -161,6 +163,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
             quit = true;
             break;
         }
+
         // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
             unite = carte[numeroCase(x, y)].getPointeurUnite();
@@ -229,7 +232,11 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
                             }
 
                             carte.affiche();
+                            afficheNombreTours(nbTour);
+                            afficheTourJoueur(id);
+
                             unite->setDep(PDepGestion);
+                            uniteCliquee->setDep(uniteCliquee->getDepMax());
                         }
                     }
                 }

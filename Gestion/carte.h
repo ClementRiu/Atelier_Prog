@@ -20,7 +20,7 @@ const int LargGauche = 0;
 const int Separation = 20; // Separation entre la carte et la mini map
 const int width = NbCase * Taille + Separation + LargDroite;
 const int height = NbCase * Taille;
-const std::string descVille = "La ville, le doux foyer"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
+const std::string descVille = "Ville"; // Descrption de la case ville. Variable a ne par retirer sans regarder la fonction boutonAction
 
 
 class Heros;

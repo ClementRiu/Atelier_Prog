@@ -1,6 +1,5 @@
 #include "unite.h"
 #include <iostream>
-#include <sstream>
 #include "joueurs.h"
 
 
@@ -456,9 +455,7 @@ Sbire::Sbire(const Sbire &s) {
 }
 
 bool Sbire::estVivant() const{
-    std::cout<<"On teste si le sbire est vivant"<<std::endl;
-    if (PV <= 0 && nombre == 0) {
-        std::cout<<"Le sbire est mort ce soir"<<std::endl;
+    if (nombre <= 0) {
         return false;
     }
     return true;
@@ -475,7 +472,6 @@ void Sbire::prendDommage(int degatRecu) {
             degatRecu-=PV;
             std::cout<<PVMax<<std::endl;
             PV = PVMax;
-            std::cout<<"PV ="<<PV<<std::endl;
             nombre -= 1;
         }
         else {
@@ -487,29 +483,24 @@ void Sbire::prendDommage(int degatRecu) {
 
 //A MODIFIER !!
 void Sbire::affichePVNombre(){
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite +170,
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite + 140,
                       Imagine::WHITE);
 
-    int intPV = int(PV);
-    std::string result;
-    std::ostringstream convert;
-    convert << intPV;
-    result = convert.str();
+    std::string PVaffiche = intToString(PV);
+
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
                         "Sbire", Imagine::BLACK, 9);
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
                         "courant :", Imagine::BLACK, 9);
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
-                        "PV = "+result, Imagine::BLACK, 10);
+                        "PV = "+PVaffiche, Imagine::BLACK, 10);
 
-    int intNb = nombre;
-    std::string result2;
-    std::ostringstream convert2;
-    convert2 << intNb;
-    result2 = convert.str();
+
+    std::string Nbaffiche = intToString(nombre);
+
 
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 150 + Taille,
-                        "Nb = "+result2, Imagine::BLACK, 10);
+                        "Nb = "+Nbaffiche, Imagine::BLACK, 10);
 }
 
 
@@ -562,20 +553,17 @@ void Heros::retire(int i) {
 }
 
 void Heros::affichePVNombre(){
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite +170,
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite + 80,
                       Imagine::WHITE);
 
-    int test = int(PV);
-    std::string result;
-    std::ostringstream convert;
-    convert << test;
-    result = convert.str();
+    std::string PVaffiche = intToString(PV);
+
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
                         "Heros", Imagine::BLACK, 9);
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
                         "courant :", Imagine::BLACK, 9);
     Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
-                        "PV = "+result, Imagine::BLACK, 10);
+                        "PV = "+PVaffiche, Imagine::BLACK, 10);
 }
 
 std::vector<Sbire *> Heros::getArmee() {

@@ -51,6 +51,15 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
     }
 }
 
+std::string intToString(int a){
+    std::string result;
+    std::ostringstream convert;
+    convert << a;
+    result = convert.str();
+
+    return result;
+}
+
 
 void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase) {
     Imagine::enableMouseTracking(true);
@@ -149,11 +158,9 @@ void afficheCaseSurvole(int x, int y, Carte &carte) {
         Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
                             carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 7);
         if (carte[numeroCase(x, y)].getOccupe()) {
-            int test = int(carte[numeroCase(x, y)].getPointeurUnite()->getPV());
-            std::string result;
-            std::ostringstream convert;
-            convert << test;
-            result = convert.str();
+            int PVaffiche = int(carte[numeroCase(x, y)].getPointeurUnite()->getPV());
+
+            std::string result = intToString(PVaffiche);
 
             Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 50 + Taille,
                                 "Unité", Imagine::BLACK, 9);
@@ -192,5 +199,33 @@ void afficheChemins(int x, int y, Carte &carte, std::vector<std::vector<int> > d
                 }
             }
         }
+    }
+}
+
+
+void afficheNombreTours(int tour){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 220 + Taille, LargDroite, LargDroite/5, Imagine::WHITE);
+
+    std::string result=intToString(tour);
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 230 + Taille,
+                        result+"e tour", Imagine::BLACK, 10);
+}
+
+void afficheTourJoueur(int idJoueur) {
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 230 + Taille, LargDroite, 3 * LargDroite / 5,
+                      Imagine::WHITE);
+
+    if (idJoueur == 1) {
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 240 + Taille,
+                            "Joueur", Imagine::BLUE, 10);
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 250 + Taille,
+                            "Bleu", Imagine::BLUE, 10);
+    }
+    if (idJoueur == 2){
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 240 + Taille,
+                            "Joueur", Imagine::RED, 10);
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 250 + Taille,
+                            "Rouge", Imagine::RED, 10);
     }
 }

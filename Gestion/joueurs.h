@@ -106,7 +106,7 @@ public:
     int get_id() const;
 
     void tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction,
-                     Bouton boutonInventaire, bool &save);
+                     Bouton boutonInventaire, bool &save, int nbTour);
 
     // Fini le tour de Gestion du joueur en remettant les bons nombres de déplacement dans les unités
     void finTourGestion();

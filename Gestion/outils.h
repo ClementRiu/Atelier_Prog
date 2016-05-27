@@ -7,6 +7,8 @@
 void sauvegarde(std::vector<Unite*> unites);
 void charge(std::vector<Unite*> & unites, Carte& carte);
 
+std::string intToString(int a);
+
 // Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
 void clic(int &x, int &y, Carte& carte);
 
@@ -21,6 +23,9 @@ void survole(int &x, int &y);
 
 // Affiche l'endroit survole par la souris #Clement
 void afficheCaseSurvole(int x, int y, Carte& carte);
+
+void afficheNombreTours(int tour);
+void afficheTourJoueur(int idJoueur);
 
 // Affiche le chemin pour le Heros
 void afficheChemins(int x, int y, Carte& carte, std::vector< std::vector<int> > differentsChemins, int numcase);
