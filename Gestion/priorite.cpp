@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "priorite.h"
 #include "unite.h"
 
@@ -15,7 +30,7 @@ CaseDist::CaseDist(int num, float dep, std::vector<int> way) {
 }
 
 
-int CaseDist::getNum() {
+int CaseDist::getNum() const {
     return num_case;
 }
 
@@ -25,12 +40,12 @@ bool CaseDist::operator<(CaseDist c) const {
 }
 
 
-float CaseDist::getDep() {
+float CaseDist::getDep() const {
     return PDep;
 }
 
 
-std::vector<int> CaseDist::getChemin() {
+std::vector<int> CaseDist::getChemin() const{
     return chemin;
 }
 
@@ -102,7 +117,7 @@ T *FilePriorite<T>::pop() {
 }
 
 template<typename T>
-int FilePriorite<T>::size() {
+int FilePriorite<T>::size() const {
     return v.size();
 }
 

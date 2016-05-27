@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <typeinfo>
 #include "../Gestion/carte.h"
 #include "../Gestion/boutons.h"
@@ -19,6 +20,7 @@ const int ZoneBoutonUp[4] = {NbCase * Taille + Separation, 0, NbCase * Taille + 
                              LargDroite}; // Zone du bouton Up
 const int ZoneBoutonDown[4] = {NbCase * Taille + Separation, LargDroite + 10,
                                NbCase * Taille + Separation + LargDroite, 2 * LargDroite + 10}; // Zone du bouton Down
+const int ZoneBoutonArgent[4] = {0, (NbCase - 2) * Taille, 50, NbCase * Taille};
 const int BoutonMilieu[2] = {180, width - 100};
 
 
@@ -34,11 +36,13 @@ public:
 
     Mere();
 
-    Mere(std::string nom_);
+    Mere(std::string nom_, int price);
 
     Mere(const Mere &m);
 
-    std::string getNom();
+    std::string getNom() const;
+
+    int getPrix() const;
 
     // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
     // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
@@ -48,6 +52,8 @@ public:
     virtual void equiper(Heros *h, bool droite);
 
     virtual Mere *clone() const;
+
+    virtual void afficheCarac();
 };
 
 
@@ -57,7 +63,7 @@ class Objet : public Mere {
 public:
     Objet();
 
-    Objet(std::string nom_);
+    Objet(std::string nom_, int price);
 
     bool operator==(const Objet &B) const;
 
@@ -70,7 +76,8 @@ public:
 class Inventaire {
     std::vector<Mere *> contenu;
 public:
-    int taille();
+    // Renvoie la taille de l'inventaire
+    int taille() const;
 
     Inventaire();
 
@@ -84,8 +91,10 @@ public:
 
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple
+
+
     void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
-                         Unite *unite, void (Unite::*faire)(Ville*, int, bool));
+                         Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources);
 
     // Retire le i-ème objet de l'nventaire
     void retire(int i);
@@ -94,7 +103,6 @@ public:
 };
 
 
-const Objet nul("NUL");
 
 
 class Equipement : public Objet {
@@ -104,7 +112,6 @@ class Equipement : public Objet {
     int defense;
     int dexterite;
     int initiative;
-
     float PDep;
 
 public:
@@ -112,7 +119,9 @@ public:
 
     Equipement(const Equipement &eq);
 
-    Equipement(std::string nom_);
+    Equipement(std::string nom_, int price);
+
+    virtual void afficheCarac();
 };
 
 
@@ -120,7 +129,7 @@ class Casque : public Equipement {
 public:
     Casque();
 
-    Casque(std::string nom_);
+    Casque(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -132,7 +141,7 @@ class Anneau : public Equipement {
 public:
     Anneau();
 
-    Anneau(std::string nom_);
+    Anneau(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -144,7 +153,7 @@ class Gants : public Equipement {
 public:
     Gants();
 
-    Gants(std::string nom_);
+    Gants(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -156,7 +165,7 @@ class Jambes : public Equipement {
 public:
     Jambes();
 
-    Jambes(std::string nom_);
+    Jambes(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -168,7 +177,7 @@ class Bottes : public Equipement {
 public:
     Bottes();
 
-    Bottes(std::string nom_);
+    Bottes(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -180,7 +189,7 @@ class Arme : public Equipement {
 public:
     Arme();
 
-    Arme(std::string nom_);
+    Arme(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 
@@ -192,7 +201,7 @@ class Torse : public Equipement {
 public:
     Torse();
 
-    Torse(std::string nom_);
+    Torse(std::string nom_, int price);
 
     virtual void equiper(Heros *h, bool droite);
 

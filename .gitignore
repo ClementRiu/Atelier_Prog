@@ -5,6 +5,9 @@ Combat/CMakeLists.txt.user
 Charles-build
 .idea
 Ville-build
+Affichage-build
+Combat-build
+Gestion-build
 
 soldat.cpp
 soldat.h

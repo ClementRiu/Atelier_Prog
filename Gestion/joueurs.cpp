@@ -1,6 +1,20 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "joueurs.h"
 #include <iterator>
-#include <sstream>
 
 Ville::Ville() {
 
@@ -47,7 +61,7 @@ void Ville::ajoute(Mere *obj) {
 }
 
 
-Mere *Ville::getObjet(int i) {
+Mere *Ville::getPointeurMere(int i) {
     return achetable.get(i);
 }
 
@@ -59,6 +73,9 @@ Joueur::Joueur(int num) {
     id = num;
     for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] = 0;
+    }
+    for (int i = 0; i<NB_RESSOURCES; ++i) {
+        revenus[i] = 100;
     }
     score = 0;
     nb_heros_max_joueur = 1;
@@ -79,6 +96,7 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite, std::vector<Ville *> villes)
     }
 }
 
+
 Joueur::Joueur(int idj, std::vector<Unite *> unite) {
     id = idj;
     herosJoueur.resize(unite.size());
@@ -93,9 +111,29 @@ Joueur::Joueur(int idj, std::vector<Unite *> unite) {
 }
 
 
-//gros tas de get
+void Joueur::ajouteUnite(std::vector<Unite *> unite) {
+    for (int i = 0; i < unite.size(); i++) {
+        herosJoueur.push_back(unite[i]);
+    }
+}
+
+void Joueur::ajouteVille(std::vector<Ville *> ville) {
+    for (int i = 0; i < ville.size(); i++) {
+        villesJoueur.push_back(*ville[i]);
+    }
+}
+
+
+
 int Joueur::get_id() const {
     return id;
+}
+
+bool Joueur::aPerdu(){
+    if (herosJoueur.empty()){
+        return true;
+    }
+    return false;
 }
 
 
@@ -104,9 +142,6 @@ void Joueur::finTourGestion() {
         herosJoueur[i]->setDep(herosJoueur[i]->getDepMax());
     }
 
-    for (int i = 0; i < herosJoueur.size(); ++i) {
-        std::cout << herosJoueur[i]->getDep() << std::endl;
-    }
 
     for (int i = 0; i < NB_RESSOURCES; i++) {
         ressources[i] += revenus[i];
@@ -115,11 +150,11 @@ void Joueur::finTourGestion() {
 
 
 void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde,
-                         Bouton boutonAction, Bouton boutonInventaire, bool &quit) {
+                         Bouton boutonAction, Bouton boutonInventaire, bool &quit, int nbTour) {
     Unite *unite;
 
-    ///////////////////ATTENTION AFFICHAGE CLEMENT/////////////////////////////////////
-    //affiche(ressources)
+    afficheNombreTours(nbTour);
+    afficheTourJoueur(id);
 
     LOOP: //sorte de "point de repère" : avec un "goto LOOP" on peut retourner au début de la boucle
     while (true) {
@@ -140,14 +175,17 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
             quit = true;
             break;
         }
+
         // Vient-on de cliquer sur une unite ?
         if (numeroCase(x, y) != -1 && carte[numeroCase(x, y)].getOccupe()) {
-            unite = carte[numeroCase(x, y)].getUnite();
+            unite = carte[numeroCase(x, y)].getPointeurUnite();
 
             //Si l'unité sur laquelle on vient de cliquer n'est pas au joueur concerné, on retourne au début de la boucle
             if (get_id() != unite->getID()) {
                 goto LOOP;
             }
+
+            unite->affichePVNombre();
 
             float dep = unite->getDep();
 
@@ -162,7 +200,7 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
             // Bouton inventaire
             if (boutonInventaire.boutonActive(x, y)) {
-                unite->ouvreInventaire();
+                unite->ouvreInventaire(ressources[0]);
                 // unites[u]->equipe(1);
                 // unites[u]->ouvreInventaire();
                 // Reaffichage de la carte
@@ -180,15 +218,37 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
 
                     //S'il y a un héros, on déclanche un combat
                     if (carte[numeroCase(x, y)].getOccupe()) {
-                        Unite *uniteCliquee = carte[numeroCase(x, y)].getUnite();
+                        Unite *uniteCliquee = carte[numeroCase(x, y)].getPointeurUnite();
 
                         //Si l'unité n'est pas à nous, on déclenche effectivement le combat
                         if (unite->getID() != uniteCliquee->getID()) {
                             float PDepGestion = unite->getDep();
+                            int positionGestion[2] = {unite->getCase(), uniteCliquee->getCase()};
+                            carte[positionGestion[0]].retireUnite();
+                            carte[positionGestion[1]].retireUnite();
+
+                            unite->afficheCaseDisponibleOnOff(carte, false, PDepGestion, 0);
+
                             unite->setDep(unite->getDepMax());
-                            unite->declencheCombat(uniteCliquee);
+
+                            int unitePerdante = unite->declencheCombat(uniteCliquee);
+
+
+                            if (unitePerdante==unite->getID()){
+                                uniteCliquee->setCase(positionGestion[1], carte);
+                                carte[positionGestion[1]].placeUnite(uniteCliquee);
+                            }
+                            else{
+                                unite->setCase(positionGestion[0], carte);
+                                carte[positionGestion[0]].placeUnite(unite);
+                            }
+
                             carte.affiche();
+                            afficheNombreTours(nbTour);
+                            afficheTourJoueur(id);
+
                             unite->setDep(PDepGestion);
+                            uniteCliquee->setDep(uniteCliquee->getDepMax());
                         }
                     }
                 }
@@ -203,6 +263,10 @@ void Joueur::tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauveg
             unite->afficheCaseDisponibleOnOff(carte, false, dep, 0);
         }
     }
+}
+
+int& Joueur::getRessources() {
+    return ressources[0];
 }
 
 #if 0
@@ -261,10 +325,6 @@ bool Ville::get_heros_present() {
     return heros_present;
 }
 
-int Joueur::get_ressources(int i) {
-    return ressources[i];
-}
-
 int Joueur::get_score() {
     return score;
 }
@@ -295,6 +355,11 @@ void Joueur::add_score(int points) {
 void Joueur::tue_heros(Unite* mort) {
     //à faire dès que les héros ont une idée
 }
+
+int& Joueur::getRessources() {
+    return ressources[0];
+}
+
 
 void Joueur::recrute_heros(Unite* recrue) {
     herosJoueur.push_back(recrue);

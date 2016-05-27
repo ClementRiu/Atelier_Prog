@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "unite.h"
 #include <iostream>
 #include "joueurs.h"
@@ -28,30 +43,29 @@ Attaque::Attaque(std::vector<Imagine::Coords<2> > zone, int power) {
 
 void Attaque::zone(Carte &carte, bool b, int caseUnite) {
     for (int i = 0; i < zoneInfluence.size(); ++i) {
-        if (caseUnite + zoneInfluence[i].y() * NbCase > 0 && caseUnite + zoneInfluence[i].y() * NbCase &&
-            (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase)) {
+        if (caseUnite + zoneInfluence[i].y() * NbCase >= 0 && caseUnite + zoneInfluence[i].y() * NbCase < NbCase * NbCase - 1 &&
+            (caseUnite / NbCase == (caseUnite + zoneInfluence[i].x()) / NbCase) && caseUnite + zoneInfluence[i].x() >= 0) {
             carte[caseUnite + zoneInfluence[i].x() + zoneInfluence[i].y() * NbCase].brillanceOnOff(b);
         }
     }
 }
 
 
-int Attaque::getPuissance() {
+int Attaque::getPuissance() const {
     return puissance;
 }
 
 
 Unite::Unite() {
-    tour = false;
     PDep = 8;
     numcase = 0;
     PV = 100;
+    PVMax = 100;
     force = 10;
 }
 
 
 Unite::Unite(const Unite &unit) {
-    tour = false;
     PV = unit.PV;
     PVMax = unit.PVMax;
     mana = unit.mana;
@@ -72,15 +86,14 @@ Unite::Unite(const Unite &unit) {
         defenseMag[i] = unit.defenseMag[i];
     }
 
-    for (int i = 0; i++; i < NB_MAX_ATTAQUES) {
-        competences[i] = unit.competences[i];
-    }
+        competences = unit.competences;
 }
 
 
-Unite::Unite(int ID, float dep, float depMax, int num, float init) {
-    tour = false;
+
+Unite::Unite(int ID, float PVm, float dep, float depMax, int num, float init) {
     IDjoueur = ID;
+    PVMax = PVm;
     PDep = dep;
     PDepMax = depMax;
     numcase = num;
@@ -115,9 +128,11 @@ bool Unite::operator<(Unite u) const {
     return (initiativeTemporaire < u.initiativeTemporaire);
 }
 
-void Unite::choixAction() {
-    std::cout << "Implementer le choix d'action méthode choixAction de Unite";
+
+
+std::vector<Sbire *> Unite::getArmee() {
 }
+
 
 void Unite::ajouteSbire(Sbire *s) {
 
@@ -128,7 +143,7 @@ void Unite::tueUnite() {
 }
 
 
-void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
+bool Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
     float dep = PDep;
 
     if (dep > 0) {
@@ -136,7 +151,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
             deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
             PDep = dep;
-            return;
+            return true;
         }
 
         int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
@@ -146,11 +161,12 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             afficheCaseDisponibleOnOff(carte, false, dep, caseDep);
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
-            this->attaqueDeBase(carte[numeroCase(x1, y1)].getUnite());
-            return;
+            this->attaqueDeBase(carte[numeroCase(x1, y1)].getPointeurUnite());
+            return false;
         }
 
         afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+        return true;
     }
 }
 
@@ -158,23 +174,20 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
 // Fonction simple permettant d'afficher les cases disponibles pour le Heros, ou de les enlever
 std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, bool b, float &deplacement,
                                                                  int case_a_atteindre) {
-    return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre);
+    // CE VECTEUR DOIT ETRE VIDE
+    std::vector< Imagine::Coords<2> > vecCaseBrillante;
+    return carte[numcase].fastMarching(PDep, carte, b, deplacement, case_a_atteindre, vecCaseBrillante);
 }
 
 
-void Unite::deplaceVersCase(Case &c2, Case &c1) {
-    if (!c2.getOccupe()) {
-        c2.flagHeros(c1.getUnite());
-        c1.flagHeros(NULL);
-        c1.affiche();
-        c2.affiche();
-        numcase = numeroCase(c2.get(0), c2.get(1));
+void Unite::deplaceVersCase(Case &caseDestination, Case &caseDepart) {
+    if (!caseDestination.getOccupe()) {
+        caseDestination.placeUnite(caseDepart.getPointeurUnite());
+        caseDepart.placeUnite(NULL);
+        caseDepart.affiche();
+        caseDestination.affiche();
+        numcase = numeroCase(caseDestination.get(0), caseDestination.get(1));
     }
-}
-
-
-void Unite::changeOrientation(int i) {
-    orientation = i;
 }
 
 
@@ -200,12 +213,21 @@ void Unite::ouvreVille(Ville *v) {
 
 }
 
-bool Unite::estHeros() {
+void Unite::affichePVNombre(){
+    
+}
+
+bool Unite::estHeros() const{
     return false;
 }
 
 
-void Unite::setCase(int num) {
+void Unite::setCase(int & num, const Carte& carte) {
+    while(carte.get(num).NbDep()==INF){
+        num+=1;
+        std::cout<<"Modification"<<std::endl;
+    }
+
     numcase = num;
 }
 
@@ -230,19 +252,24 @@ float Unite::getPV() const {
 }
 
 
-//à implémenter
+int Unite::getNombre() const{
+    return -1;
+}
+
+
+
 void Unite::prendDommage(int valeurDegats) {
-    std::cout << "à implémenter !" << std::endl;
+    std::cout << "Fonction prendDommage à modifier !" << std::endl;
     PV = PV - valeurDegats;
 }
 
 
-void Unite::setAttaque(Attaque att, int i) {
-    competences[i] = att;
+void Unite::setAttaque(const Attaque& att) {
+    competences = Attaque(att);
 }
 
 
-bool Unite::estVivant() {
+bool Unite::estVivant() const{
     if (PV <= 0) {
         return false;
     }
@@ -284,13 +311,13 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
 
         if (boutonAction.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
-            competences[0].zone(carte, true, getCase());
-            attaque(competences[0], carte);
-            competences[0].zone(carte, false, getCase());
-            tourContinue = false;
+            competences.zone(carte, true, getCase());
+            bool effectuee = attaque(competences, carte);
+            competences.zone(carte, false, getCase());
+            tourContinue = !effectuee;
         }
         else {
-            deplacement(carte, x, y, false);
+            tourContinue = deplacement(carte, x, y, false);
         }
         boutonAction.affiche();
     }
@@ -299,7 +326,7 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
 }
 
 
-void Unite::action(Attaque att, Unite *u) {
+void Unite::action(const Attaque& att, Unite *u) {
     // A MODIFIER
     //u->prendDommage(att.getPuissance());
 
@@ -313,7 +340,7 @@ void Unite::attaqueDeBase(Unite *u) {
 }
 
 
-void Unite::declencheCombat(Unite *u) {
+int Unite::declencheCombat(Unite *u) {
 
 }
 
@@ -322,15 +349,17 @@ void Unite::retire(int i) {
 }
 
 
-void Unite::attaque(Attaque attq, Carte &carte) {
+bool Unite::attaque(const Attaque& attq, Carte &carte) {
+    bool b = false;//indique si l'attaque a eu lieu
     int x1, y1 = 0;
-
     do {
         clic(x1, y1, carte);
-    } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
-    if (carte[numeroCase(x1, y1)].getOccupe()) {
-        action(attq, carte[numeroCase(x1, y1)].getUnite());
+    } while (numeroCase(x1, y1) < 0);
+    if (carte[numeroCase(x1, y1)].getOccupe() && carte[numeroCase(x1, y1)].Brillance()) {
+        action(attq, carte[numeroCase(x1, y1)].getPointeurUnite());
+        b = true;
     }
+    return b;
 }
 
 
@@ -386,24 +415,21 @@ std::vector<Bouton> Unite::boutonAction(Carte &carte) {
 }
 */
 
-std::vector<Sbire *> Unite::getArmee() {
-}
-
 
 void Unite::ramasse(Mere *obj) {
 
 }
 
-void Unite::achete(Ville *ville, int i, bool b) {
+void Unite::achete(Ville *ville, int i, bool b, int &ressources) {
 }
 
 
-void Unite::ouvreInventaire() {
+void Unite::ouvreInventaire(int &ressources) {
 
 }
 
 
-void Unite::equipe(Ville *ville, int i, bool droite) {
+void Unite::equipe(Ville *ville, int i, bool droite, int &ressources) {
 
 }
 
@@ -422,8 +448,9 @@ Sbire::Sbire() {
 
 }
 
-Sbire::Sbire(int IDj, float dep, float depMax, int num, float init, int nb) : Unite(IDj, dep, depMax, num, init) {
+Sbire::Sbire(int IDj, float PVm, float dep, float depMax, int num, float init, int nb) : Unite(IDj, PVm, dep, depMax, num, init) {
     nombre = nb;
+    competences = Attaque();
 }
 
 
@@ -431,23 +458,53 @@ Sbire::Sbire(const Sbire &s) {
 
 }
 
-bool Sbire::estVivant() {
-    if (PV <= 0 && nombre == 0) {
+bool Sbire::estVivant() const{
+    if (nombre <= 0) {
         return false;
     }
     return true;
 }
 
+int Sbire::getNombre() const{
+    return nombre;
+}
 
+//A MODIFIER !! (ON NE PREND PAS EN COMPTE LE NOMBRE DE SBIRES
 void Sbire::prendDommage(int degatRecu) {
     while (degatRecu > 0) {
-        degatRecu -= PV;
-
-        if (degatRecu > 0) {
+        if (PV - degatRecu <= 0 && nombre>0) {
+            degatRecu-=PV;
+            std::cout<<PVMax<<std::endl;
             PV = PVMax;
             nombre -= 1;
         }
+        else {
+            PV-=degatRecu;
+            degatRecu=0;
+        }
     }
+}
+
+//A MODIFIER !!
+void Sbire::affichePVNombre(){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite + 140,
+                      Imagine::WHITE);
+
+    std::string PVaffiche = intToString(PV);
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
+                        "Sbire", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
+                        "courant :", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
+                        "PV = "+PVaffiche, Imagine::BLACK, 10);
+
+
+    std::string Nbaffiche = intToString(nombre);
+
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 150 + Taille,
+                        "Nb = "+Nbaffiche, Imagine::BLACK, 10);
 }
 
 
@@ -466,14 +523,14 @@ Sbire::~Sbire() {
 //*********************************************************************************************************************
 
 
-Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, dep, depMax, num, init) {
-    Casque c("Casque de base");
-    Arme a("Arme de base");
-    Torse t("Armure de Base");
-    Gants g("Gants de base");
-    Anneau an("Anneau de base");
-    Bottes b("Bottes de base");
-    Jambes j("Genouilleres de base");
+Heros::Heros(int ID, float PVm, float dep, float depMax, int num, float init, Joueur* jou) : Unite(ID, PVm, dep, depMax, num, init) {
+    Casque c("Casque de base", 0);
+    Arme a("Arme de base", 0);
+    Torse t("Armure de Base", 0);
+    Gants g("Gants de base", 0);
+    Anneau an("Anneau de base", 0);
+    Bottes b("Bottes de base", 0);
+    Jambes j("Genouilleres de base", 0);
     equipementCasque = c;
     equipementArmeDroite = a;
     equipementTorse = t;
@@ -481,6 +538,7 @@ Heros::Heros(int ID, float dep, float depMax, int num, float init) : Unite(ID, d
     equipementAnneauDroite = an;
     equipementBottes = b;
     equipementJambes = j;
+    joueur = jou;
 }
 
 
@@ -498,13 +556,27 @@ void Heros::retire(int i) {
     inventaire.retire(i);
 }
 
+void Heros::affichePVNombre(){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 110, LargDroite, LargDroite + 80,
+                      Imagine::WHITE);
+
+    std::string PVaffiche = intToString(PV);
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 120 + Taille,
+                        "Heros", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 130 + Taille,
+                        "courant :", Imagine::BLACK, 9);
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 140 + Taille,
+                        "PV = "+PVaffiche, Imagine::BLACK, 10);
+}
+
 std::vector<Sbire *> Heros::getArmee() {
     return armeeHeros;
 }
 
 
 void Heros::ouvreVille(Ville *v) {
-    Heros *h2 = new Heros(1, 1, 1, 1, 1);
+    Heros *h2 = new Heros(1, 100, 1, 1, 1, 1, joueur);
     if (typeid(this) == typeid(h2)) {
         // Creation des differents boutons pour les differentes categories d'objets
         std::vector<Bouton> boutonsChoix;
@@ -534,26 +606,31 @@ void Heros::ouvreVille(Ville *v) {
         categoriesObjets.ajoute(new Objet());
 
         // Creation du pointeur vers la fonction equipe
-        void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::achete;
+        void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::achete;
 
-        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction);
+        std::cerr << (joueur==NULL);
+
+        (v->getInventaire()).ouvreInventaire(boutonsChoix, categoriesObjets, v, this, pointeurFonction, joueur->getRessources());
         //inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, this, pointeurFonction);
     }
     delete h2;
 }
 
 
-void Heros::achete(Ville *ville, int i, bool b) {
-    this->ramasse(ville->getObjet(i)->clone());
+void Heros::achete(Ville *ville, int i, bool b, int &ressources) {
+    if (ressources >= ville->getPointeurMere(i)->getPrix()) {
+        this->ramasse(ville->getPointeurMere(i)->clone());
+        ressources -= ville->getPointeurMere(i)->getPrix();
+    }
 }
 
 
-bool Heros::estHeros() {
+bool Heros::estHeros() const{
     return true;
 }
 
 
-void Heros::declencheCombat(Unite *u) {
+int Heros::declencheCombat(Unite *u) {
     Bouton boutonFinTour(ZoneBoutonFinTour, Imagine::BLACK, "End turn");
     Bouton boutonAction(ZoneBoutonAction, Imagine::BLACK, "Action");
     Bouton boutonInventaire(ZoneBoutonInventaire, Imagine::BLACK, "Inventaire");
@@ -570,12 +647,17 @@ void Heros::declencheCombat(Unite *u) {
 
     Carte carte(0);
 
+    int position = 0;
+
     //on prend toutes les unités présentes dans le héros qui a déclanché le combat et on les place dans la file d'unité et d'unités alliées
     for (int i = 0; i < this->getArmee().size(); i++) {
         Sbire *uniteCourante = this->getArmee()[i];
         unitesAlliees.push_back(uniteCourante);
+        position = this->getArmee()[i]->getCase();
+        this->getArmee()[i]->setCase(position, carte);
+
         fileUnites.push(uniteCourante);
-        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
+        carte[position].placeUnite(uniteCourante);
         this->getArmee().pop_back();
     }
 
@@ -583,24 +665,28 @@ void Heros::declencheCombat(Unite *u) {
     for (int i = 0; i < u->getArmee().size(); i++) {
         Sbire *uniteCourante = u->getArmee()[i];
         unitesEnnemies.push_back(uniteCourante);
+        position = u->getArmee()[i]->getCase();
+        u->getArmee()[i]->setCase(position, carte);
+
         fileUnites.push(uniteCourante);
-        carte[uniteCourante->getCase()].flagHeros(uniteCourante);
+        carte[position].placeUnite(uniteCourante);
         u->getArmee().pop_back();
     }
 
-
-    int positionGestion[2] = {this->getCase(), u->getCase()};
-
     // Initialisation des unites
-    this->setCase(100);
-    u->setCase(200);
-    carte[100].flagHeros(this);
-    carte[200].flagHeros(u);
+    int positionHerosAllie = 100;
+    int positionHerosEnnemi = 200;
+    this->setCase(positionHerosAllie, carte);
+    u->setCase(positionHerosEnnemi, carte);
+    carte[positionHerosEnnemi].placeUnite(this);
+    carte[positionHerosAllie].placeUnite(u);
+
 
     carte.affiche();
 
     fileUnites.push(this);
     fileUnites.push(u);
+
 
     bool finCombat = false;
 
@@ -609,7 +695,8 @@ void Heros::declencheCombat(Unite *u) {
     while (!finCombat) {
         //règles d'initiative assez arbitraires, à modifier !
         Unite *unitJouable = fileUnites.pop();
-        std::cout << fileUnites.size() << std::endl;
+        unitJouable->affichePVNombre();
+        std::cout<<unitJouable->getNombre()<<std::endl;
 
         //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
@@ -617,11 +704,15 @@ void Heros::declencheCombat(Unite *u) {
             fileUnites.push(unitJouable);
         }
 
-        //On regarde si les unités contenue dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
+        //On regarde si les unités contenues dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
         for (int i = 0; i < unitesAlliees.size(); i++) {
             if (!unitesAlliees[i]->estVivant()) {
                 if (unitesAlliees[i]->estHeros()) {
-                    getArmee()[i]->tueUnite();
+                    for (int j = 0; j < getArmee().size(); ++j) {
+                        unitesAlliees[i]->getArmee()[j]->tueUnite();
+                    }
+                    return this->getID();
+                    //finCombat = true;
                 }
                 else {
                     carte[unitesAlliees[i]->getCase()].retireUnite();
@@ -635,7 +726,11 @@ void Heros::declencheCombat(Unite *u) {
         for (int i = 0; i < unitesEnnemies.size(); i++) {
             if (!unitesEnnemies[i]->estVivant()) {
                 if (unitesEnnemies[i]->estHeros()) {
-
+                    for (int j = 0; j < unitesEnnemies[i]->getArmee().size(); ++j) {
+                        unitesEnnemies[i]->getArmee()[j]->tueUnite();
+                    }
+                    finCombat = true;
+                    return u->getID();
                 }
                 carte[unitesEnnemies[i]->getCase()].retireUnite();
                 unitesEnnemies.erase(unitesEnnemies.begin() + i);
@@ -646,12 +741,18 @@ void Heros::declencheCombat(Unite *u) {
         //Si un des deux vecteurs est vide, une armée a été vaincue ; c'est la fin du combat
         if (unitesAlliees.size() == 0 || unitesEnnemies.size() == 0) {
             finCombat = true;
+
+
+            if (unitesAlliees.size()==0){
+                return this->getID();
+            }
+            if(unitesEnnemies.size()==0){
+                return u->getID();
+            }
+
         }
         tourCombat += 1;
     }
-
-    this->setCase(positionGestion[0]);
-    u->setCase(positionGestion[1]);
 }
 
 
@@ -662,7 +763,7 @@ Heros::Heros(const Unite &h) : Unite(h) {
 //*********************************EQUIPEMENT********************************************
 
 
-Casque Heros::equipeCasque(Casque casque) {
+Casque Heros::equipeCasque(const Casque& casque) {
     Casque desequipe = equipementCasque;
 
     equipementCasque = casque;
@@ -671,7 +772,7 @@ Casque Heros::equipeCasque(Casque casque) {
 }
 
 
-Arme Heros::equipeArmeDroite(Arme arme) {
+Arme Heros::equipeArmeDroite(const Arme& arme) {
     Arme desequipe = equipementArmeDroite;
 
     equipementArmeDroite = arme;
@@ -680,7 +781,7 @@ Arme Heros::equipeArmeDroite(Arme arme) {
 }
 
 
-Arme Heros::equipeArmeGauche(Arme arme) {
+Arme Heros::equipeArmeGauche(const Arme& arme) {
     Arme desequipe = equipementArmeGauche;
 
     equipementArmeGauche = arme;
@@ -689,7 +790,7 @@ Arme Heros::equipeArmeGauche(Arme arme) {
 }
 
 
-Torse Heros::equipeTorse(Torse torse) {
+Torse Heros::equipeTorse(const Torse& torse) {
     Torse desequipe = equipementTorse;
 
     equipementTorse = torse;
@@ -698,7 +799,7 @@ Torse Heros::equipeTorse(Torse torse) {
 
 }
 
-Gants Heros::equipeGants(Gants gants) {
+Gants Heros::equipeGants(const Gants& gants) {
     Gants desequipe = equipementGants;
 
     equipementGants = gants;
@@ -706,7 +807,7 @@ Gants Heros::equipeGants(Gants gants) {
     return desequipe;
 }
 
-Jambes Heros::equipeJambes(Jambes jambes) {
+Jambes Heros::equipeJambes(const Jambes& jambes) {
     Jambes desequipe = equipementJambes;
 
     equipementJambes = jambes;
@@ -714,7 +815,7 @@ Jambes Heros::equipeJambes(Jambes jambes) {
     return desequipe;
 }
 
-Bottes Heros::equipeBottes(Bottes bottes) {
+Bottes Heros::equipeBottes(const Bottes& bottes) {
     Bottes desequipe = equipementBottes;
 
     equipementBottes = bottes;
@@ -723,7 +824,7 @@ Bottes Heros::equipeBottes(Bottes bottes) {
 }
 
 
-Anneau Heros::equipeAnneauDroite(Anneau anneau) {
+Anneau Heros::equipeAnneauDroite(const Anneau& anneau) {
     Anneau desequipe = equipementAnneauDroite;
 
     equipementAnneauDroite = anneau;
@@ -732,7 +833,7 @@ Anneau Heros::equipeAnneauDroite(Anneau anneau) {
 }
 
 
-Anneau Heros::equipeAnneauGauche(Anneau anneau) {
+Anneau Heros::equipeAnneauGauche(const Anneau& anneau) {
     Anneau desequipe = equipementAnneauGauche;
 
     equipementAnneauGauche = anneau;
@@ -741,7 +842,7 @@ Anneau Heros::equipeAnneauGauche(Anneau anneau) {
 }
 
 
-void Heros::equipe(Ville *ville, int i, bool droite) {
+void Heros::equipe(Ville *ville, int i, bool droite, int &ressources) {
     if (i < inventaire.taille()) {
         inventaire.get(i)->equiper(this, droite);
     }
@@ -753,7 +854,7 @@ void Heros::ramasse(Mere *obj) {
 }
 
 
-void Heros::ouvreInventaire() {
+void Heros::ouvreInventaire(int &ressources) {
     // Creation des differents boutons pour les differentes categories d'objets
     std::vector<Bouton> boutonsChoix;
     std::vector<std::string> nomBoutons;
@@ -782,9 +883,9 @@ void Heros::ouvreInventaire() {
     categoriesObjets.ajoute(new Objet());
 
     // Creation du pointeur vers la fonction equipe
-    void (Unite::*pointeurFonction)(Ville *, int, bool) = &Unite::equipe;
+    void (Unite::*pointeurFonction)(Ville *, int, bool, int&) = &Unite::equipe;
 
-    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction);
+    inventaire.ouvreInventaire(boutonsChoix, categoriesObjets, NULL, this, pointeurFonction, ressources);
 
     //categoriesObjets.~Inventaire();
 }

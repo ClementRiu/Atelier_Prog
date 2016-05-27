@@ -1,3 +1,19 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
+#include <sstream>
 #include "outils.h"
 
 void sauvegarde(std::vector<Unite *> unites) {
@@ -39,14 +55,24 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
             std::cout << depMax << std::endl;
             std::getline(fichier, ligne);
             float init = atoi(ligne.c_str());
-            unites.push_back(new Unite(ID, dep, depMax, num, init));
-            carte[num].flagHeros(unites[unites.size()-1]);
+            //PVmax à 100 arbitraire, à modifier
+            unites.push_back(new Unite(ID, 100, dep, depMax, num, init));
+            carte[num].placeUnite(unites[unites.size()-1]);
         }
         fichier.close();
     }
     else {
         std::cerr << "Erreur à l'ouverture !" << std::endl;
     }
+}
+
+std::string intToString(int a){
+    std::string result;
+    std::ostringstream convert;
+    convert << a;
+    result = convert.str();
+
+    return result;
 }
 
 
@@ -87,7 +113,7 @@ void clic(int &x, int &y, Carte &carte) {
 }
 
 
-void clicSimple(int &x, int &y) {
+int clicSimple(int &x, int &y) {
     Imagine::Event e;
     do {
         getEvent(0, e);
@@ -96,6 +122,7 @@ void clicSimple(int &x, int &y) {
             y = e.pix[1];
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
+    return e.button;
 }
 
 
@@ -138,13 +165,25 @@ void survole(int &x, int &y) {
 
 void afficheCaseSurvole(int x, int y, Carte &carte) {
     // A MODIFIER
-    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite,
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, LargDroite, LargDroite +70,
                       Imagine::WHITE);
     if (numeroCase(x, y) != -1) {
         Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 10, Taille, Taille,
                           carte[numeroCase(x, y)].getImage());
         Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 30 + Taille,
-                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 4);
+                            carte[numeroCase(x, y)].getDescription(), Imagine::BLACK, 7);
+        if (carte[numeroCase(x, y)].getOccupe()) {
+            int PVaffiche = int(carte[numeroCase(x, y)].getPointeurUnite()->getPV());
+
+            std::string result = intToString(PVaffiche);
+
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 50 + Taille,
+                                "Unité", Imagine::BLACK, 9);
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 60 + Taille,
+                                "survolée :", Imagine::BLACK, 9);
+            Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 75 + Taille,
+                                "PV = "+ result, Imagine::BLACK, 10);
+        }
     }
 }
 
@@ -175,5 +214,33 @@ void afficheChemins(int x, int y, Carte &carte, std::vector<std::vector<int> > d
                 }
             }
         }
+    }
+}
+
+
+void afficheNombreTours(int tour){
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 220 + Taille, LargDroite, LargDroite/5, Imagine::WHITE);
+
+    std::string result=intToString(tour);
+
+    Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 230 + Taille,
+                        result+"e tour", Imagine::BLACK, 10);
+}
+
+void afficheTourJoueur(int idJoueur) {
+    Imagine::fillRect(LargGauche + Separation + NbCase * Taille, LargDroite + 230 + Taille, LargDroite, 3 * LargDroite / 5,
+                      Imagine::WHITE);
+
+    if (idJoueur == 1) {
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 240 + Taille,
+                            "Joueur", Imagine::BLUE, 10);
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 250 + Taille,
+                            "Bleu", Imagine::BLUE, 10);
+    }
+    if (idJoueur == 2){
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 240 + Taille,
+                            "Joueur", Imagine::RED, 10);
+        Imagine::drawString(LargGauche + Separation + NbCase * Taille, LargDroite + 250 + Taille,
+                            "Rouge", Imagine::RED, 10);
     }
 }

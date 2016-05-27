@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #pragma once
 
 
@@ -18,16 +33,16 @@ public:
     CaseDist(int num, float dep, std::vector<int> way);
 
     // Accesseur au numero de la case
-    int getNum();
+    int getNum() const;
 
     // Accesseur au nombre de deplacements restants
-    float getDep();
+    float getDep() const;
 
     // Operateur inferieur ou egal sur la classe
     bool operator<(CaseDist c) const;
 
     // Pour récupérer le chemin de la case
-    std::vector<int> getChemin();
+    std::vector<int> getChemin() const;
 };
 
 
@@ -51,6 +66,6 @@ public:
     bool empty();
 
     //renvoie la taille de la file
-    int size();
+    int size() const;
 };
 
