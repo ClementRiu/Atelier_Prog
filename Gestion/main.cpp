@@ -7,8 +7,13 @@ int main() {
     Imagine::openWindow(width, height);
 
     Ville *v = new Ville();
-    v->ajoute(new Objet("essai", 10));
-    v->ajoute(new Objet("poup", 20));
+    v->ajoute(new Arme("Fusil", 1000));
+    v->ajoute(new Arme("Epée", 40));
+    v->ajoute(new Torse("Cotte de maille", 100));
+    v->ajoute(new Bottes("Chaussures en tissu", 30));
+    v->ajoute(new Objet("Potion faible", 10));
+    v->ajoute(new Objet("Potion", 20));
+    v->ajoute(new Objet("Potion forte", 40));
 
     Carte carte(v);
 
@@ -89,6 +94,38 @@ int main() {
     unitesAlliees[0]->ramasse(new Objet("rat mort", 10));
     unitesAlliees[0]->ramasse(new Objet("boite a outils", 10));
 
+    unitesEnnemies[0]->ramasse(new Arme("Arc", 20));
+    unitesEnnemies[0]->ramasse(new Arme("Epée", 20));
+    unitesEnnemies[0]->ramasse(new Arme("Lance", 20));
+    unitesEnnemies[0]->ramasse(new Bottes("Bottes de cuir", 20));
+    unitesEnnemies[0]->ramasse(new Gants("Gants de cuir", 20));
+    unitesEnnemies[0]->ramasse(new Casque("Casque de fer", 20));
+    unitesEnnemies[0]->ramasse(new Torse("Plastron de cuir", 20));
+    unitesEnnemies[0]->ramasse(new Anneau("Anneau simple", 20));
+    unitesEnnemies[0]->ramasse(new Objet("Potion", 20));
+
+    unitesEnnemies[1]->ramasse(new Arme("Arc composé", 40));
+    unitesEnnemies[1]->ramasse(new Arme("Epée", 20));
+    unitesEnnemies[1]->ramasse(new Arme("Lance cassée", 0));
+    unitesEnnemies[1]->ramasse(new Bottes("Bottes de cuir renforcées", 25));
+    unitesEnnemies[1]->ramasse(new Bottes("Bottes de cuir", 20));
+    unitesEnnemies[1]->ramasse(new Gants("Gants de cuir", 20));
+    unitesEnnemies[1]->ramasse(new Casque("Casque de fer doré", 50));
+    unitesEnnemies[1]->ramasse(new Torse("Cotte de mailles", 37));
+    unitesEnnemies[1]->ramasse(new Anneau("Anneau magique", 80));
+    unitesEnnemies[1]->ramasse(new Objet("Potion faible", 10));
+
+
+    unitesAlliees[1]->ramasse(new Arme("Arc composé cassé", 5));
+    unitesAlliees[1]->ramasse(new Arme("Epée double", 40));
+    unitesAlliees[1]->ramasse(new Arme("Lance cassée", 0));
+    unitesAlliees[1]->ramasse(new Bottes("Bottes de cuir renforcées avec des pics", 42));
+    unitesAlliees[1]->ramasse(new Bottes("Bottes de cuir", 20));
+    unitesAlliees[1]->ramasse(new Gants("Gants de cuir troués", 11));
+    unitesAlliees[1]->ramasse(new Casque("Casque de fer", 20));
+    unitesAlliees[1]->ramasse(new Torse("Cotte de mailles", 37));
+    unitesAlliees[1]->ramasse(new Anneau("Anneau magique", 100));
+    unitesAlliees[1]->ramasse(new Objet("Potion faible", 10));
 
     // Initialisation d'une attaque
     std::vector<Imagine::Coords<2> > zoneInfl;

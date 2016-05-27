@@ -135,7 +135,7 @@ void Unite::tueUnite() {
 }
 
 
-void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
+bool Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
     float dep = PDep;
 
     if (dep > 0) {
@@ -143,7 +143,7 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
             deplaceVersCase(carte[numeroCase(x1, y1)], carte[numcase]);
             PDep = dep;
-            return;
+            return true;
         }
 
         int caseDep = carte[numeroCase(x1, y1)].plusProcheVoisineBrillante(x1, y1, carte, numcase);
@@ -154,10 +154,11 @@ void Unite::deplacement(Carte &carte, int x1, int y1, bool gestion) {
             deplaceVersCase(carte[caseDep], carte[numcase]);
             PDep = dep;
             this->attaqueDeBase(carte[numeroCase(x1, y1)].getPointeurUnite());
-            return;
+            return false;
         }
 
         afficheCaseDisponibleOnOff(carte, false, dep, numeroCase(x1, y1));
+        return true;
     }
 }
 
@@ -313,7 +314,7 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
             tourContinue = false;
         }
         else {
-            deplacement(carte, x, y, false);
+            tourContinue = deplacement(carte, x, y, false);
         }
         boutonAction.affiche();
     }

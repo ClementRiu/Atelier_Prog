@@ -97,7 +97,7 @@ public:
     bool operator<(Unite u) const;
 
 
-    void deplacement(Carte &carte, int x1, int y1, bool gestion);
+    bool deplacement(Carte &carte, int x1, int y1, bool gestion);
 
     // Permet à l'unité de choisir son action
     // A IMPLEMENTER

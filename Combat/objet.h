@@ -52,6 +52,8 @@ public:
     virtual void equiper(Heros *h, bool droite);
 
     virtual Mere *clone() const;
+
+    virtual void afficheCarac();
 };
 
 
@@ -108,7 +110,6 @@ class Equipement : public Objet {
     int defense;
     int dexterite;
     int initiative;
-
     float PDep;
 
 public:
@@ -117,6 +118,8 @@ public:
     Equipement(const Equipement &eq);
 
     Equipement(std::string nom_, int price);
+
+    virtual void afficheCarac();
 };
 
 

@@ -89,7 +89,7 @@ void clic(int &x, int &y, Carte &carte) {
 }
 
 
-void clicSimple(int &x, int &y) {
+int clicSimple(int &x, int &y) {
     Imagine::Event e;
     do {
         getEvent(0, e);
@@ -98,6 +98,7 @@ void clicSimple(int &x, int &y) {
             y = e.pix[1];
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
+    return e.button;
 }
 
 
