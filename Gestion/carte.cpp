@@ -347,13 +347,11 @@ void Case::action(Unite* u) {
     }
 }
 
+int energie_partielle(Imagine::Image<int> mat, int param){
 
-int energie(Imagine::Image<int> mat){
-    int param=5;
     int E=0;
     int W= mat.size(0);
     int H=mat.size(1);
-    int nb_case[3]= {0,0,0};
     for (int i = 0 ; i<W; i++){
         for (int j =0; j<H; j++){
             if (i>0 && mat(i-1,j)!=mat(i,j)){
@@ -368,39 +366,93 @@ int energie(Imagine::Image<int> mat){
             if (j<H-1 && mat(i,j+1)!=mat(i,j)){
                 E+=param;
             }
-            nb_case[mat(i,j)]+=1;
         }
     }
-    E+= pow(nb_case[0], 2)+ pow(nb_case[1], 2)+ 8*pow(nb_case[2], 2);
     return E;
 }
 
 
-Imagine::Image<int> recuit_simule(int W, int H){
+Imagine::Image<int> recuit_simule(int W, int H){//Utilise un algorithme de reuit simule pour generer une "carte" d'entier traduisible en case
+    //On utilise une fonction d'energie sur l'ensemble des carte, on essaie ensuite de chercher un minimum de cette energie
+    //Une convergence trop rapide de l'algorithme nous permet d'obtenir un minimum local de l'energie
+    int param=5; //utilise dans le calcul de l'energie
     srand(time(NULL));
+
+    //On genere une carte de maniere totalement aleatoire
     Imagine::Image<int> matrice(W,H);
+    int nb_case[3]= {0,0,0};
+    int nb_case2[3]= {0,0,0};
     for (int i=0;i<W;i++){
         for (int j=0; j<H; j++ ){
             matrice(i,j)=rand() % 3;
+            nb_case[matrice(i,j)] += 1;
         }
     }
-    int E=energie(matrice);
-    double k=1.;
+
+    //On calcule l'energie de cette carte
+    int E = energie_partielle(matrice, param) + pow(nb_case[0], 2)+ pow(nb_case[1], 2)+ 8*pow(nb_case[2], 2);
+
+    //on cree une variable de temperature. En l'occurence, k est l'inverse de la temperature
+    double k = 1.;
+
     while (k<100){
-        for (int n=0; n< W*H; n++){
+        for (int n=0; n< W*H; n++){//nombre arbitraire d'operation, suppose permettre une faible energie finale
+
+            //On cherche a creer une nouvelle carte en modifiant l'une des cases
             int new_case,i,j;
             do{
-                i=rand() % W;
-                j=rand() % H;
-                new_case=rand() % 3;
+                i = rand() % W;
+                j = rand() % H;
+                new_case = rand() % 3;
             } while (new_case == matrice(i,j));
-            Imagine::Image<int> matrice2=matrice.clone();
-            matrice2(i,j)=new_case;
-            int E2=energie(matrice2);
+
+            //On calcule la nouvelle energie
+            for (int l=0;l<3;l++){
+                nb_case2[l] = nb_case[l];
+            }
+
+            nb_case2[matrice(i,j)] += -1;
+            nb_case2[new_case] += 1;
+            int E2 =E-(pow(nb_case[0], 2)+ pow(nb_case[1], 2)+ 8*pow(nb_case[2], 2));
+            E2+= pow(nb_case2[0], 2)+ pow(nb_case2[1], 2)+ 8*pow(nb_case2[2], 2);
+
+            if (i>0 && matrice(i-1,j)!=matrice(i,j)){
+                E2-=param;
+            }
+            if (j>0 && matrice(i,j-1)!=matrice(i,j)){
+                E2-=param;
+            }
+            if (i<W-1 && matrice(i+1,j)!=matrice(i,j)){
+                E2-=param;
+            }
+            if (j<H-1 && matrice(i,j+1)!=matrice(i,j)){
+                E2-=param;
+            }
+
+
+            if (i>0 && matrice(i-1,j)!=new_case){
+                E2+=param;
+            }
+            if (j>0 && matrice(i,j-1)!=new_case){
+                E2+=param;
+            }
+            if (i<W-1 && matrice(i+1,j)!=new_case){
+                E2+=param;
+            }
+            if (j<H-1 && matrice(i,j+1)!=new_case){
+                E2+=param;
+            }
+
+
+            //On determine si on garde la nouvelle carte ou pas
+            //Si son energie est inferieure, on la garde, sinon, on la garde avec une probabilite dependant de la temperature
             double p =double(rand())/double(RAND_MAX);
             if (E2<E || (p< exp((E-E2)*k))){
-                matrice=matrice2.clone();
-                E=E2;
+                matrice(i,j) = new_case;
+                E = E2;
+                for (int l=0;l<3;l++){
+                    nb_case[l] = nb_case2[l];
+                }
             }
         }
         k+=2.;
@@ -411,7 +463,7 @@ Imagine::Image<int> recuit_simule(int W, int H){
 
 
 Carte::Carte(int inutilePourLInstant) {
-    Imagine::Image<int> I=recuit_simule(NbCase,NbCase);
+    Imagine::Image<int> I=recuit_simule(NbCase,NbCase);//On genere une carte d'entier avec le recuit simule, puis on la traduit en case
     for (int i = 0; i < NbCase * Taille; i += Taille) {
         for (int j = 0; j < NbCase * Taille; j += Taille) {
             int k = i/Taille;
@@ -432,7 +484,6 @@ Carte::Carte(int inutilePourLInstant) {
         }
     }
 }
-
 
 
 
