@@ -1,5 +1,6 @@
 #include "boutons.h"
 
+
 Bouton::Bouton(int xmin, int ymin, int xmax, int ymax, Imagine::Color c, std::string nom) {
     zoneDeDelimitation[0] = xmin;
     zoneDeDelimitation[1] = ymin;

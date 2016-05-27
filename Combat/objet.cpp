@@ -134,10 +134,11 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         boutonsCategories[i].affiche();
     }
 
-    // Acrtions possibles dans l'inventaire
+    // Actions possibles dans l'inventaire
     int x, y;
     int decalementVertical = 0; // Cette variable va servir a scroller
-    clicSimple(x, y);
+    int clic;
+    clic = clicSimple(x, y);
     while (!boutonStop.boutonActive(x, y)) {
         // Les entiers suivants vont savoir ou placer le bouton odulo le decalement vertical
         int xmin = BoutonMilieu[0], ymin = Police, xmax = BoutonMilieu[1], ymax = 2 * Police;
@@ -176,26 +177,35 @@ void Inventaire::ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventai
         for (int i = 0; i < boutonUtile.size(); ++i) {
             boutonUtile[i].affiche(decalementVertical);
         }
-
         // On regarde si on vient de cliquer sur un des boutons specifiques d'une categorie
         for (int i = 0; i < boutonUtile.size(); ++i) {
             if (boutonUtile[i].boutonActive(x, y, decalementVertical)) {
-                // Applique une methode de Unite a travers le pointeur faire
-                (*unite.*faire)(ville, objetPresent[i], true, ressources);
-                // On change le nom du bouton et on le reaffiche
-                std::ostringstream oss2;
-                oss2 << contenu[objetPresent[i]]->getPrix();
-                boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom() + " " + oss2.str());
-                boutonUtile[i].affiche(decalementVertical);
-                std::ostringstream oss3;
-                oss3 << ressources;
-                boutonRessources.setNom(oss3.str());
-                boutonRessources.affiche();
+                // On regarde si on a fait un clic gauche
+                if (clic==1) {
+                    // Applique une methode de Unite a travers le pointeur faire
+                    (*unite.*faire)(ville, objetPresent[i], true, ressources);
+                    // On change le nom du bouton et on le reaffiche
+                    std::ostringstream oss2;
+                    oss2 << contenu[objetPresent[i]]->getPrix();
+                    boutonUtile[i].setNom(contenu[objetPresent[i]]->getNom() + " " + oss2.str());
+                    boutonUtile[i].affiche(decalementVertical);
+                    std::ostringstream oss3;
+                    oss3 << ressources;
+                    boutonRessources.setNom(oss3.str());
+                }
+                // On regarde si on a fait un clic droit
+                if (clic==3) {
+                    contenu[objetPresent[i]]->afficheCarac();
+                    for (int i = 0; i < boutonsCategories.size(); ++i) {
+                        boutonsCategories[i].affiche();
+                    }
+                }
             }
         }
 
         // On clique, et on efface les objets
-        clicSimple(x, y);
+        boutonRessources.affiche();
+        clic = clicSimple(x, y);
         Imagine::fillRect(BoutonMilieu[0], 0, BoutonMilieu[1] - BoutonMilieu[0], height, Imagine::WHITE);
     }
 }
@@ -235,6 +245,39 @@ Equipement::Equipement(const Equipement &eq) : Objet(eq) {
 
 Equipement::Equipement(std::string nom_, int price) : Objet(nom_, price) {
 
+}
+
+
+void Mere::afficheCarac() {
+    Imagine::fillRect(0, 0, Taille * NbCase, Taille * NbCase + LargDroite + Separation, Imagine::WHITE);
+    Imagine::drawString(0, 20, nom , Imagine::BLACK, 15);
+    int x, y;
+    clicSimple(x, y);
+    Imagine::fillRect(0, 0, Taille * NbCase, Taille * NbCase + LargDroite + Separation, Imagine::WHITE);
+}
+
+
+void Equipement::afficheCarac() {
+    Imagine::fillRect(0, 0, Taille * NbCase, Taille * NbCase + LargDroite + Separation, Imagine::WHITE);
+    Imagine::drawString(0, 20, getNom(), Imagine::BLACK, 15);
+    std::ostringstream oss;
+    oss << PV;
+    Imagine::drawString(0, 40, "PV supplémentaires : " + oss.str(), Imagine::BLACK, 15);
+    std::ostringstream oss2;
+    oss2 << mana;
+    Imagine::drawString(0, 60, "Mana supplémentaire : " + oss2.str(), Imagine::BLACK, 15);
+    std::ostringstream oss3;
+    oss3 << force;
+    Imagine::drawString(0, 80, "Force supplémentaire : " + oss3.str(), Imagine::BLACK, 15);
+    std::ostringstream oss4;
+    oss4 << initiative;
+    Imagine::drawString(0, 100, "Initiative supplémentaire : " + oss4.str(), Imagine::BLACK, 15);
+    std::ostringstream oss5;
+    oss5 << PDep;
+    Imagine::drawString(0, 120, "Deplacement supplémentaires : " + oss5.str(), Imagine::BLACK, 15);
+    int x, y;
+    clicSimple(x, y);
+    Imagine::fillRect(0, 0, Taille * NbCase, Taille * NbCase + LargDroite + Separation, Imagine::WHITE);
 }
 
 

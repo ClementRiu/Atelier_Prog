@@ -11,7 +11,7 @@ void charge(std::vector<Unite*> & unites, Carte& carte);
 void clic(int &x, int &y, Carte& carte);
 
 // Fonction renvoyant en référence dans x et y la position d'un clic
-void clicSimple(int &x, int &y);
+int clicSimple(int &x, int &y);
 
 // Fonction pour choisir d'attaquer ou se deplacer (ou autre plus tard...). choix devient 0 pour le deplacement et 1 pour l'attaque
 void choisir(int &choix, int &x, int &y);
