@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "unite.h"
 #include <iostream>
 #include "joueurs.h"
@@ -42,7 +57,6 @@ int Attaque::getPuissance() const {
 
 
 Unite::Unite() {
-    tour = false;
     PDep = 8;
     numcase = 0;
     PV = 100;
@@ -52,7 +66,6 @@ Unite::Unite() {
 
 
 Unite::Unite(const Unite &unit) {
-    tour = false;
     PV = unit.PV;
     PVMax = unit.PVMax;
     mana = unit.mana;
@@ -79,7 +92,6 @@ Unite::Unite(const Unite &unit) {
 
 
 Unite::Unite(int ID, float PVm, float dep, float depMax, int num, float init) {
-    tour = false;
     IDjoueur = ID;
     PVMax = PVm;
     PDep = dep;
@@ -116,9 +128,6 @@ bool Unite::operator<(Unite u) const {
     return (initiativeTemporaire < u.initiativeTemporaire);
 }
 
-void Unite::choixAction() const{
-    std::cout << "Implementer le choix d'action méthode choixAction de Unite";
-}
 
 
 std::vector<Sbire *> Unite::getArmee() {
@@ -171,19 +180,14 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 }
 
 
-void Unite::deplaceVersCase(Case &c2, Case &c1) {
-    if (!c2.getOccupe()) {
-        c2.placeUnite(c1.getPointeurUnite());
-        c1.placeUnite(NULL);
-        c1.affiche();
-        c2.affiche();
-        numcase = numeroCase(c2.get(0), c2.get(1));
+void Unite::deplaceVersCase(Case &caseDestination, Case &caseDepart) {
+    if (!caseDestination.getOccupe()) {
+        caseDestination.placeUnite(caseDepart.getPointeurUnite());
+        caseDepart.placeUnite(NULL);
+        caseDepart.affiche();
+        caseDestination.affiche();
+        numcase = numeroCase(caseDestination.get(0), caseDestination.get(1));
     }
-}
-
-
-void Unite::changeOrientation(int i) {
-    orientation = i;
 }
 
 
@@ -221,7 +225,6 @@ bool Unite::estHeros() const{
 void Unite::setCase(int & num, const Carte& carte) {
     while(carte.get(num).NbDep()==INF){
         num+=1;
-        std::cout<<"Modification"<<std::endl;
     }
 
     numcase = num;
@@ -255,7 +258,6 @@ int Unite::getNombre() const{
 
 
 void Unite::prendDommage(int valeurDegats) {
-    std::cout << "Fonction prendDommage à modifier !" << std::endl;
     PV = PV - valeurDegats;
 }
 
@@ -470,7 +472,6 @@ void Sbire::prendDommage(int degatRecu) {
     while (degatRecu > 0) {
         if (PV - degatRecu <= 0 && nombre>0) {
             degatRecu-=PV;
-            std::cout<<PVMax<<std::endl;
             PV = PVMax;
             nombre -= 1;
         }
@@ -692,7 +693,6 @@ int Heros::declencheCombat(Unite *u) {
         //règles d'initiative assez arbitraires, à modifier !
         Unite *unitJouable = fileUnites.pop();
         unitJouable->affichePVNombre();
-        std::cout<<unitJouable->getNombre()<<std::endl;
 
         //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
@@ -708,13 +708,11 @@ int Heros::declencheCombat(Unite *u) {
                         unitesAlliees[i]->getArmee()[j]->tueUnite();
                     }
                     return this->getID();
-                    //finCombat = true;
                 }
                 else {
                     carte[unitesAlliees[i]->getCase()].retireUnite();
                     unitesAlliees.erase(unitesAlliees.begin() + i);
-                    //delete unitesAlliees[i];
-                    carte.affiche(); //à modifier #clement
+                    carte.affiche(); //à modifier pour plus d'efficacité
                 }
             }
         }
@@ -730,7 +728,7 @@ int Heros::declencheCombat(Unite *u) {
                 }
                 carte[unitesEnnemies[i]->getCase()].retireUnite();
                 unitesEnnemies.erase(unitesEnnemies.begin() + i);
-                carte.affiche(); //à modifier #clement
+                carte.affiche(); //à modifier pour plus d'efficacité
             }
         }
 

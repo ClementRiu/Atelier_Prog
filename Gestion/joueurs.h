@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #ifndef JOUEURS_H
 #define JOUEURS_H
 
@@ -33,20 +48,31 @@ public:
 
     ~Ville();
 
-    // Ouvre la réserve de la Ville
+    /**
+     * Ouvre l'inventaire de la ville
+     * @param h : héros qui ouvre la ville, utilisé pour savoir à qui ajouter les objets achetés par exemple
+     */
     void ouvreVille(Unite *h);
 
-    // Ajoute un objet dans la réserve
+    /**
+     * Ajoute un objet dans l'inventaire de la ville
+     * @param obj
+     */
     void ajoute(Mere *obj);
 
-    // Renvoie un pointeur pointant vers l'objet à la position i dans la réserve
+    /**
+     * @param i
+     * @return le pointeur pointant vers l'objet à la position i dans l'inventaire de la ville
+     */
     Mere *getPointeurMere(int i);
 
-    // Renvoir l'id su joueur à qui appartient la ville
     int get_id() const;
 
-    // Retourne l'inventaire du joueur en référence
+    /**
+     * @return l'inventaire du joueur en référence
+     */
     Inventaire &getInventaire();
+
 
     //Fonctions inutilisées ou non implémentées pour l'instant
 #if 0
@@ -81,7 +107,7 @@ class Joueur {
     std::vector<Unite *> herosJoueur;
     std::vector<Ville> villesJoueur;
 
-    bool humain; //sera utilisé lors de l'implémentation d'une intelligence artificielle
+    bool humain; //sera utilisé lors de l'ajout d'une intelligence artificielle controllant un ou plusieurs joueurs
 
 public:
     Joueur(int num);
@@ -93,22 +119,48 @@ public:
     // Renvoie les ressources du joueur en référence
     int &getRessources();
 
-    // Renvoie vraie si le joueur n'a plus de héros
-    bool aPerdu();
-
     // Ajoute les unités passées en argument aux unités du joueur
     // utilisé pour le recrutement dans les villes et au début du jeu
-    void ajouteUnite(std::vector<Unite *> unite);
-
-    // Ajoute les villes passées en argument aux villes du joueur
-    void ajouteVille(std::vector<Ville *> ville);
-
     int get_id() const;
 
+    /**
+     * Permet de déterminer si la partie est finie ou non en examinant le vecteur de héros du joueur
+     * @return vrai herosJoueur est vide
+     */
+    bool aPerdu();
+
+    /** Ajoute les unités passées en argument aux unités du joueur
+     * Utilisé au début du jeu, et sera utilisé pour le recrutement dans les villes
+     * @param unite : vecteur d'unites à ajouter aux unités du joueur
+     */
+    void ajouteUnite(std::vector<Unite *> unite);
+
+    /** Ajoute les villes passées en arguement aux villes du joueur
+     * Utilisé au début du jeu, et sera utilisée lorsque la conquète des villes sera possible
+     * @param ville
+     */
+    void ajouteVille(std::vector<Ville *> ville);
+
+    /**
+     * Fonction gérant le tour d'un joueur : on sélectionne une unité, puis on peut a déplacer, déclancher un combat
+     * en cliquant sur une unité ennemie adjacente...
+     * La fonction se termine lorsqu'on clique sur le bouton FinDeTour
+     * @param carte : carte du monde
+     * @param boutonFinTour : bouton qui permet de terminer la fonction
+     * @param boutonSauvegarde : bouton permettant de sauvegarder
+     * @param boutonAction  : bouton permettant de lancer une action (inutile pour l'instant)
+     * @param boutonInventaire : bouton permettant d'ouvrir l'inventaire
+     * @param quit : modifié en true si le joueur clique sur boutonSauvegarde
+     * @param nbTour : numéro du tour actuel (pour l'affichage dans le menu de droite)
+     */
     void tourGestion(Carte &carte, Bouton boutonFinTour, Bouton boutonSauvegarde, Bouton boutonAction,
                      Bouton boutonInventaire, bool &save, int nbTour);
 
     // Fini le tour de Gestion du joueur en remettant les bons nombres de déplacement dans les unités
+    /**
+     * Restaure les points de déplacement des unités au maximum et en ajoutant aux réserves de ressources du joueur ses
+     * revenus (pour l'instant uniquement l'or)
+     */
     void finTourGestion();
 
 

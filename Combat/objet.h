@@ -44,11 +44,23 @@ public:
 
     int getPrix() const;
 
-    // Fonction creeant un bouton vide si les 2 objets ne sont pas du meme type et
-    // Creant un bouton au nom de l'objet sur lequel la methode est effectuee sinon
+    /**
+     * Fonction qui crée un bouton vide si les deux objets ne sont pas du même type,
+     * et crée un bouton au nom de l'objet sur lequel la méthode est appelée sinon
+     * @param obj
+     * @param xmin : utilisé pour le constructeur du bouton
+     * @param ymin : utilisé pour le constructeur du bouton
+     * @param xmax : utilisé pour le constructeur du bouton
+     * @param ymax : utilisé pour le constructeur du bouton
+     * @return un bouton vide ou un bouton au nom de l'objet sur lequel la méthode est appelée
+     */
     Bouton creeBouton(Mere *obj, int xmin, int &ymin, int xmax, int &ymax);
 
-    // Fonction vide utile uniquement pour les equipements
+    /**
+     * Fonction équipant l'objet à un endroit différent en fonction du type (main si arme, etc)
+     * @param h : héros sur lequel on équipe
+     * @param droite : non utilisé pour l'instant, destiné pour équiper les objets en main droite ou main gauche
+     */
     virtual void equiper(Heros *h, bool droite);
 
     virtual Mere *clone() const;
@@ -65,36 +77,56 @@ public:
 
     Objet(std::string nom_, int price);
 
+    /**
+     * Vérifie l'égalité des objets en se basant sur leur nom, non utilisé pour l'instant
+     * @param B
+     * @return true si les deux noms sont identiques
+     */
     bool operator==(const Objet &B) const;
 
     virtual Objet *clone() const;
 };
 
 
-// Fonction a modifier
-// faire vien plutot de Unite
 class Inventaire {
     std::vector<Mere *> contenu;
 public:
-    // Renvoie la taille de l'inventaire
-    int taille() const;
-
     Inventaire();
 
     Inventaire(const Inventaire &inventaire);
 
-    // Ajoute un objet dans l'inventaire
+    /**
+     * @return la taille du vecteur contenu
+     */
+    int taille() const;
+
+    /**
+     * Ajoute un objet dans l'inventaire
+     * @param obj : objet ajouté
+     */
     void ajoute(Mere *obj);
 
-    // renvoie le pointeur sur l'objet numero i
+    /**
+     * @return le pointeur sur l'objet numero i
+     */
     Mere *get(int i);
 
-    // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
-    // Voir unite.h pour avoir un exemple
+    /**
+     * Cette fonction ouvre un inventaire et permet d'effectuer différentes actions dedans.
+     * @param boutonsCategories : vecteur de boutons de types comme "Arme", "Anneau"
+     * @param classeObjets : Inventaire contenant des instances de chaque classe que l'on souhaite afficher dans l'inventaire
+     * @param ville : ville à laquelle on veut accéder si jamais on veut accéder à une ville
+     * @param unite : unité qui ouvre l'inventaire ou la ville
+     * @param faire : pointeur de fonctions : soit pour acheter un objet, soit pour équiper un équipement
+     * @param ressources : ressources du joueur qui possède l'unité unite
+     */
     void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
                          Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources);
 
-    // Retire le i-ème objet de l'nventaire
+    /**
+     * Retire le i-ème objet de l'inventaire
+     * @param i
+     */
     void retire(int i);
 
     ~Inventaire();
@@ -119,6 +151,9 @@ public:
 
     Equipement(std::string nom_, int price);
 
+    /**
+     * Remplit l'écran de blanc et affiche les caractéristiques de l'équipement
+     */
     virtual void afficheCarac();
 };
 

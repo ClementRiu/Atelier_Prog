@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include <sstream>
 #include "outils.h"
 
@@ -66,11 +81,6 @@ void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > different
     Imagine::Event e;
     x = -1;
     y = -1;
-    for (int i = 0; i < NbCase * NbCase; ++i) {
-        if (carte[i].getChemin()) {
-            std::cerr << 1 << std::endl;
-        }
-    }
 
     do {
         getEvent(0, e);
@@ -108,35 +118,6 @@ int clicSimple(int &x, int &y) {
         }
     } while (e.type != Imagine::EVT_BUT_OFF);
     return e.button;
-}
-
-
-// A supprimer a la fin, mais on le garde au cas ou on change d'avis
-void choisir(int &choix, int &x, int &y) {
-    choix = -1;
-    x = -1;
-    y = -1;
-    int tailleEcriture = 9;
-    // A MODIFIER
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 3 * (tailleEcriture + 1), "ESP: Fin de tour",
-                        Imagine::BLACK, tailleEcriture);
-    Imagine::Event e;
-    do {
-        getEvent(0, e);
-        if (e.type == Imagine::EVT_KEY_ON) {
-            choix = e.key;
-        }
-        if (e.type == Imagine::EVT_BUT_ON) {
-            x = e.pix[0];
-            y = e.pix[1];
-        }
-    } while (e.type != Imagine::EVT_KEY_OFF && e.type != Imagine::EVT_BUT_OFF);
-    // A MODIFIER
-    Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
 }
 
 
@@ -229,3 +210,32 @@ void afficheTourJoueur(int idJoueur) {
                             "Rouge", Imagine::RED, 10);
     }
 }
+
+#if 0
+void choisir(int &choix, int &x, int &y) {
+    choix = -1;
+    x = -1;
+    y = -1;
+    int tailleEcriture = 9;
+    // A MODIFIER
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + tailleEcriture + 1, "0 : deplacement",
+                        Imagine::BLACK, tailleEcriture);
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 2 * (tailleEcriture + 1), "1 : attaque",
+                        Imagine::BLACK, tailleEcriture);
+    Imagine::drawString(NbCase * Taille + Separation, LargDroite + 3 * (tailleEcriture + 1), "ESP: Fin de tour",
+                        Imagine::BLACK, tailleEcriture);
+    Imagine::Event e;
+    do {
+        getEvent(0, e);
+        if (e.type == Imagine::EVT_KEY_ON) {
+            choix = e.key;
+        }
+        if (e.type == Imagine::EVT_BUT_ON) {
+            x = e.pix[0];
+            y = e.pix[1];
+        }
+    } while (e.type != Imagine::EVT_KEY_OFF && e.type != Imagine::EVT_BUT_OFF);
+    // A MODIFIER
+    Imagine::fillRect(NbCase * Taille + Separation, LargDroite, LargDroite, 2 * (tailleEcriture + 2), Imagine::WHITE);
+}
+#endif

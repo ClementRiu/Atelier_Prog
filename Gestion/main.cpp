@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "carte.h"
 #include "unite.h"
 #include "joueurs.h"
@@ -180,9 +195,6 @@ int main() {
     int nbTour = 1;
 
     while (!quit) {
-        //Clement à toi de jouer
-
-        std::cout << "Tour joueur 1" << std::endl;
         allie->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire, quit, nbTour);
         if (quit) {
             break;
@@ -190,7 +202,6 @@ int main() {
         if (allie->aPerdu()) {
             break;
         }
-        std::cout << " Tour joueur 2" << std::endl;
         ennemi->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
                             quit, nbTour);
         if (ennemi->aPerdu()) {
@@ -212,10 +223,7 @@ int main() {
 
 
 
-    // Destruction des unités
-    // EST CE QUE CA MARCHE VRAIMENT ????? FUITE ????
     for (int i = 0; i < unitesAlliees.size(); ++i) {
-        //delete unitesAlliees[i];
         unitesAlliees[i] = 0;
     }
     //Imagine::endGraphics();
