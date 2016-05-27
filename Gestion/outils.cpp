@@ -40,7 +40,8 @@ void charge(std::vector<Unite *> &unites, Carte &carte) {
             std::cout << depMax << std::endl;
             std::getline(fichier, ligne);
             float init = atoi(ligne.c_str());
-            unites.push_back(new Unite(ID, dep, depMax, num, init));
+            //PVmax à 100 arbitraire, à modifier
+            unites.push_back(new Unite(ID, 100, dep, depMax, num, init));
             carte[num].placeUnite(unites[unites.size()-1]);
         }
         fichier.close();

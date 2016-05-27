@@ -26,8 +26,11 @@ class Ville {
 
 public:
     Ville();
+
     Ville(int num);
+
     Ville(int faction, int num);
+
     ~Ville();
 
     // Ouvre la réserve de la Ville
@@ -43,7 +46,7 @@ public:
     int get_id() const;
 
     // Retourne l'inventaire du joueur en référence
-    Inventaire& getInventaire();
+    Inventaire &getInventaire();
 
     //Fonctions inutilisées ou non implémentées pour l'instant
 #if 0
@@ -88,9 +91,13 @@ public:
     Joueur(int id, std::vector<Unite *> unites); //uniquement pour tester
 
     // Renvoie les ressources du joueur en référence
-    int& getRessources();
+    int &getRessources();
+
+    // Renvoie vraie si le joueur n'a plus de héros
+    bool aPerdu();
 
     // Ajoute les unités passées en argument aux unités du joueur
+    // utilisé pour le recrutement dans les villes et au début du jeu
     void ajouteUnite(std::vector<Unite *> unite);
 
     // Ajoute les villes passées en argument aux villes du joueur

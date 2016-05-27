@@ -47,6 +47,7 @@ Unite::Unite() {
     PDep = 8;
     numcase = 0;
     PV = 100;
+    PVMax = 100;
     force = 10;
 }
 
@@ -78,9 +79,10 @@ Unite::Unite(const Unite &unit) {
 
 
 
-Unite::Unite(int ID, float dep, float depMax, int num, float init) {
+Unite::Unite(int ID, float PVm, float dep, float depMax, int num, float init) {
     tour = false;
     IDjoueur = ID;
+    PVMax = PVm;
     PDep = dep;
     PDepMax = depMax;
     numcase = num;
@@ -246,9 +248,14 @@ float Unite::getPV() const {
 }
 
 
-//à implémenter
+int Unite::getNombre() const{
+    return -1;
+}
+
+
+
 void Unite::prendDommage(int valeurDegats) {
-    std::cout << "à implémenter !" << std::endl;
+    std::cout << "Fonction prendDommage à modifier !" << std::endl;
     PV = PV - valeurDegats;
 }
 
@@ -435,7 +442,7 @@ Sbire::Sbire() {
 
 }
 
-Sbire::Sbire(int IDj, float dep, float depMax, int num, float init, int nb) : Unite(IDj, dep, depMax, num, init) {
+Sbire::Sbire(int IDj, float PVm, float dep, float depMax, int num, float init, int nb) : Unite(IDj, PVm, dep, depMax, num, init) {
     nombre = nb;
     competences = Attaque();
 }
@@ -446,23 +453,33 @@ Sbire::Sbire(const Sbire &s) {
 }
 
 bool Sbire::estVivant() const{
+    std::cout<<"On teste si le sbire est vivant"<<std::endl;
     if (PV <= 0 && nombre == 0) {
+        std::cout<<"Le sbire est mort ce soir"<<std::endl;
         return false;
     }
     return true;
 }
 
+int Sbire::getNombre() const{
+    return nombre;
+}
+
 //A MODIFIER !! (ON NE PREND PAS EN COMPTE LE NOMBRE DE SBIRES
 void Sbire::prendDommage(int degatRecu) {
-    /* while (degatRecu > 0) {
-        if (PV - degatRecu <= 0) {
+    while (degatRecu > 0) {
+        if (PV - degatRecu <= 0 && nombre>0) {
             degatRecu-=PV;
+            std::cout<<PVMax<<std::endl;
             PV = PVMax;
+            std::cout<<"PV ="<<PV<<std::endl;
             nombre -= 1;
         }
+        else {
+            PV-=degatRecu;
+            degatRecu=0;
+        }
     }
-     */
-    PV-=degatRecu;
 }
 
 //A MODIFIER !!
@@ -508,7 +525,7 @@ Sbire::~Sbire() {
 //*********************************************************************************************************************
 
 
-Heros::Heros(int ID, float dep, float depMax, int num, float init, Joueur* jou) : Unite(ID, dep, depMax, num, init) {
+Heros::Heros(int ID, float PVm, float dep, float depMax, int num, float init, Joueur* jou) : Unite(ID, PVm, dep, depMax, num, init) {
     Casque c("Casque de base", 0);
     Arme a("Arme de base", 0);
     Torse t("Armure de Base", 0);
@@ -564,7 +581,7 @@ std::vector<Sbire *> Heros::getArmee() {
 
 
 void Heros::ouvreVille(Ville *v) {
-    Heros *h2 = new Heros(1, 1, 1, 1, 1, joueur);
+    Heros *h2 = new Heros(1, 100, 1, 1, 1, 1, joueur);
     if (typeid(this) == typeid(h2)) {
         // Creation des differents boutons pour les differentes categories d'objets
         std::vector<Bouton> boutonsChoix;
@@ -684,6 +701,7 @@ int Heros::declencheCombat(Unite *u) {
         //règles d'initiative assez arbitraires, à modifier !
         Unite *unitJouable = fileUnites.pop();
         unitJouable->affichePVNombre();
+        std::cout<<unitJouable->getNombre()<<std::endl;
 
         //On vérifie que l'unité est bien vivante avant de la remettre dans la file de priorité
         if (unitJouable->estVivant()) {
@@ -691,7 +709,7 @@ int Heros::declencheCombat(Unite *u) {
             fileUnites.push(unitJouable);
         }
 
-        //On regarde si les unités contenue dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
+        //On regarde si les unités contenues dans les vecteurs d'alliés et ennemis sont bien vivantes ; si non on les supprime
         for (int i = 0; i < unitesAlliees.size(); i++) {
             if (!unitesAlliees[i]->estVivant()) {
                 if (unitesAlliees[i]->estHeros()) {

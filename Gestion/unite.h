@@ -90,7 +90,7 @@ public:
 
     Unite(const Unite &unit);
 
-    Unite(int IDjoueur, float dep, float depMax, int num, float init);
+    Unite(int IDjoueur, float PVm, float dep, float depMax, int num, float init);
 
     Unite(float dep, int num);
 
@@ -128,6 +128,7 @@ public:
     int getCase() const;
 
     float getPV() const; //pour tester uniquement
+    virtual int getNombre() const;
 
     int getID() const;
 
@@ -199,12 +200,14 @@ class Sbire : public Unite {
 
 public:
     Sbire();
-    Sbire(int IDj, float dep, float depMax, int num, float init, int nb);
+    Sbire(int IDj, float PVm, float dep, float depMax, int num, float init, int nb);
     Sbire(const Sbire &s);
 
     virtual bool estVivant() const;
     virtual void prendDommage(int valeurDegats);
     virtual void tueUnite();
+
+    virtual int getNombre() const;
 
     virtual void affichePVNombre();
 
@@ -230,7 +233,7 @@ class Heros : public Unite {
     Anneau equipementAnneauGauche;
 
 public:
-    Heros(int ID, float dep, float depMax, int num, float init, Joueur* jou);
+    Heros(int ID, float PVm, float dep, float depMax, int num, float init, Joueur* jou);
     Heros(const Heros &h);
     Heros(const Unite &u);
 

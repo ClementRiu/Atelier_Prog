@@ -13,8 +13,8 @@ int main() {
     Carte carte(v);
 
     // Définition des joueurs
-    Joueur* allie = new Joueur(1);
-    Joueur* ennemi = new Joueur(2);
+    Joueur *allie = new Joueur(1);
+    Joueur *ennemi = new Joueur(2);
 
 
     // Initialisation des unites
@@ -41,24 +41,24 @@ int main() {
         charge(unitesAlliees, carte);
     }
     else {
-        Heros* heros1 = new Heros(1, 5, 5, 20, 120, allie);
-        Heros* heros2 = new Heros(1, 10, 10, 303, 100, allie);
+        Heros *heros1 = new Heros(1, 100, 5, 5, 20, 120, allie);
+        Heros *heros2 = new Heros(1, 100, 10, 10, 303, 100, allie);
         unitesAlliees.push_back(heros1);
         unitesAlliees.push_back(heros2);
 
         carte[20].placeUnite(unitesAlliees[0]);
         carte[303].placeUnite(unitesAlliees[1]);
     }
-    Sbire* sbire1 = new Sbire(1, 5, 5, 35, 105, 2);
-    Sbire* sbire2 = new Sbire(1, 5, 5, 20, 117, 2);
-    Sbire* sbire3 = new Sbire(2, 5, 5, 35, 115, 2);
-    Sbire* sbire4 = new Sbire(2, 5, 5, 20, 110, 2);
+    Sbire *sbire1 = new Sbire(1, 100, 5, 5, 35, 105, 2);
+    Sbire *sbire2 = new Sbire(1, 100, 5, 5, 20, 117, 2);
+    Sbire *sbire3 = new Sbire(2, 100, 5, 5, 35, 115, 2);
+    Sbire *sbire4 = new Sbire(2, 100, 5, 5, 20, 110, 2);
 
     unitesAlliees[0]->ajouteSbire(sbire1);
     unitesAlliees[1]->ajouteSbire(sbire2);
 
-    Heros* heros3 = new Heros(2, 6, 6, 308, 120, ennemi);
-    Heros* heros4 = new Heros(2, 7, 7, 312, 100, ennemi);
+    Heros *heros3 = new Heros(2, 100, 6, 6, 308, 120, ennemi);
+    Heros *heros4 = new Heros(2, 100, 7, 7, 312, 100, ennemi);
 
     unitesEnnemies.push_back(heros3);
     unitesEnnemies.push_back(heros4);
@@ -150,11 +150,27 @@ int main() {
         if (quit) {
             break;
         }
+        if (allie->aPerdu()) {
+            break;
+        }
         std::cout << " Tour joueur 2" << std::endl;
         ennemi->tourGestion(carte, boutonFinTour, boutonSauvegarde, boutonAction, boutonInventaire,
-                           quit);
-
+                            quit);
+        if (ennemi->aPerdu()) {
+            break;
+        }
         nbTour += 1;
+    }
+
+    if (allie->aPerdu()) {
+        Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+        Imagine::drawString(width / 2, height / 2, "Le joueur 1 a gagné", Imagine::BLUE);
+    }
+
+
+    if (ennemi->aPerdu()) {
+        Imagine::fillRect(0, 0, width, height, Imagine::WHITE);
+        Imagine::drawString(width / 2, height / 2, "Le joueur 2 a gagné", Imagine::RED);
     }
 
 

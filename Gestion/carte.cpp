@@ -206,14 +206,25 @@ void Case::affiche() const{
     //AFFICHAGE DU JOUEUR 1 EN BLEU, JOUEUR 2 EN ROUGE, A MODIFIER EN FONCTION DU NOMBRE DE JOUEURS
     if (this->getOccupe()) {
         if (pointeurUnite->getID() == 1) {
+            //affichage du héros sur la carte principale
             Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::BLUE);
+
+            //affichage sur la mini-carte
             Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                               taillemax, Imagine::BLUE);
         }
         if (pointeurUnite->getID() == 2) {
+            //affichage du héros sur la carte principale
             Imagine::fillRect(x + Taille / 4, y + Taille / 4, (Taille - 1) / 2, (Taille - 1) / 2, Imagine::RED);
+
+            //affichage sur la mini-carte
             Imagine::fillRect(x * taillemax / Taille + Taille * NbCase + Separation, y * taillemax / Taille, taillemax,
                               taillemax, Imagine::RED);
+        }
+
+        //on donne une apparence différente aux héros pour repérer les héros et les sbires
+        if (pointeurUnite->estHeros()){
+            Imagine::fillRect(x + Taille / 6 + Taille / 5 + Taille/20, y + Taille / 6 + Taille/5 + Taille/20, (Taille - 1) / 6, (Taille - 1) / 6, Imagine::WHITE);
         }
     }
 

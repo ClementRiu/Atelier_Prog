@@ -110,9 +110,16 @@ void Joueur::ajouteVille(std::vector<Ville *> ville) {
 }
 
 
-//gros tas de get
+
 int Joueur::get_id() const {
     return id;
+}
+
+bool Joueur::aPerdu(){
+    if (herosJoueur.empty()){
+        return true;
+    }
+    return false;
 }
 
 
