@@ -16,15 +16,15 @@ Faute de temps, notre projet se compose actuellement de deux programmes distinct
 
 \section{Partie Gestion}
 
-De même, beaucoup de fonctionnalités ne sont pas implémentées pour l'instant. En l'état, le but du jeu est assez sommaire : tuer les héros ennemis (rouges). \\
+Nous avons créé un projet très général. Ainsi, beaucoup de fonctionnalités pourraient être implémentées en plus. En l'état, le but du jeu est assez sommaire : tuer les héros ennemis. \\
 Le jeu est pour l'instant à 2 joueurs, mais est destiné à être jouable contre une IA.
 
 \subsection{Le principe du jeu}
 
-Vous possédez des héros sur la carte principale (voir image 1). Chaque tour, vous pouvez les déplacer, les faire entrer dans des villes alliées (où ils pourront acheter de l'équipement, des unités...). Lorsque vous terminez votre tour, c'est à l'ennemi de jouer. \\
-L'objectif est (pour l'instant) de détruire tous les héros ennemis. \\
+Vous possédez des héros sur la carte principale (voir figure~\ref{fig2}). Ce sont les carrés de couleur avec de petits carrés blancs à  l'intérieur. Chaque tour, vous pouvez les déplacer, les faire entrer dans des villes alliées (où ils pourront acheter de l'équipement) ou les faire attaquer. Lorsque vous terminez votre tour (en cliquant sur "fin de tour"), c'est à l'ennemi de jouer. \\
+L'objectif est de détruire tous les héros ennemis. \\
 \\
-Pour ce faire, déplacez-vous près d'un héros ennemis, puis cliquez sur lui. Une carte aléatoire sera alors générée, et vos Sbires (que vous devriez pouvoir recruter dans l'écran de ville). Pour l'instant, les sbires ne peuvent pas mourir mais cela sera corrigé d'ici le rendu final. Pour gagner le combat, tuez le Héros ennemis, les sbires fuiront. Vous serez alors ramené à la carte principale.
+Pour ce faire, déplacez-vous jute à côté d'un héros ennemi, puis cliquez sur lui. Vous entrerez alors dans la phase de combat et une carte aléatoire sera alors générée grâce à l'algorithme du recuit simulé. Vous pourrez alors vous battre avec les héros combattants et leur sbires. Pour gagner le combat, tuez le Héros ennemi, les sbires fuiront. Vous serez alors ramenés à la carte principale.
 
 \subsection{Ce qui est fonctionnel}
 
@@ -32,7 +32,7 @@ Pour ce faire, déplacez-vous près d'un héros ennemis, puis cliquez sur lui. U
 
 Cliquez sur "Nouvelle Partie" pour commencer une nouvelle partie avec des positions de départ prédéfinies.
 
-Cliquez sur "Charger Partie" pour charger une partie sauvegardée ; pour l'instant la sauvegarde ne garde en mémoire que la position des deux héros bleus, le reste viendra.
+Cliquez sur "Charger Partie" pour charger une partie sauvegardée ; pour l'instant la sauvegarde ne garde en mémoire que la position des deux héros bleus.
 
 \begin{figure}[h]
 \begin{center}
@@ -49,17 +49,21 @@ Cliquez sur "Charger Partie" pour charger une partie sauvegardée ; pour l'insta
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.5]{./ecran_de_gestion.png}
-\caption{Écran de jeu principal}
+\caption{Écran de jeu principal\label{fig2}}
+
 \end{center}
 \end{figure}
 
-La plus grande partie de l'écran se compose de la carte principale. La droite de l'écran correspond à la barre d'outil, qui permet notamment de : finir son tour, sauvegarder \& quitter, afficher le nombre PV des unités survolées et de celle sélectionnée, et la mini-carte (qui ffiche une vue d'ensemble à taille réduite de la carte totale. Pour l'instant, toute la carte est visible mais elle est destinée à être plus large, comme dans la partie graphique). \\
+La plus grande partie de l'écran se compose de la carte principale. La droite de l'écran correspond à la barre d'outil, qui permet notamment de : finir son tour, sauvegarder \& quitter, afficher le nombre PV des unités survolées et de celle sélectionnée, afficher le numéro du tour et le joueur dont c'est le tour, et la mini-carte (qui affiche une vue d'ensemble à taille réduite de la carte totale. Pour l'instant, toute la carte est visible mais elle est destinée à être plus large, comme dans la partie graphique). \\
 
 Les différentes couleurs de cases correspondent à des types de cases différentes : \\
--Une case bleue correspond à de l'eau, infranchissable ;\\
--Une case jaune correspond à une route, à moindre coût de déplacement ;\\
--Une case verte correspond à des champs, qui sont deux fois plus longs à traverser que les routes ;\\
--Une case violette correspond à une ville (ennemie ou alliée, indifférencié pour l'instant) ;\\
+\begin{itemize}
+\item Une case bleue correspond à de l'eau, infranchissable ;
+\item Une case jaune correspond à une route, à moindre coût de déplacement ;
+\item Une case verte correspond à des champs, qui sont deux fois plus longs à traverser que les routes ;\
+\item Une case violette correspond à une ville (ennemie ou alliée, indifférencié pour l'instant) ;
+\item On peut rajouter très facilement d'autres types de cases, mais nous ne désirions pas complexifier le jeu plus que nécessaire.
+\end{itemize}
 
 La description des cases s'affiche en-dessous de la minicarte.
 
@@ -67,8 +71,8 @@ Les boutons "Save \& Quit" et "End turn" :\\
 Cliquez sur "Save \& Quit" pour sauvegarder le jeu et pouvoir le charger plus tard (pour l'instant, seules les positions des deux héros bleus sont sauvegardées).
 Cliquez sur "End turn" pour mettre fin au tour.\\
 
-Les unités sur la carte sont représentés par des carrés bleu ou rouge selon le joueur auquel elles appartiennent. \\
-Cliquez sur une unité pour la sélectionner. Les cases que l'unité peut atteindre appraissent cerclées de noir. On peut se déplacer tant qu'il reste des points de déplacement.
+Les unités sur la carte sont représentées par des carrés bleus ou rouge selon le joueur auquel elles appartiennent. \\
+Cliquez sur une unité pour la sélectionner. Les cases que l'unité peut atteindre apparaissent cerclées de noir. On peut se déplacer tant qu'il reste des points de déplacement.
 
 Notez que vous ne pouvez déplacer que les unités bleues ou rouges. Les unités restantes sont celles de l'autre joueur et ne pourront pas se déplacer tant que vous n'aurez pas cliqué sur ``fin de tour''. \\
 \\
@@ -112,6 +116,15 @@ Cliquez sur "Up et "Down" pour faire défiler la liste d'objet.
 
 Cliquez sur "Fermer" pour fermer l'inventaire et revenir à l'écran de jeu.
 
+Un clic droit sur un objet quelconque permettra d'afficher ses caractéristiques. Il faudra alors cliquer de nouveau pour ré afficher le menu de l'inventaire. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{./ecran_carac_objet.png}
+\caption{Écran de caractéristiques des objets}
+\end{center}
+\end{figure}
+
 \subsubsection{Écran d'achat}
 
 \begin{figure}[h]
@@ -126,6 +139,8 @@ Cet écran s'affiche lorsqu'une unité rentre dans une ville.
 Cet écran est similaire à l'écran d'inventaire, sauf que les objets affiché ne sont pas ceux transporté par le héros mais ceux disponibles au marché de la ville.
 
 Cliquez sur un objet pour que celui-ci s'ajoute à l'inventaire du héros.
+
+Encore une fois, un clic droit sur un objet de la boutique permettra d'afficher les caractéristiques de la boutique.
 
 \subsection{Ce que nous allons implémenter}
 
@@ -152,13 +167,17 @@ Cette partie est déclenchée par la partie gestion lorsqu'une unité en attaque
 La plus grande partie de l'écran se compose de la carte principale. Celle-ci est généré aléatoirement à chaque combat. Les unités apparaissent pour l'instant à des endroits prédéfinis (mais ne tomberont jamais dans l'eau), à l'avenir il sera possible de les placer avant le début du combat. \\
 L'interface est identique à celle de gestion. \\
 
-Contrairement à la phase gestion, vous ne choisissez pas quelle unité vous contrôlez ; l'ordre dans lequel elles jouent est déterminé par une file de priorité en fonction de leur ``initiative'' (une stratistique liée à l'unité).\\
+Contrairement à la phase gestion, vous ne choisissez pas quelle unité vous contrôlez ; l'ordre dans lequel elles jouent est déterminé par une file de priorité en fonction de leur ``initiative'' (une statistique liée à l'unité).\\
 
-Après s'être déplacée, si elle ne s'est pas déplacée du nombre de case maximum possible, elle peut encore se déplacer.
+Après s'être déplacée, si elle ne s'est pas déplacée du nombre de case maximum possible, elle peut encore se déplacer. Lors des déplacements, le chemin le plus court que va prendre l'unité s'affiche avec des ronds rouges.
 
 Lorsqu'une unité est active, le bouton "action" apparaît en bas à gauche de l'écran.
 
 Le bouton "action" permet d'attaquer l'ennemi, cliquer dessus fait apparaître des cadres noirs dans les cases où l'unité peut attaquer. Lorsqu'une unité est attaqué, elle perd des points de vie. Lorsque ses points de vie tombe à zéro, elle meurt. Si cette unité était un héros, le joueur contrôlant cette unité perd le combat et le combat est fini.
+
+Pour attaquer une unité, on peut aussi cliquer dessus lors d'une phase de déplacement. On va alors se coller à elle et effectuer une attaque de base. On se placera différemment en fonction de l'endroit où l'on clique sur l'unité. Dans tous les cas, le chemin que prendra l'unité est affiché en rouge.
+
+On ne peut plus accéder à l'inventaire dans la phase combat.
 
 \subsection{Ce que nous allons implémenter}
 
