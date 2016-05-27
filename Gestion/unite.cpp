@@ -309,9 +309,9 @@ void Unite::tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction) 
         if (boutonAction.boutonActive(x, y)) {
             afficheCaseDisponibleOnOff(carte, false, PDep, 0);
             competences.zone(carte, true, getCase());
-            attaque(competences, carte);
+            bool effectuee = attaque(competences, carte);
             competences.zone(carte, false, getCase());
-            tourContinue = false;
+            tourContinue = !effectuee;
         }
         else {
             tourContinue = deplacement(carte, x, y, false);
@@ -346,15 +346,17 @@ void Unite::retire(int i) {
 }
 
 
-void Unite::attaque(const Attaque& attq, Carte &carte) {
+bool Unite::attaque(const Attaque& attq, Carte &carte) {
+    bool b = false;//indique si l'attaque a eu lieu
     int x1, y1 = 0;
-
     do {
         clic(x1, y1, carte);
-    } while (numeroCase(x1, y1) < 0 || !carte[numeroCase(x1, y1)].Brillance());
-    if (carte[numeroCase(x1, y1)].getOccupe()) {
+    } while (numeroCase(x1, y1) < 0);
+    if (carte[numeroCase(x1, y1)].getOccupe() && carte[numeroCase(x1, y1)].Brillance()) {
         action(attq, carte[numeroCase(x1, y1)].getPointeurUnite());
+        b = true;
     }
+    return b;
 }
 
 

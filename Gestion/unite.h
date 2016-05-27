@@ -118,7 +118,7 @@ public:
     // ATTENTION, cette fonction peut rencontrer des problemes lorsque l'on modifie la fonction boutonAction
     void tourCombat(Carte &carte, Bouton boutonFinTour, Bouton boutonAction);
 
-    void attaque(const Attaque& attq, Carte &carte);
+    bool attaque(const Attaque& attq, Carte &carte);
 
     void changeOrientation(int i);
 
