@@ -56,7 +56,7 @@ public:
     // Constructeur vide de la classe TypeCase
     TypeCase();
 
-    // Accesseur a l'image du type de la case
+    // Accesseur à l'image du type de la case
     Imagine::Color Image() const;
 
     // Accesseur au nombre de déplacement que coûte la case
@@ -65,15 +65,27 @@ public:
     // Accesseur à la desctiprion de la case
     std::string Description() const;
 
-    // affichage à modifier
-    // Fonction qui créé une fenêtre pop un avec une question fermé et qui renvoie le résultat
+    /**
+     * Fonction qui crée une fenêtre pop up avec une question fermée et qui renvoie le résultat
+     * @param question : question posée au joueur
+     * @return true si le joueur a répondu "Oui"
+     *         false sinon
+     */
     bool popUp(std::string question) const;
 
+    /**
+     * Pour l'instant, n'est utile que pour ouvrir une ville quand on clique dessus
+     * @param h : unité concernée par l'action (ex : le héros qui ouvre la ville)
+     */
     virtual void action(Unite* h);
 
     virtual TypeCase *clone() const;
 
-    // Cree des boutons où on pour choisir si l'on veut effecter l'action de la case ou non
+    /**
+     * Appelle la fonction pop, crée des boutons où on peut choisir si l'on veut effectuer l'action de la case ou non
+     * @return true si on clique sur "oui"
+     *         false sinon
+     */
     virtual bool boutonChoix();
 };
 
@@ -133,23 +145,39 @@ public:
 
     Case(const Case &tuile);
 
-    // Place le heros sur cette case
+    /**
+    * Place l'unité u sur la case en actualisant pointeurUnite
+    * @param u
+    */
     void placeUnite(Unite* u);
 
+    /**
+     * Retire l'unité qui était présente sur la case
+     */
     void retireUnite();
 
+    /**
+     * @return true si il y a une unité présente sur la case
+     *         false sinon
+     */
     bool getOccupe() const;
 
-    // renvoie le pointeur de l'unité sur la case
+    /**
+     * @return le pointeur de l'unité sur la case
+     */
     Unite* getPointeurUnite();
 
-    //get temporaire à se débarasser !!
+    /**
+     * Get temporaire utilisé uniquement dans deplaceVersCase
+     */
     int get(int i) const;
 
-    // Place la case en surbrillance, ou enleve la surbrillance selon le booleen et affiche la case
+    /**
+     * Place la case en surbrillance, ou enlève la surbrillance en fonction du booléen placé en argument
+     * @param flag : si flag = true, on place en surbrillance
+     */
     void brillanceOnOff(bool flag);
 
-    // Affiche la case
     void affiche() const;
 
     // Accesseur au nombre de déplacement que coûte la case
@@ -163,14 +191,34 @@ public:
 
     bool getChemin() const;
 
-    // Renvoie le plus proche voisin en surbrillance, ou qui a le numéro numcase
+    /**
+     *
+     * @param x1 : abcisse de clic
+     * @param y1 : ordonnée du clic
+     * @param carte
+     * @param numcase : numéro de la case du héros qui appelle cette focntion
+     * @return l'entier qui correspond à la case brillante la plus proche du point (x1, y1)
+     */
     int plusProcheVoisineBrillante(int x1, int y1, Carte &carte, int numcase) const;
 
-    // Renvoie les numéros des cases voisines (Attention, il peut y en avoir que 3 ou 2 ...) dans l'ordre du plus proche
-    // du point (x, y) au plus éloigné
+    /**
+     *
+     * @param x1 : abcisse du clic donc on examine les cases voisines
+     * @param y1 : ordonnée du clic
+     * @return les numéros des cases voisines (attention il peut n'y en avoir que 3 ou 2) dans l'ordre du plus proche du
+     *          point (x, y) au plus éloigné
+     */
     std::vector<int> casesVoisines(int x1, int y1) const;
 
-    // Algorithme de FastMarching pour mettre en surbrillance les cases autorisées au Heros
+    /**
+     * @param dep : déplacement nécessaire pour parcourir la case
+     * @param carte
+     * @param brillance : si true, on veut afficher les cases en surbrillance, et si false, on veut retirer la surbrillance
+     * @param dep_restant : déplacements restants du héros
+     * @param case_a_atteindre : case où on souhaite aller, dans le cas où on souhaite se déplacer
+     * @param vecCaseBrillante : vecteur des cases brillantes
+     * @return
+     */
     std::vector<std::vector<int> > fastMarching(float dep, Carte &carte, bool brillance, float &dep_restant,
                                                 int case_a_atteindre, std::vector< Imagine::Coords<2> > &vecCaseBrillante);
 
@@ -193,7 +241,10 @@ public:
 class Carte {
     Case carte[NbCase * NbCase];
 public:
-    //Construit une carte aléatoire (ou on aimerait que ça le fasse)
+    /**
+     * Construit une carte aléatoire
+     * @param inutilePourLInstant : là uniquement pour différencier les constructeurs (pour l'instant)
+     */
     Carte(int inutilePourLInstant);
 
     // Construit une carte de base
@@ -210,10 +261,15 @@ public:
 };
 
 
-// Renvoie le numero de la case associee au pixel (x, y) et renvoie -1 si aucune case n'est associee
+/**
+ *
+ * @param x : abcisse du pixel examiné
+ * @param y : ordonnee du pixel examiné
+ * @return le numéro de la case associée au pixel de coordonnées (x,y) et renvoie -1 si aucune case n'est associée
+ */
 int numeroCase(int x, int y);
 
-// Fonction renvoyant en référence dans x et y la position d'un clic et affichant les cases survolees
+
 void clic(int &x, int &y, Carte &carte, std::vector<std::vector<int> > differentsChemins, int numcase);
 
 

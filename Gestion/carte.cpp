@@ -184,7 +184,6 @@ Unite* Case::getPointeurUnite() {
 }
 
 
-//à se débarasser, présent uniquement dans Unite::deplaceVersCase
 int Case::get(int i) const{
     if (i == 0) {
         return x;
