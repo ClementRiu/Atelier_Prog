@@ -13,6 +13,7 @@ const Bouton action(widthworld + 2, heightmmap + 22, widthscreen - 2, heightmmap
 class Heros_Graph {
 private:
     const char *nom;    // Nom du héros.
+
     std::string nom_image;  // Nom de l'image.
     Imagine::Image<Imagine::Color> frame;   // Image du pion.
     Imagine::Coords<2> position;    // Position du pion sur la 'map'. En case.
