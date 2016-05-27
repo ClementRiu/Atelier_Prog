@@ -91,6 +91,8 @@ public:
 
     // Cette fonction ouvre un inventaire et sert a effectuer differentes actions dedans.
     // Voir unite.h pour avoir un exemple
+
+
     void ouvreInventaire(std::vector<Bouton> boutonsCategories, Inventaire classeObjets, Ville* ville,
                          Unite *unite, void (Unite::*faire)(Ville*, int, bool, int&), int& ressources);
 

@@ -1,3 +1,18 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Heroes of Ponts&Chaussées                                                                                           *
+ *                                                                                                                     *
+ * Jeu développé dans le cadre du module Atelier de Programmation de première année de l'École des Ponts               *
+ *                                                                                                                     *
+ * AUTEURS :                                                                                                           *
+ *      Charles    AUGUSTE                                                                                             *
+ *      Nathanaël  GROSS-HUMBERT                                                                                       *
+ *      Clément    RIU                                                                                                 *
+ *      Anne       SPITZ                                                                                               *
+ *                                                                                                                     *
+ * Rendu le 27 Mai 2016                                                                                                *
+ *                                                                                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
 #include "unite.h"
 #include <iostream>
 #include "joueurs.h"
@@ -42,7 +57,6 @@ int Attaque::getPuissance() const {
 
 
 Unite::Unite() {
-    tour = false;
     PDep = 8;
     numcase = 0;
     PV = 100;
@@ -52,7 +66,6 @@ Unite::Unite() {
 
 
 Unite::Unite(const Unite &unit) {
-    tour = false;
     PV = unit.PV;
     PVMax = unit.PVMax;
     mana = unit.mana;
@@ -79,7 +92,6 @@ Unite::Unite(const Unite &unit) {
 
 
 Unite::Unite(int ID, float PVm, float dep, float depMax, int num, float init) {
-    tour = false;
     IDjoueur = ID;
     PVMax = PVm;
     PDep = dep;
@@ -116,9 +128,6 @@ bool Unite::operator<(Unite u) const {
     return (initiativeTemporaire < u.initiativeTemporaire);
 }
 
-void Unite::choixAction() const{
-    std::cout << "Implementer le choix d'action méthode choixAction de Unite";
-}
 
 
 std::vector<Sbire *> Unite::getArmee() {
@@ -171,19 +180,14 @@ std::vector<std::vector<int> > Unite::afficheCaseDisponibleOnOff(Carte &carte, b
 }
 
 
-void Unite::deplaceVersCase(Case &c2, Case &c1) {
-    if (!c2.getOccupe()) {
-        c2.placeUnite(c1.getPointeurUnite());
-        c1.placeUnite(NULL);
-        c1.affiche();
-        c2.affiche();
-        numcase = numeroCase(c2.get(0), c2.get(1));
+void Unite::deplaceVersCase(Case &caseDestination, Case &caseDepart) {
+    if (!caseDestination.getOccupe()) {
+        caseDestination.placeUnite(caseDepart.getPointeurUnite());
+        caseDepart.placeUnite(NULL);
+        caseDepart.affiche();
+        caseDestination.affiche();
+        numcase = numeroCase(caseDestination.get(0), caseDestination.get(1));
     }
-}
-
-
-void Unite::changeOrientation(int i) {
-    orientation = i;
 }
 
 
