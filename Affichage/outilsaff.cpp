@@ -6,7 +6,9 @@ void interface(Bouton fin_tour, Bouton menu) {
     Imagine::display(fond_ecran, 0, 0);
     Imagine::drawRect(widthworld + (widthui - widthmmap) / 2 - 1, (widthui - widthmmap) / 2 - 1, widthmmap + 1,
                       heightmmap + 1, Imagine::BLACK, 1);
-
+    Imagine::drawRect(widthworld + (widthui - widthmmap) / 2,
+                      (widthui - widthmmap) / 2 - 1 + heightmmap + 2 + fin_tour.hauteur() + 2, widthui - 4 ,
+                      heightscreen / 2, Imagine::BLACK, 2);
     fin_tour.affiche_graph();
 
     menu.affiche_graph();
